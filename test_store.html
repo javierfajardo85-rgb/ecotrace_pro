@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mock Store · EcoTrace Demo</title>
+    <style>
+      :root {
+        --bg0: #020617;
+        --bg1: #0b1226;
+        --card: rgba(255, 255, 255, 0.06);
+        --stroke: rgba(255, 255, 255, 0.12);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.68);
+        --muted2: rgba(255, 255, 255, 0.55);
+        --emerald: #10b981;
+        --amber: #f59e0b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        background: radial-gradient(1200px 600px at 20% 0%, rgba(16, 185, 129, 0.22), transparent 55%),
+          radial-gradient(900px 540px at 86% 14%, rgba(56, 189, 248, 0.16), transparent 60%),
+          linear-gradient(180deg, var(--bg0), var(--bg1));
+        min-height: 100vh;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 18px 70px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 14px 16px;
+        border: 1px solid var(--stroke);
+        background: rgba(2, 6, 23, 0.35);
+        border-radius: 18px;
+        box-shadow: 0 30px 80px -70px rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.28);
+        color: rgba(16, 185, 129, 0.95);
+        font-weight: 900;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 14px;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .brand p {
+        margin: 2px 0 0 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(245, 158, 11, 0.28);
+        background: rgba(245, 158, 11, 0.1);
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .pill b {
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      .grid {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1.3fr 0.9fr;
+        gap: 16px;
+      }
+
+      @media (max-width: 960px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        border: 1px solid var(--stroke);
+        background: var(--card);
+        border-radius: 22px;
+        padding: 16px;
+        box-shadow: 0 34px 100px -85px rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(10px);
+      }
+
+      .card h2 {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        letter-spacing: -0.01em;
+      }
+
+      .sub {
+        margin: 0 0 14px 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .products {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      @media (max-width: 640px) {
+        .products {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .product {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(2, 6, 23, 0.28);
+        border-radius: 18px;
+        padding: 14px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .product .title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .product h3 {
+        margin: 0;
+        font-size: 14px;
+        letter-spacing: -0.01em;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        background: rgba(16, 185, 129, 0.12);
+        color: rgba(255, 255, 255, 0.92);
+        white-space: nowrap;
+      }
+
+      .price {
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+      }
+
+      .muted {
+        color: var(--muted2);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .btnrow {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        border-radius: 14px;
+        padding: 10px 12px;
+        font-weight: 900;
+        font-size: 13px;
+        letter-spacing: -0.01em;
+      }
+
+      .btn {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+
+      .btn:hover {
+        background: rgba(255, 255, 255, 0.09);
+      }
+
+      .btn-primary {
+        background: linear-gradient(180deg, rgba(16, 185, 129, 0.95), rgba(16, 185, 129, 0.78));
+        color: #052e25;
+        border: 1px solid rgba(16, 185, 129, 0.28);
+        box-shadow: 0 24px 70px -52px rgba(16, 185, 129, 0.9);
+      }
+
+      .btn-primary:hover {
+        filter: brightness(1.03);
+      }
+
+      .form {
+        display: grid;
+        gap: 10px;
+      }
+
+      .field label {
+        display: block;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.76);
+        margin-bottom: 6px;
+        font-weight: 800;
+      }
+
+      .field input {
+        width: 100%;
+        border-radius: 14px;
+        padding: 10px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(2, 6, 23, 0.34);
+        color: rgba(255, 255, 255, 0.92);
+        outline: none;
+      }
+
+      .field input:focus {
+        border-color: rgba(16, 185, 129, 0.55);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.12);
+      }
+
+      .hint {
+        margin: 0;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.62);
+        line-height: 1.45;
+      }
+
+      .widgetShell {
+        display: grid;
+        gap: 12px;
+        align-content: start;
+      }
+
+      .widgetMount {
+        border-radius: 22px;
+        padding: 14px;
+        border: 1px solid rgba(16, 185, 129, 0.22);
+        background: radial-gradient(900px 450px at 20% 0%, rgba(16, 185, 129, 0.18), transparent 62%),
+          rgba(2, 6, 23, 0.3);
+      }
+
+      code.kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.86);
+      }
+
+      .footer {
+        margin-top: 16px;
+        color: rgba(255, 255, 255, 0.52);
+        font-size: 12px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">E</div>
+          <div style="min-width: 0">
+            <h1>Mock Store · EcoTrace Live Demo</h1>
+            <p>Checkout-style product test page using the live EcoTrace cloud backend.</p>
+          </div>
+        </div>
+        <div class="pill" title="Backend configured for production">
+          Backend: <b>Render</b> <span style="opacity: 0.7">·</span> <code class="kbd">ecotrace-gx1q</code>
+        </div>
+      </div>
+
+      <div class="grid">
+        <section class="card">
+          <h2>Products</h2>
+          <p class="sub">
+            Pick a demo product to set the shipment weight, then review the EcoTrace widget estimate on the right. This page loads the widget with
+            <code class="kbd">data-backend="https://ecotrace-gx1q.onrender.com"</code>.
+          </p>
+
+          <div class="products" role="list">
+            <article class="product" role="listitem">
+              <div class="title">
+                <h3>Eco-Friendly T‑Shirt</h3>
+                <span class="badge">Weight: <span data-weight-label="tshirt">0.35</span> kg</span>
+              </div>
+              <div class="muted">Soft organic cotton blend. Lightweight shipment for quick CO₂e validation.</div>
+              <div class="title" style="margin-top: 4px">
+                <div class="price">$24.00</div>
+                <div class="btnrow">
+                  <button class="btn" type="button" data-product="tshirt">Select</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product" role="listitem">
+              <div class="title">
+                <h3>Recycled Shoes</h3>
+                <span class="badge">Weight: <span data-weight-label="shoes">1.20</span> kg</span>
+              </div>
+              <div class="muted">Recycled materials. Heavier shipment to compare CO₂e output vs. lighter items.</div>
+              <div class="title" style="margin-top: 4px">
+                <div class="price">$89.00</div>
+                <div class="btnrow">
+                  <button class="btn" type="button" data-product="shoes">Select</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div style="margin-top: 14px" class="card">
+            <h2 style="margin: 0 0 10px 0">Shipment inputs</h2>
+            <div class="form">
+              <div class="field">
+                <label for="storePublicId">Store Public ID</label>
+                <input id="storePublicId" type="text" placeholder="Paste your store_public_id (from /auth/register)" />
+              </div>
+              <div class="field" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+                <div>
+                  <label for="originZip">Origin ZIP</label>
+                  <input id="originZip" type="text" inputmode="numeric" value="10001" />
+                </div>
+                <div>
+                  <label for="destinationZip">Destination ZIP</label>
+                  <input id="destinationZip" type="text" inputmode="numeric" value="90001" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="weightKg">Weight (kg)</label>
+                <input id="weightKg" type="number" step="0.01" min="0" value="0.35" />
+              </div>
+              <p class="hint">
+                Tip: the default ZIP demo set includes <code class="kbd">10001</code>, <code class="kbd">90001</code>, <code class="kbd">60601</code>,
+                <code class="kbd">94105</code>, <code class="kbd">33101</code>.
+              </p>
+              <div class="btnrow">
+                <button class="btn-primary" type="button" id="renderWidget">Update widget</button>
+                <button class="btn" type="button" id="resetDemo">Reset demo</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="card widgetShell">
+          <h2>EcoTrace Widget</h2>
+          <p class="sub" style="margin-bottom: 0">
+            The widget below calls the live API endpoint <code class="kbd">/calculate</code> on Render.
+          </p>
+          <div class="widgetMount">
+            <div id="ecotrace-widget"></div>
+            <div id="ecotrace-widget-script"></div>
+          </div>
+          <p class="hint" style="margin: 0">
+            If you see “Missing attributes”, fill in your Store Public ID and click <b>Update widget</b>.
+          </p>
+        </aside>
+      </div>
+
+      <div class="footer">EcoTrace · Mock Store Demo Page</div>
+    </div>
+
+    <script>
+      (function () {
+        const BACKEND = "https://ecotrace-gx1q.onrender.com";
+        const WIDGET_SRC = "widget/widget.js";
+
+        const els = {
+          storePublicId: document.getElementById("storePublicId"),
+          originZip: document.getElementById("originZip"),
+          destinationZip: document.getElementById("destinationZip"),
+          weightKg: document.getElementById("weightKg"),
+          renderWidget: document.getElementById("renderWidget"),
+          resetDemo: document.getElementById("resetDemo"),
+          scriptMount: document.getElementById("ecotrace-widget-script"),
+        };
+
+        function num(v, fallback) {
+          const n = Number(v);
+          return Number.isFinite(n) ? n : fallback;
+        }
+
+        function clearWidgetScript() {
+          while (els.scriptMount.firstChild) els.scriptMount.removeChild(els.scriptMount.firstChild);
+        }
+
+        function renderWidget() {
+          clearWidgetScript();
+
+          const storePublicId = String(els.storePublicId.value || "").trim();
+          const originZip = String(els.originZip.value || "").trim();
+          const destinationZip = String(els.destinationZip.value || "").trim();
+          const weightKg = String(num(els.weightKg.value, 0.35).toFixed(2));
+
+          const s = document.createElement("script");
+          s.src = WIDGET_SRC;
+          s.setAttribute("data-backend", BACKEND);
+          s.setAttribute("data-store", storePublicId || "");
+          s.setAttribute("data-weight", weightKg);
+          s.setAttribute("data-origin-zip", originZip);
+          s.setAttribute("data-destination-zip", destinationZip);
+          els.scriptMount.appendChild(s);
+        }
+
+        document.querySelectorAll("button[data-product]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const product = btn.getAttribute("data-product");
+            if (product === "tshirt") els.weightKg.value = "0.35";
+            if (product === "shoes") els.weightKg.value = "1.20";
+            renderWidget();
+          });
+        });
+
+        els.renderWidget.addEventListener("click", renderWidget);
+
+        els.resetDemo.addEventListener("click", () => {
+          els.storePublicId.value = "";
+          els.originZip.value = "10001";
+          els.destinationZip.value = "90001";
+          els.weightKg.value = "0.35";
+          renderWidget();
+        });
+
+        // Initial render (requires store public id to compute successfully).
+        renderWidget();
+      })();
+    </script>
+  </body>
+</html>
+
