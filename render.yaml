@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: ecotrace-api
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecotrace-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_ALG
+        value: HS256
+      - key: CARBON_INTERFACE_API_KEY
+        sync: false
+
+databases:
+  - name: ecotrace-db
+    plan: free
+    databaseName: ecotrace
+    user: ecotrace
+    ipAllowList: []
+
