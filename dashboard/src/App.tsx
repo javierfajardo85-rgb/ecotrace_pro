@@ -79,7 +79,7 @@ function SecondaryButton(props: { children: any; onClick: () => void; disabled?:
 }
 
 export default function App() {
-  const [backendUrl, setBackendUrl] = useState("http://127.0.0.1:8000");
+  const [backendUrl, setBackendUrl] = useState("https://ecotrace-gx1q.onrender.com");
   const [storePublicId, setStorePublicId] = useState("");
   const [token, setToken] = useState("");
 
@@ -164,7 +164,12 @@ export default function App() {
         <div className="mt-8 grid gap-6">
           <Section title="Connect to your store">
             <div className="grid gap-4 md:grid-cols-3">
-              <TextField label="Backend URL" value={backendUrl} onChange={setBackendUrl} placeholder="http://127.0.0.1:8000" />
+              <TextField
+                label="Backend URL"
+                value={backendUrl}
+                onChange={setBackendUrl}
+                placeholder="https://ecotrace-gx1q.onrender.com"
+              />
               <TextField label="Store Public ID" value={storePublicId} onChange={setStorePublicId} placeholder="e.g. 2f6b..." />
               <TextField label="Bearer Token" value={token} onChange={setToken} placeholder="Paste token from /auth/login" type="password" />
             </div>

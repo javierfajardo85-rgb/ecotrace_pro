@@ -46,6 +46,11 @@ app.add_middleware(
 bearer = HTTPBearer(auto_error=False)
 
 
+@app.get("/")
+def root():
+    return {"status": "EcoTrace API Online", "version": "1.0", "message": "Climate Compliance System Active"}
+
+
 @app.on_event("startup")
 def _startup() -> None:
     Base.metadata.create_all(bind=engine)

@@ -2,7 +2,7 @@
   const script = document.currentScript;
   if (!script) return;
 
-  const backendUrl = script.getAttribute("data-backend") || "http://127.0.0.1:8000";
+  const backendUrl = script.getAttribute("data-backend") || "https://ecotrace-gx1q.onrender.com";
   const storePublicId = script.getAttribute("data-store") || "";
   const weightKg = parseFloat(script.getAttribute("data-weight") || "0");
   const originZip = script.getAttribute("data-origin-zip") || script.getAttribute("data-zip") || "";
