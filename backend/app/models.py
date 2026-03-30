@@ -46,12 +46,29 @@ class Log(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     store_id: Mapped[int] = mapped_column(ForeignKey("stores.id"), nullable=False, index=True)
 
+    transaction_id: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+
+    origin_zip: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    destination_zip: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    origin_lat: Mapped[float | None] = mapped_column(Float, nullable=True)
+    origin_lon: Mapped[float | None] = mapped_column(Float, nullable=True)
+    destination_lat: Mapped[float | None] = mapped_column(Float, nullable=True)
+    destination_lon: Mapped[float | None] = mapped_column(Float, nullable=True)
+
     weight_kg: Mapped[float] = mapped_column(Float, nullable=False)
     distance_km: Mapped[float] = mapped_column(Float, nullable=False)
+    activity_tkm: Mapped[float | None] = mapped_column(Float, nullable=True)
     vehicle_type: Mapped[str] = mapped_column(String(50), nullable=False, default="truck")
 
     co2_kg: Mapped[float] = mapped_column(Float, nullable=False)
     co2_source: Mapped[str] = mapped_column(String(30), nullable=False)  # "carbon_interface" | "fallback"
+    emission_factor_used: Mapped[float | None] = mapped_column(Float, nullable=True)
+    emission_factor_source: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    source_metadata: Mapped[str | None] = mapped_column(Text, nullable=True)
+    radiative_forcing_multiplier: Mapped[float | None] = mapped_column(Float, nullable=True)
+    uncertainty_multiplier: Mapped[float | None] = mapped_column(Float, nullable=True)
+    audit_status: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    audit_log: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     is_offset_purchased: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 

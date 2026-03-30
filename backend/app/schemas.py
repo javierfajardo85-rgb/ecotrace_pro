@@ -28,7 +28,7 @@ class CalculateRequest(BaseModel):
     store_public_id: str
     origin_zip: str
     destination_zip: str
-    weight_kg: float = Field(gt=0)
+    weight_kg: float | None = Field(default=None, gt=0)
     vehicle_type: str = Field(default="truck")
 
     distance_km: float | None = Field(default=None, gt=0)
