@@ -9,6 +9,7 @@ type Props = {
   weightKg?: number;
   originZip?: string;
   destinationZip?: string;
+  theme?: "light" | "dark";
   variant?: "compact" | "large";
 };
 
@@ -19,6 +20,7 @@ export function EcoTraceWidgetDemo({
   weightKg = 1.4,
   originZip = "28001",
   destinationZip = "08001",
+  theme = "light",
   variant = "large",
 }: Props) {
   const mountId = "ecotrace-widget-demo";
@@ -45,6 +47,7 @@ export function EcoTraceWidgetDemo({
     script.setAttribute("data-weight", String(weightKg));
     script.setAttribute("data-origin-zip", originZip);
     script.setAttribute("data-destination-zip", destinationZip);
+    script.setAttribute("data-theme", theme);
     script.dataset.instance = scriptId;
 
     script.onload = () => setReady(true);
@@ -58,20 +61,20 @@ export function EcoTraceWidgetDemo({
         mount.innerHTML = "";
       } catch (_) {}
     };
-  }, [backendUrl, destinationZip, originZip, scriptId, scriptSrc, storePublicId, weightKg]);
+  }, [backendUrl, destinationZip, originZip, scriptId, scriptSrc, storePublicId, theme, weightKg]);
 
   return (
     <div className={className}>
       <div
         className={
           variant === "compact"
-            ? "rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
-            : "rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur"
+            ? "rounded-2xl border border-slate-200 bg-white p-4 shadow-soft"
+            : "rounded-3xl border border-slate-200 bg-white p-6 shadow-soft"
         }
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="text-sm font-semibold text-white">Live widget demo</div>
-          <div className="text-xs font-semibold text-white/60">{ready ? "Loaded" : "Loading"}</div>
+          <div className="text-sm font-semibold text-slate-950">Live widget demo</div>
+          <div className="text-xs font-semibold text-slate-500">{ready ? "Loaded" : "Loading"}</div>
         </div>
         <div className="mt-5" id={mountId} />
       </div>

@@ -55,6 +55,8 @@
 
   const THEME_KEY = "ecotrace_widget_theme";
   function getTheme() {
+    const forced = String(script.getAttribute("data-theme") || "").toLowerCase();
+    if (forced === "light" || forced === "dark") return forced;
     const stored = String(localStorage.getItem(THEME_KEY) || "").toLowerCase();
     if (stored === "light" || stored === "dark") return stored;
     return "dark"; // dark-first by requirement
