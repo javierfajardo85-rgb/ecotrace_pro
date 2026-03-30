@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable}`}>
-      <body className="font-sans">
+      <body className="bg-white font-sans text-slate-600 antialiased">
         <Nav />
         <main style={{ flex: 1 }}>{children}</main>
         <Footer />
