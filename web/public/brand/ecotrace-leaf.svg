@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="EcoTrace leaf icon">
+  <title>EcoTrace leaf</title>
+  <defs>
+    <linearGradient id="g" x1="40" y1="40" x2="220" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <path
+    d="M214 36c-78 6-134 51-152 101-16 45 6 83 52 83 62 0 106-64 100-184Z"
+    fill="url(#g)"
+  />
+  <path
+    d="M66 208c28-50 72-78 148-108"
+    fill="none"
+    stroke="#065f46"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.9"
+  />
+</svg>
+

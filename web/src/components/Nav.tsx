@@ -5,14 +5,14 @@ export function Nav() {
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex h-16 items-center justify-between gap-6">
-          <Link className="flex items-center gap-3" href="/">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-ecotrace-50 text-sm font-semibold text-ecotrace-700 ring-1 ring-inset ring-ecotrace-200" aria-hidden="true">
-              E
-            </span>
-            <span className="hidden sm:block">
-              <span className="block text-sm font-semibold text-slate-900">EcoTrace</span>
-              <span className="block text-xs text-slate-600">Audit-ready ESG logistics</span>
-            </span>
+          <Link className="flex items-center gap-4" href="/" aria-label="EcoTrace home">
+            <img
+              src="/brand/ecotrace-logo.svg"
+              width={180}
+              height={40}
+              alt="EcoTrace"
+              className="h-auto w-[180px]"
+            />
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">

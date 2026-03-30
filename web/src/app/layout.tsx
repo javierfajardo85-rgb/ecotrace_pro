@@ -22,6 +22,12 @@ export const metadata: Metadata = {
   description:
     "Audit-ready carbon accounting for eCommerce logistics. ISO 14064 and GHG Protocol: traceable calculation, emission factor sourcing, and per-transaction transparency.",
   metadataBase: new URL("https://ecotracegreen.com"),
+  icons: {
+    icon: [
+      { url: "/brand/ecotrace-leaf.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
+  },
 };
 
 export default function RootLayout({
