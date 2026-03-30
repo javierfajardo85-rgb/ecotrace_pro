@@ -72,3 +72,89 @@ class DailyEmissionsResponse(BaseModel):
     days: int
     points: list[DailyEmissionPoint]
 
+
+class OrganizationCreateRequest(BaseModel):
+    name: str = Field(min_length=2, max_length=200)
+    country: str = Field(min_length=2, max_length=2)  # ISO 3166-1 alpha-2
+    industry: str | None = Field(default=None, max_length=120)
+    baseline_year: int | None = Field(default=None, ge=1900, le=2100)
+    consolidation_method: str = Field(default="operational_control", max_length=32)
+
+
+class OrganizationResponse(BaseModel):
+    id: int
+    name: str
+    country: str
+    industry: str | None
+    baseline_year: int | None
+    consolidation_method: str
+
+
+class ActivityCreateRequest(BaseModel):
+    facility_id: int | None = None
+    scope: int = Field(ge=1, le=3)
+    category: str = Field(min_length=2, max_length=200)
+    activity_data_value: float | None = None
+    activity_data_unit: str | None = Field(default=None, max_length=60)
+    spend_amount: float | None = Field(default=None, ge=0)
+    spend_currency: str | None = Field(default=None, min_length=3, max_length=3)
+    data_quality_level: str = Field(default="estimated", max_length=20)
+    confidence_score: int = Field(default=50, ge=0, le=100)
+    input_metadata: dict | None = None
+
+
+class ActivityResponse(BaseModel):
+    id: int
+    organization_id: int
+    facility_id: int | None
+    scope: int
+    category: str
+    activity_data_value: float | None
+    activity_data_unit: str | None
+    spend_amount: float | None
+    spend_currency: str | None
+    data_quality_level: str
+    confidence_score: int
+
+
+class EmissionFactorImportItem(BaseModel):
+    source: str = Field(min_length=2, max_length=40)
+    year: int = Field(ge=1900, le=2100)
+    region: str = Field(min_length=2, max_length=40)
+    category: str = Field(min_length=2, max_length=240)
+    unit: str = Field(min_length=2, max_length=80)
+    factor_value: float
+    methodology_reference: str | None = Field(default=None, max_length=400)
+    version: str = Field(min_length=1, max_length=60)
+
+
+class EmissionFactorResolveRequest(BaseModel):
+    scope: int = Field(ge=1, le=3)
+    category: str = Field(min_length=2, max_length=240)
+    region: str = Field(min_length=2, max_length=40)
+    year: int = Field(ge=1900, le=2100)
+
+
+class EmissionFactorResolved(BaseModel):
+    factor_id: int
+    factor_value: float
+    source: str
+    version: str
+    unit: str
+
+
+class CalculationResponse(BaseModel):
+    calculation_id: int
+    activity_id: int
+    factor_id: int
+    result_value: float
+    result_unit: str
+    data_quality_level: str
+    confidence_score: int
+
+
+class ComplianceStatusResponse(BaseModel):
+    framework: str
+    percent_complete: int
+    missing_requirements: list[str]
+
