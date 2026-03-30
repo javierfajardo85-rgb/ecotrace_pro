@@ -1,55 +1,65 @@
-import styles from "./page.module.css";
 import { RoiCalculator } from "@/components/RoiCalculator";
 import { WaitlistForm } from "@/components/WaitlistForm";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <section className={styles.hero}>
-        <div className="et-container">
-          <div className={styles.heroGrid}>
-            <div className={styles.heroCopy}>
-              <div className={styles.chip}>
-                <span className={styles.dot} aria-hidden="true" />
-                ISO 14064 · GHG Protocol · CSRD-ready
+    <div className="bg-white text-slate-900">
+      <section className="border-b border-slate-200">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">
+                <span className="h-2 w-2 rounded-full bg-ecotrace-500" aria-hidden="true" />
+                ISO 14064 · GHG Protocol · Green Claims-ready
               </div>
-              <h1 className={styles.h1}>
-                Cumplimiento climático <span className={styles.grad}>auditable</span> para eCommerce.
+
+              <h1 className="mt-5 text-5xl font-semibold tracking-tight text-slate-900 sm:text-6xl">
+                Audit-ready carbon accounting for{" "}
+                <span className="text-ecotrace-600">eCommerce logistics</span>.
               </h1>
-              <p className={styles.lead}>
-                EcoTrace convierte el cálculo de emisiones en un registro verificable: <span className="et-kbd">E=A×EF</span>, fuente del factor,
-                multiplicadores y trazabilidad por transacción.
+              <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
+                EcoTrace turns checkout emissions into verifiable evidence: <span className="font-mono">E=A×EF</span>, emission factor source,
+                correction multipliers, and a durable audit log per transaction.
               </p>
 
-              <div className={styles.ctas}>
-                <a className={styles.btnPrimary} href="#waitlist">
-                  Instalar en Shopify
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <a
+                  href="#waitlist"
+                  className="inline-flex h-11 items-center justify-center rounded-xl bg-ecotrace-600 px-5 text-sm font-semibold text-white shadow-soft hover:bg-ecotrace-700"
+                >
+                  Install on Shopify
                 </a>
-                <a className={styles.btnSecondary} href="#roi">
-                  Calcular ROI
+                <a
+                  href="#roi"
+                  className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+                >
+                  Calculate ROI
                 </a>
               </div>
 
-              <div className={styles.trustRow}>
-                <div className={styles.trustItem}>
-                  <div className={styles.trustKpi}>Audit-ready</div>
-                  <div className={styles.trustText}>JSON por transacción</div>
+              <dl className="mt-10 grid gap-6 sm:grid-cols-3">
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <dt className="text-sm font-semibold text-slate-900">Audit log</dt>
+                  <dd className="mt-2 text-sm text-slate-600">One record per transaction</dd>
                 </div>
-                <div className={styles.trustItem}>
-                  <div className={styles.trustKpi}>Transparencia</div>
-                  <div className={styles.trustText}>EF + metodología</div>
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <dt className="text-sm font-semibold text-slate-900">Methodology</dt>
+                  <dd className="mt-2 text-sm text-slate-600">EF cited + assumptions visible</dd>
                 </div>
-                <div className={styles.trustItem}>
-                  <div className={styles.trustKpi}>Conversión</div>
-                  <div className={styles.trustText}>Widget en checkout</div>
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <dt className="text-sm font-semibold text-slate-900">Conversion</dt>
+                  <dd className="mt-2 text-sm text-slate-600">Customer-facing disclosure</dd>
                 </div>
-              </div>
+              </dl>
             </div>
 
-            <div className={styles.heroPanel}>
-              <div className={`${styles.panelCard} et-card`}>
-                <div className={styles.panelTitle}>Registro auditable (ejemplo)</div>
-                <pre className={styles.code}>
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
+              <div className="text-sm font-semibold text-slate-900">Example audit log</div>
+              <p className="mt-1 text-sm text-slate-600">
+                Designed for sustainability teams, auditors, and compliance review.
+              </p>
+              <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs leading-5 text-slate-800">
+                <pre className="overflow-auto">
 {`{
   "transaction_id": "ECO-99821",
   "timestamp": "2026-03-26T10:45:00Z",
@@ -57,96 +67,116 @@ export default function Home() {
   "calculation_logic": {
     "distance_km": 620,
     "transport_mode": "truck_heavy",
-    "emission_factor_source": "DEFRA_2024",
-    "emission_factor_value": 0.1234
+    "emission_factor_source": "DEFRA_2024_v1.2",
+    "emission_factor_value": 0.1234,
+    "radiative_forcing_multiplier": 1.0
   },
   "result_co2_kg": 0.1147,
   "audit_status": "verified"
 }`}
                 </pre>
-                <div className={styles.panelFoot}>
-                  Fuente API: <a href="https://ecotrace-gx1q.onrender.com" target="_blank" rel="noreferrer">Render backend</a>
-                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
+                <span>Backend</span>
+                <a className="font-medium text-slate-900 hover:text-ecotrace-700" href="https://ecotrace-gx1q.onrender.com" target="_blank" rel="noreferrer">
+                  ecotrace-gx1q.onrender.com
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className={styles.section}>
-        <div className="et-container">
-          <div className={styles.sectionHead}>
-            <h2 className={styles.h2}>El problema vs. la solución</h2>
-            <p className={styles.p}>De “estimaciones opacas” a evidencia reconstruible.</p>
-          </div>
-          <div className={styles.compare}>
-            <div className={`${styles.compareCard} et-card`}>
-              <div className={styles.compareTitle}>Caos legal (hoy)</div>
-              <ul className={styles.ul}>
-                <li>Factores sin cita ni versión</li>
-                <li>Sin geocodificación ni trazabilidad</li>
-                <li>Imposible auditar un pedido concreto</li>
-                <li>Riesgo de claims y cumplimiento</li>
-              </ul>
-            </div>
-            <div className={`${styles.compareCard} et-card`}>
-              <div className={styles.compareTitle}>EcoTrace (automático)</div>
-              <ul className={styles.ul}>
-                <li>Fórmula estándar: <span className="et-kbd">E=A×EF</span></li>
-                <li>Origen/destino y distancia guardados</li>
-                <li>EF con fuente y metadata</li>
-                <li>Audit log JSON por transacción</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.section} id="roi">
-        <div className="et-container">
-          <div className={styles.sectionHead}>
-            <h2 className={styles.h2}>Calculadora de ROI (reputación + CO₂)</h2>
-            <p className={styles.p}>
-              Simula cuánto CO₂ podrías transparentar y neutralizar. Útil para explicar el impacto a tu equipo y a tus clientes.
+      <section className="bg-slate-50">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">From vague estimates to defensible evidence</h2>
+            <p className="mt-3 text-slate-600">
+              Sustainability and legal teams require sources, versioning, and traceability—not a single opaque number.
             </p>
           </div>
-          <RoiCalculator />
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6">
+              <div className="text-sm font-semibold text-slate-900">Status quo</div>
+              <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                <li>Uncited emission factors</li>
+                <li>No per-order traceability</li>
+                <li>Hard to defend green claims</li>
+                <li>High audit friction</li>
+              </ul>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-6">
+              <div className="text-sm font-semibold text-slate-900">EcoTrace</div>
+              <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                <li>
+                  Standardized formula: <span className="font-mono">E=A×EF</span>
+                </li>
+                <li>Origin/destination and distance recorded</li>
+                <li>EF source & multipliers persisted</li>
+                <li>Audit log JSON per transaction</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className={styles.section}>
-        <div className="et-container">
-          <div className={styles.sectionHead}>
-            <h2 className={styles.h2}>Proyectos de carbono</h2>
-            <p className={styles.p}>Galería (placeholder): conectaremos proveedores certificados y evidencia verificable.</p>
+      <section id="roi">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">ROI calculator</h2>
+            <p className="mt-3 text-slate-600">
+              Model operational impact, transparency volume, and an internal narrative metric (non-regulatory) for stakeholder reporting.
+            </p>
           </div>
-          <div className={styles.projects}>
+          <div className="mt-10">
+            <RoiCalculator />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-slate-50">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Carbon projects</h2>
+            <p className="mt-3 text-slate-600">
+              Placeholder gallery. Production roll-out includes verified projects and retirement evidence to prevent double counting.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {[
-              { t: "Reforestación (Gold Standard)", d: "Restauración forestal con reporte y trazabilidad (coming soon)." },
-              { t: "Eólica / Renovables", d: "Energía renovable verificada para reducción de emisiones (coming soon)." },
-              { t: "Biodiversidad", d: "Proyectos con co-beneficios y auditoría externa (coming soon)." },
+              { t: "Reforestation (Gold Standard)", d: "Verified reporting and auditable retirement flows (coming soon)." },
+              { t: "Wind / Renewables", d: "Verified renewable generation projects (coming soon)." },
+              { t: "Biodiversity co-benefits", d: "High-quality projects with co-benefit evidence (coming soon)." },
             ].map((p) => (
-              <div key={p.t} className={`${styles.projectCard} et-card`}>
-                <div className={styles.projectTitle}>{p.t}</div>
-                <div className={styles.projectDesc}>{p.d}</div>
-                <div className={styles.projectTag}>Verificación: en integración</div>
+              <div key={p.t} className="rounded-3xl border border-slate-200 bg-white p-6">
+                <div className="text-sm font-semibold text-slate-900">{p.t}</div>
+                <div className="mt-2 text-sm leading-6 text-slate-600">{p.d}</div>
+                <div className="mt-4 inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                  Verification: in integration
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className={styles.section} id="waitlist">
-        <div className="et-container">
-          <div className={`${styles.waitlist} et-card`}>
-            <div className={styles.waitCopy}>
-              <h2 className={styles.h2}>Primera demo y acceso anticipado</h2>
-              <p className={styles.p}>
-                Déjanos tu email y el tamaño aproximado de tu tienda. Te enviamos instalación rápida y una demo guiada.
+      <section id="waitlist">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="grid gap-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-soft lg:grid-cols-2 lg:items-start">
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Request a demo</h2>
+              <p className="mt-3 text-slate-600">
+                Share your email and store size. We’ll send an installation guide and schedule a compliance-focused walkthrough.
               </p>
-              <div className={styles.note}>
-                Legal: al enviar, aceptas nuestra política de privacidad y uso de datos de contacto para coordinar la demo.
-              </div>
+              <p className="mt-5 text-sm text-slate-500">
+                By submitting, you agree to our{" "}
+                <a className="font-medium text-slate-900 hover:text-ecotrace-700" href="/legal/privacy">
+                  privacy policy
+                </a>
+                .
+              </p>
             </div>
             <WaitlistForm />
           </div>

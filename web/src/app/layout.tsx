@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "EcoTrace · Certidumbre climática auditable",
+    default: "EcoTrace · Audit-ready ESG logistics",
     template: "%s · EcoTrace",
   },
   description:
-    "Cumplimiento climático auditable para eCommerce. ISO 14064 y GHG Protocol: cálculo trazable, factor de emisión citado y transparencia por transacción.",
+    "Audit-ready carbon accounting for eCommerce logistics. ISO 14064 and GHG Protocol: traceable calculation, emission factor sourcing, and per-transaction transparency.",
   metadataBase: new URL("https://ecotracegreen.com"),
 };
 
@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <Nav />
         <main style={{ flex: 1 }}>{children}</main>
