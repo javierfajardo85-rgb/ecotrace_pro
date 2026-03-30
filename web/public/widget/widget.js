@@ -19,6 +19,7 @@
     style.textContent = `
       :root { --et-ease: cubic-bezier(.22,1,.36,1); }
       #ecotrace-widget { font-feature-settings: "ss01" 1, "cv10" 1, "liga" 1; }
+      #ecotrace-widget-demo { font-feature-settings: "ss01" 1, "cv10" 1, "liga" 1; }
       @keyframes etFadeUp { from { opacity: 0; transform: translateY(10px); filter: blur(6px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
       @keyframes etPop { 0% { transform: translateY(6px) scale(.985); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
       .et-anim-in { animation: etFadeUp .55s var(--et-ease) both; }
@@ -29,7 +30,6 @@
   }
 
   function leafSvg() {
-    // Refined, calm leaf mark (no aggressive pulse).
     return `
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5">
         <path
@@ -57,7 +57,7 @@
   function getTheme() {
     const stored = String(localStorage.getItem(THEME_KEY) || "").toLowerCase();
     if (stored === "light" || stored === "dark") return stored;
-    return "dark"; // dark-first by requirement
+    return "dark";
   }
 
   function setTheme(next) {
@@ -68,8 +68,6 @@
 
   const initialTheme = getTheme();
 
-  // Tailwind classes assume Tailwind is present (via CDN in test page / host page).
-  // If Tailwind isn't present, the widget still renders structurally, but styles may be minimal.
   mount.innerHTML = `
     <div class="${initialTheme === "dark" ? "dark" : ""}">
       <section
@@ -229,7 +227,6 @@
     applyTheme(next);
   });
 
-  // Tooltip: show on hover/focus, hide on blur/leave.
   function showTip() {
     tip.classList.remove("pointer-events-none", "opacity-0");
     tip.classList.add("opacity-100");
@@ -243,7 +240,6 @@
   tipBtn.addEventListener("focus", showTip);
   tipBtn.addEventListener("blur", hideTip);
 
-  // Ensure initial theme applied (adds/removes et-light on card).
   applyTheme(initialTheme);
 
   if (!storePublicId || !originZip || !destinationZip || !weightKg) {
@@ -263,7 +259,7 @@
       destination_zip: destinationZip,
       weight_kg: weightKg,
       vehicle_type: "truck",
-      is_offset_purchased: false
+      is_offset_purchased: false,
     }),
   })
     .then(async (r) => {
@@ -276,7 +272,6 @@
       const distanceKm = Number(data.distance_km || 0);
       const source = String(data.source || "fallback");
 
-      // Value render + subtle animations.
       valueEl.textContent = `${co2.toFixed(2)} kg CO₂e`;
       subEl.textContent = "Estimated at checkout. Evidence stored for auditing.";
       valueEl.classList.add("et-anim-pop");
@@ -290,7 +285,6 @@
       const checkbox = mount.querySelector("#et-offset");
 
       function emit(checked) {
-        // Simulate sending to the store: publish an event the checkout can listen for.
         window.dispatchEvent(
           new CustomEvent("ecotrace:offset-change", {
             detail: {

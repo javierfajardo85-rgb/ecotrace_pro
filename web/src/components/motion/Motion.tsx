@@ -74,3 +74,7 @@ export function HoverLift({
   );
 }
 
+export const easings = {
+  premium: [0.22, 1, 0.36, 1] as const,
+};
+
