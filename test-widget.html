@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" class="bg-slate-950">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoTrace Widget · Premium Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        font-feature-settings: "ss01" 1, "cv10" 1, "liga" 1;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-950 text-slate-100">
+    <div class="pointer-events-none absolute inset-0 opacity-80" aria-hidden="true"
+      style="background: radial-gradient(1200px 700px at 15% 5%, rgba(16,185,129,.18), transparent 60%), radial-gradient(900px 540px at 86% 14%, rgba(34,197,94,.10), transparent 60%), linear-gradient(180deg, #020617, #0b1226);">
+    </div>
+
+    <main class="relative mx-auto max-w-5xl px-6 py-16">
+      <header class="flex flex-col gap-2">
+        <div class="text-xs font-semibold uppercase tracking-wide text-emerald-300/90">Local demo</div>
+        <h1 class="text-4xl font-bold tracking-tight text-white">EcoTrace widget (premium)</h1>
+        <p class="max-w-2xl text-base leading-relaxed text-slate-300">
+          This page loads Tailwind via CDN and mounts the widget into <code class="rounded bg-white/5 px-1.5 py-0.5">#ecotrace-widget</code>.
+          Edit the <code class="rounded bg-white/5 px-1.5 py-0.5">data-*</code> attributes on the script tag to test.
+        </p>
+      </header>
+
+      <section class="mt-10 grid gap-8 lg:grid-cols-2">
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+          <div class="text-sm font-semibold text-white">Mounted widget</div>
+          <p class="mt-2 text-sm text-slate-300">The widget injects itself below.</p>
+          <div class="mt-6" id="ecotrace-widget"></div>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+          <div class="text-sm font-semibold text-white">Test inputs</div>
+          <p class="mt-2 text-sm text-slate-300">
+            These are the attributes the widget reads from <code class="rounded bg-white/5 px-1.5 py-0.5">document.currentScript</code>.
+          </p>
+          <dl class="mt-6 grid gap-3 text-sm">
+            <div class="flex items-center justify-between gap-4">
+              <dt class="text-slate-300">Backend</dt>
+              <dd class="font-mono text-slate-100">https://ecotrace-gx1q.onrender.com</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt class="text-slate-300">Store</dt>
+              <dd class="font-mono text-slate-100">demo_store</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt class="text-slate-300">Weight</dt>
+              <dd class="font-mono text-slate-100">1.4 kg</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt class="text-slate-300">Origin ZIP</dt>
+              <dd class="font-mono text-slate-100">28001</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt class="text-slate-300">Destination ZIP</dt>
+              <dd class="font-mono text-slate-100">08001</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+        <div class="text-sm font-semibold text-white">Offset event</div>
+        <p class="mt-2 text-sm text-slate-300">
+          The widget dispatches <code class="rounded bg-white/5 px-1.5 py-0.5">ecotrace:offset-change</code> events.
+        </p>
+        <pre id="event-log" class="mt-5 overflow-auto rounded-2xl border border-white/10 bg-black/30 p-4 text-xs text-slate-200"></pre>
+      </section>
+    </main>
+
+    <script>
+      const pre = document.getElementById("event-log");
+      window.addEventListener("ecotrace:offset-change", (e) => {
+        pre.textContent = JSON.stringify(e.detail, null, 2);
+      });
+    </script>
+
+    <script
+      src="./widget/widget.js"
+      data-backend="https://ecotrace-gx1q.onrender.com"
+      data-store="demo_store"
+      data-weight="1.4"
+      data-origin-zip="28001"
+      data-destination-zip="08001"
+    ></script>
+  </body>
+</html>
+
