@@ -19,6 +19,8 @@ export function RoiCalculator() {
   const [avgWeightKg, setAvgWeightKg] = useState(1.2);
   const [avgDistanceKm, setAvgDistanceKm] = useState(620);
   const [shareOffsets, setShareOffsets] = useState(25); // %
+  const [conversionLiftBps, setConversionLiftBps] = useState(30); // 0.30% default
+  const [complianceRiskHoursSaved, setComplianceRiskHoursSaved] = useState(20);
 
   const result = useMemo(() => {
     const orders = clamp(Number(ordersPerMonth) || 0, 0, 1_000_000);
@@ -37,6 +39,9 @@ export function RoiCalculator() {
     // Internal narrative proxy (non-regulatory).
     const reputationScore = Math.round(Math.sqrt(totalKg) * 2.4);
 
+    const conversionLiftPct = clamp(Number(conversionLiftBps) || 0, 0, 300) / 100; // 0-3.00%
+    const complianceHours = clamp(Number(complianceRiskHoursSaved) || 0, 0, 200);
+
     return {
       activityTkm,
       ef,
@@ -44,61 +49,114 @@ export function RoiCalculator() {
       totalKg,
       totalOffsetsKg,
       reputationScore,
+      conversionLiftPct,
+      complianceHours,
     };
-  }, [ordersPerMonth, avgWeightKg, avgDistanceKm, shareOffsets]);
+  }, [ordersPerMonth, avgWeightKg, avgDistanceKm, shareOffsets, conversionLiftBps, complianceRiskHoursSaved]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
         <div className="text-sm font-semibold text-slate-900">Inputs</div>
-        <div className="mt-4 grid gap-4">
+        <div className="mt-4 grid gap-5">
           <label className="grid gap-2">
-            <span className="text-xs font-semibold text-slate-700">Orders per month</span>
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-xs font-semibold text-slate-700">Orders per month</span>
+              <span className="text-xs font-semibold text-slate-900">{fmtInt(ordersPerMonth)}</span>
+            </div>
             <input
               value={ordersPerMonth}
-              type="number"
+              type="range"
               min={0}
-              step={50}
+              max={50000}
+              step={100}
               onChange={(e) => setOrdersPerMonth(Number(e.target.value))}
-              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none ring-0 focus:border-ecotrace-400 focus:ring-4 focus:ring-ecotrace-100"
+              className="h-2 w-full accent-ecotrace-600"
             />
           </label>
+
           <label className="grid gap-2">
-            <span className="text-xs font-semibold text-slate-700">Average weight (kg)</span>
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-xs font-semibold text-slate-700">Average weight (kg)</span>
+              <span className="text-xs font-semibold text-slate-900">{fmtKg(avgWeightKg)} kg</span>
+            </div>
             <input
               value={avgWeightKg}
-              type="number"
-              min={0}
+              type="range"
+              min={0.1}
+              max={20}
               step={0.1}
               onChange={(e) => setAvgWeightKg(Number(e.target.value))}
-              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none ring-0 focus:border-ecotrace-400 focus:ring-4 focus:ring-ecotrace-100"
+              className="h-2 w-full accent-ecotrace-600"
             />
           </label>
+
           <label className="grid gap-2">
-            <span className="text-xs font-semibold text-slate-700">Average distance (km)</span>
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-xs font-semibold text-slate-700">Average distance (km)</span>
+              <span className="text-xs font-semibold text-slate-900">{fmtInt(avgDistanceKm)} km</span>
+            </div>
             <input
               value={avgDistanceKm}
-              type="number"
-              min={0}
+              type="range"
+              min={10}
+              max={3000}
               step={10}
               onChange={(e) => setAvgDistanceKm(Number(e.target.value))}
-              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none ring-0 focus:border-ecotrace-400 focus:ring-4 focus:ring-ecotrace-100"
+              className="h-2 w-full accent-ecotrace-600"
             />
           </label>
+
           <label className="grid gap-2">
-            <span className="text-xs font-semibold text-slate-700">% customers who offset</span>
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-xs font-semibold text-slate-700">% customers who offset</span>
+              <span className="text-xs font-semibold text-slate-900">{fmtInt(shareOffsets)}%</span>
+            </div>
             <input
               value={shareOffsets}
-              type="number"
+              type="range"
               min={0}
               max={100}
               step={5}
               onChange={(e) => setShareOffsets(Number(e.target.value))}
-              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none ring-0 focus:border-ecotrace-400 focus:ring-4 focus:ring-ecotrace-100"
+              className="h-2 w-full accent-ecotrace-600"
+            />
+          </label>
+
+          <label className="grid gap-2">
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-xs font-semibold text-slate-700">Conversion uplift (assumption)</span>
+              <span className="text-xs font-semibold text-slate-900">{result.conversionLiftPct.toFixed(2)}%</span>
+            </div>
+            <input
+              value={conversionLiftBps}
+              type="range"
+              min={0}
+              max={300}
+              step={5}
+              onChange={(e) => setConversionLiftBps(Number(e.target.value))}
+              className="h-2 w-full accent-ecotrace-600"
+            />
+          </label>
+
+          <label className="grid gap-2">
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-xs font-semibold text-slate-700">Compliance risk time saved (assumption)</span>
+              <span className="text-xs font-semibold text-slate-900">{fmtInt(result.complianceHours)} hrs/mo</span>
+            </div>
+            <input
+              value={complianceRiskHoursSaved}
+              type="range"
+              min={0}
+              max={120}
+              step={5}
+              onChange={(e) => setComplianceRiskHoursSaved(Number(e.target.value))}
+              className="h-2 w-full accent-ecotrace-600"
             />
           </label>
         </div>
-        <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+
+        <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
           This calculator uses a conservative road logistics factor as a placeholder. In production, EcoTrace persists the exact emission factor
           source and assumptions per transaction.
         </div>
@@ -128,6 +186,16 @@ export function RoiCalculator() {
             <div className="text-xs font-semibold text-slate-700">Reputation benefit (proxy)</div>
             <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{fmtInt(result.reputationScore)}</div>
             <div className="mt-2 text-sm text-slate-600">Internal narrative metric (non-regulatory)</div>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="text-xs font-semibold text-slate-700">Compliance risk savings (proxy)</div>
+            <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{fmtInt(result.complianceHours)} hrs/mo</div>
+            <div className="mt-2 text-sm text-slate-600">Reduced manual ESG data ops (assumption)</div>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="text-xs font-semibold text-slate-700">Conversion uplift (proxy)</div>
+            <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">+{result.conversionLiftPct.toFixed(2)}%</div>
+            <div className="mt-2 text-sm text-slate-600">Radical transparency at checkout (assumption)</div>
           </div>
         </div>
       </div>
