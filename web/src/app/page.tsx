@@ -14,12 +14,12 @@ export default function Home() {
               </div>
 
               <h1 className="mt-5 text-5xl font-semibold tracking-tight text-slate-900 sm:text-6xl">
-                Audit-ready carbon accounting for{" "}
-                <span className="text-ecotrace-600">eCommerce logistics</span>.
+                Install audit-ready shipping emissions in{" "}
+                <span className="text-ecotrace-600">your checkout</span>.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
-                EcoTrace turns checkout emissions into verifiable evidence: <span className="font-mono">E=A×EF</span>, emission factor source,
-                correction multipliers, and a durable audit log per transaction.
+                EcoTrace helps merchants disclose shipping CO₂e and store per-order evidence for ESG teams. We persist{" "}
+                <span className="font-mono">E=A×EF</span>, emission factor source/versioning, and correction multipliers in a durable audit log.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -35,20 +35,26 @@ export default function Home() {
                 >
                   Calculate ROI
                 </a>
+                <a
+                  href="/dashboard"
+                  className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+                >
+                  View dashboard demo
+                </a>
               </div>
 
               <dl className="mt-10 grid gap-6 sm:grid-cols-3">
                 <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                  <dt className="text-sm font-semibold text-slate-900">Audit log</dt>
-                  <dd className="mt-2 text-sm text-slate-600">One record per transaction</dd>
+                  <dt className="text-sm font-semibold text-slate-900">Compliance-first</dt>
+                  <dd className="mt-2 text-sm text-slate-600">Designed for ISO 14064 / GHG Protocol</dd>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                  <dt className="text-sm font-semibold text-slate-900">Methodology</dt>
-                  <dd className="mt-2 text-sm text-slate-600">EF cited + assumptions visible</dd>
+                  <dt className="text-sm font-semibold text-slate-900">Verifiable evidence</dt>
+                  <dd className="mt-2 text-sm text-slate-600">Audit log per transaction</dd>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                  <dt className="text-sm font-semibold text-slate-900">Conversion</dt>
-                  <dd className="mt-2 text-sm text-slate-600">Customer-facing disclosure</dd>
+                  <dt className="text-sm font-semibold text-slate-900">Customer trust</dt>
+                  <dd className="mt-2 text-sm text-slate-600">Checkout disclosure that feels credible</dd>
                 </div>
               </dl>
             </div>
@@ -87,6 +93,57 @@ export default function Home() {
         </div>
       </section>
 
+      <section>
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
+            <div className="max-w-2xl">
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-900">How it works</h2>
+              <p className="mt-3 text-slate-600">
+                Built for clarity: what’s shown to customers and what’s stored for audits are aligned—no vague claims.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 lg:justify-end">
+              <a
+                href="#waitlist"
+                className="inline-flex h-11 items-center justify-center rounded-xl bg-ecotrace-600 px-5 text-sm font-semibold text-white shadow-soft hover:bg-ecotrace-700"
+              >
+                Install on Shopify
+              </a>
+              <a
+                href="/methodology"
+                className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+              >
+                Read methodology
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
+              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step 1</div>
+              <div className="mt-2 text-sm font-semibold text-slate-900">Collect inputs</div>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Weight and route signals (ZIP/coordinates). Defaults are flagged to avoid understating emissions.
+              </p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
+              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step 2</div>
+              <div className="mt-2 text-sm font-semibold text-slate-900">Calculate</div>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Standard equation <span className="font-mono text-slate-900">E=A×EF</span>, plus correction multipliers (e.g. radiative forcing).
+              </p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
+              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step 3</div>
+              <div className="mt-2 text-sm font-semibold text-slate-900">Store & report</div>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                A durable, per-order audit log is stored so sustainability teams can reconstruct the calculation from the database.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="bg-slate-50">
         <div className="mx-auto max-w-6xl px-6 py-16">
           <div className="max-w-2xl">
@@ -117,6 +174,21 @@ export default function Home() {
                 <li>Audit log JSON per transaction</li>
               </ul>
             </div>
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center gap-3">
+            <a
+              href="#waitlist"
+              className="inline-flex h-11 items-center justify-center rounded-xl bg-ecotrace-600 px-5 text-sm font-semibold text-white shadow-soft hover:bg-ecotrace-700"
+            >
+              Install on Shopify
+            </a>
+            <a
+              href="/transparency"
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+            >
+              See what’s stored per order
+            </a>
           </div>
         </div>
       </section>
