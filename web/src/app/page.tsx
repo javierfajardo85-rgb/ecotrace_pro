@@ -1,26 +1,24 @@
 import { RoiCalculator } from "@/components/RoiCalculator";
 import { WaitlistForm } from "@/components/WaitlistForm";
-import { ClipboardCheck, Database, FlaskConical } from "lucide-react";
+import { ClipboardCheck, Database, FlaskConical, Link as LinkIcon, ShieldCheck, Sparkles } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="bg-white text-slate-900">
+    <main className="bg-white text-slate-900">
       <section className="border-b border-slate-200">
-        <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mx-auto max-w-6xl px-6 pb-16 pt-20">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">
-                <span className="h-2 w-2 rounded-full bg-ecotrace-500" aria-hidden="true" />
-                ISO 14064 · GHG Protocol · Green Claims-ready
+              <div className="inline-flex items-center gap-2 rounded-full bg-ecotrace-50 px-3 py-1 text-xs font-semibold text-ecotrace-800 ring-1 ring-inset ring-ecotrace-200">
+                <span className="h-2 w-2 rounded-full bg-ecotrace-600" aria-hidden="true" />
+                ISO 14064 compliance
               </div>
 
-              <h1 className="mt-5 text-5xl font-semibold tracking-tight text-slate-900 sm:text-6xl">
-                The infrastructure for{" "}
-                <span className="text-ecotrace-600">auditable carbon accounting</span>.
+              <h1 className="mt-6 text-5xl font-bold tracking-tight text-slate-950 sm:text-6xl">
+                Auditable carbon accounting for next-generation brands
               </h1>
-              <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
-                Automatically calculate, report, and verify your shipping emissions with{" "}
-                <span className="font-semibold text-slate-900">ISO 14064</span> compliance.
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
+                EcoTrace automates emissions measurement for every shipment—turning compliance into a durable competitive advantage.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -60,15 +58,15 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
+            <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-2xl">
               <div className="flex items-start justify-between gap-6">
                 <div>
-                  <div className="text-sm font-semibold text-slate-900">Audit card (example)</div>
-                  <p className="mt-1 text-sm text-slate-600">A clean summary for merchants—with provenance stored for auditors.</p>
+                  <div className="text-sm font-semibold text-slate-950">Audit card</div>
+                  <p className="mt-1 text-sm text-slate-600">A clean summary for merchants and auditors—without vague claims.</p>
                 </div>
-                <span className="inline-flex items-center gap-2 rounded-full bg-ecotrace-50 px-3 py-1 text-xs font-semibold text-ecotrace-700 ring-1 ring-inset ring-ecotrace-200">
+                <span className="inline-flex items-center gap-2 rounded-full bg-ecotrace-50 px-3 py-1 text-xs font-semibold text-ecotrace-800 ring-1 ring-inset ring-ecotrace-200">
                   <span className="h-2 w-2 rounded-full bg-ecotrace-600" aria-hidden="true" />
-                  Verified by EcoTrace
+                  VERIFIED
                 </span>
               </div>
 
@@ -76,30 +74,30 @@ export default function Home() {
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Order ID</div>
-                      <div className="mt-1 font-mono text-sm font-semibold text-slate-900">ECO-99821</div>
+                      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Order</div>
+                      <div className="mt-1 font-mono text-sm font-semibold text-slate-950">#4521</div>
                     </div>
                     <div>
-                      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Shipping route</div>
-                      <div className="mt-1 text-sm font-semibold text-slate-900">28001 → 08001</div>
+                      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Origin</div>
+                      <div className="mt-1 text-sm font-semibold text-slate-950">Madrid</div>
                     </div>
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-4">
                     <div>
-                      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Calculated CO₂e</div>
-                      <div className="mt-1 text-2xl font-semibold tracking-tight text-ecotrace-700">0.11 kg</div>
+                      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">CO₂e</div>
+                      <div className="mt-1 text-2xl font-bold tracking-tight text-ecotrace-800">1.2 kg</div>
                     </div>
                     <div>
                       <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Method</div>
                       <div className="mt-1 text-sm text-slate-700">
-                        <span className="font-mono text-slate-900">E=A×EF</span> · DEFRA 2024
+                        <span className="font-mono text-slate-950">E=A×EF</span> · DEFRA
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between text-sm text-slate-600">
-                  <span>Cloud backend</span>
+                  <span>Infrastructure</span>
                   <a
                     className="font-medium text-slate-900 hover:text-ecotrace-700"
                     href="https://ecotrace-gx1q.onrender.com"
@@ -113,50 +111,97 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 border-t border-slate-200 pt-8 text-xs font-semibold tracking-wide text-slate-400">
-            <span>Integrates with Shopify</span>
-            <span>Aligned with GHG Protocol</span>
-            <span>ISO 14064 Ready</span>
+          <div className="mt-12 border-t border-slate-200 pt-8">
+            <div className="text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Designed for global climate reporting standards
+            </div>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-sm font-semibold text-slate-400">
+              <span className="opacity-50">Shopify</span>
+              <span className="opacity-50">GHG Protocol</span>
+              <span className="opacity-50">DEFRA</span>
+              <span className="opacity-50">ISO Standards</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section>
+      <section className="bg-slate-50">
         <div className="mx-auto max-w-6xl px-6 py-16">
           <div className="max-w-2xl">
-            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Why EcoTrace</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-slate-950">Product features</h2>
             <p className="mt-3 text-slate-600">
-              A Normative-style foundation, built for speed and merchant UX—without sacrificing auditability.
+              Built like infrastructure: simple on the surface, fully auditable underneath.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
-              <div className="flex items-center gap-3">
-                <Database className="h-5 w-5 text-ecotrace-700" aria-hidden="true" />
-                <div className="text-sm font-semibold text-slate-900">Data capture</div>
+          <div className="mt-10 grid gap-6 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <div className="h-full rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-ecotrace-50 ring-1 ring-inset ring-ecotrace-200">
+                    <LinkIcon className="h-5 w-5 text-ecotrace-700" aria-hidden="true" />
+                  </span>
+                  <div className="text-sm font-semibold text-slate-950">Automation</div>
+                </div>
+                <div className="mt-4 text-xl font-bold tracking-tight text-slate-950">Direct connection with Shopify API</div>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  Capture order-level signals automatically—no manual spreadsheets, no fragile exports.
+                </p>
+                <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Signals captured</div>
+                  <div className="mt-2 grid grid-cols-2 gap-3 text-sm text-slate-700">
+                    <span>Route</span>
+                    <span>Weight</span>
+                    <span>Carrier mode</span>
+                    <span>Timestamp</span>
+                  </div>
+                </div>
               </div>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
-                Automatic ingestion via Shopify APIs—no manual spreadsheets required for day-one value.
-              </p>
             </div>
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
-              <div className="flex items-center gap-3">
-                <FlaskConical className="h-5 w-5 text-ecotrace-700" aria-hidden="true" />
-                <div className="text-sm font-semibold text-slate-900">Scientific calculation</div>
+
+            <div className="lg:col-span-7">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-ecotrace-50 ring-1 ring-inset ring-ecotrace-200">
+                      <Sparkles className="h-5 w-5 text-ecotrace-700" aria-hidden="true" />
+                    </span>
+                    <div className="text-sm font-semibold text-slate-950">Science</div>
+                  </div>
+                  <div className="mt-4 text-lg font-bold tracking-tight text-slate-950">Updated emission factors (DEFRA / IEA)</div>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    Deterministic calculation based on standardized methodologies with factor provenance retained.
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-ecotrace-50 ring-1 ring-inset ring-ecotrace-200">
+                      <ShieldCheck className="h-5 w-5 text-ecotrace-700" aria-hidden="true" />
+                    </span>
+                    <div className="text-sm font-semibold text-slate-950">Audit</div>
+                  </div>
+                  <div className="mt-4 text-lg font-bold tracking-tight text-slate-950">Immutable logs for ESG audits</div>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    Store calculation evidence per transaction: inputs, factors, multipliers, and results.
+                  </p>
+                </div>
               </div>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
-                Deterministic engines based on DEFRA-style methodologies and continuously updated emission factors.
-              </p>
-            </div>
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
-              <div className="flex items-center gap-3">
-                <ClipboardCheck className="h-5 w-5 text-ecotrace-700" aria-hidden="true" />
-                <div className="text-sm font-semibold text-slate-900">Audit-ready logs</div>
+
+              <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <div className="text-sm font-semibold text-slate-950">Why it feels premium</div>
+                    <p className="mt-1 text-sm text-slate-600">
+                      Radical transparency at checkout—without adding friction.
+                    </p>
+                  </div>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
+                    <span className="h-2 w-2 rounded-full bg-ecotrace-600" aria-hidden="true" />
+                    Checkout-ready
+                  </div>
+                </div>
               </div>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
-                Immutable, per-transaction audit logs built for ESG reporting, CSRD workflows, and external audits.
-              </p>
             </div>
           </div>
         </div>
@@ -277,15 +322,15 @@ export default function Home() {
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {[
               {
-                q: "“EcoTrace nos ahorró 40 horas mensuales de gestión de datos ESG.”",
+                q: "“EcoTrace saved us 40 hours per month of ESG data operations.”",
                 a: "Sustainability Lead (Retail) · Placeholder",
               },
               {
-                q: "“Por fin pudimos defender nuestros green claims con evidencia por pedido.”",
+                q: "“We finally defended our carbon claims with per-order evidence.”",
                 a: "Legal & Compliance · Placeholder",
               },
               {
-                q: "“La transparencia en checkout mejoró la confianza sin sacrificar conversión.”",
+                q: "“Checkout transparency improved trust without sacrificing conversion.”",
                 a: "eCommerce Director · Placeholder",
               },
             ].map((t) => (
@@ -350,7 +395,7 @@ export default function Home() {
             </div>
 
             <div className="flex justify-center lg:justify-end">
-              <div className="relative w-[320px] rounded-[44px] border border-slate-200 bg-white p-3 shadow-soft">
+              <div className="relative w-[320px] rounded-[44px] border border-slate-200 bg-white p-3 shadow-2xl">
                 <div className="absolute left-1/2 top-2 h-6 w-28 -translate-x-1/2 rounded-full bg-slate-100" aria-hidden="true" />
                 <div className="rounded-[36px] bg-slate-50 p-4 pt-10">
                   <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Cart</div>
@@ -378,14 +423,15 @@ export default function Home() {
 
                   <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
                     <div className="flex items-start gap-3">
-                      <img src="/brand/ecotrace-leaf.svg" alt="" className="mt-0.5 h-6 w-6" />
+                      <img src="/brand/ecotrace-leaf.svg" alt="" className="mt-0.5 h-5 w-5" />
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold text-slate-900">EcoTrace Verified</div>
-                        <div className="mt-1 text-sm leading-6 text-slate-600">
-                          This shipment is carbon-neutralized and audited by EcoTrace.
+                        <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">EcoTrace badge</div>
+                        <div className="mt-2 text-sm font-semibold text-slate-950">
+                          This shipment is carbon-neutralized and audited by EcoTrace
                         </div>
-                        <div className="mt-3 inline-flex items-center rounded-full bg-ecotrace-50 px-3 py-1 text-xs font-semibold text-ecotrace-700 ring-1 ring-inset ring-ecotrace-200">
-                          Verified by EcoTrace
+                        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-ecotrace-50 px-3 py-1 text-xs font-semibold text-ecotrace-800 ring-1 ring-inset ring-ecotrace-200">
+                          <span className="h-2 w-2 rounded-full bg-ecotrace-600" aria-hidden="true" />
+                          Verified
                         </div>
                       </div>
                     </div>
@@ -451,6 +497,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

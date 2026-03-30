@@ -41,6 +41,7 @@ export function RoiCalculator() {
 
     const conversionLiftPct = clamp(Number(conversionLiftBps) || 0, 0, 300) / 100; // 0-3.00%
     const complianceHours = clamp(Number(complianceRiskHoursSaved) || 0, 0, 200);
+    const complianceRiskScore = clamp(Math.round((complianceHours / 120) * 100), 0, 100);
 
     return {
       activityTkm,
@@ -51,13 +52,17 @@ export function RoiCalculator() {
       reputationScore,
       conversionLiftPct,
       complianceHours,
+      complianceRiskScore,
     };
   }, [ordersPerMonth, avgWeightKg, avgDistanceKm, shareOffsets, conversionLiftBps, complianceRiskHoursSaved]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
-        <div className="text-sm font-semibold text-slate-900">Inputs</div>
+      <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+        <div className="flex items-center justify-between gap-4">
+          <div className="text-sm font-semibold text-slate-950">Inputs</div>
+          <div className="text-xs font-semibold text-slate-500">Assumptions are configurable</div>
+        </div>
         <div className="mt-4 grid gap-5">
           <label className="grid gap-2">
             <div className="flex items-center justify-between gap-4">
@@ -156,18 +161,18 @@ export function RoiCalculator() {
           </label>
         </div>
 
-        <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
-          This calculator uses a conservative road logistics factor as a placeholder. In production, EcoTrace persists the exact emission factor
-          source and assumptions per transaction.
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+          This calculator uses a conservative road logistics factor as a placeholder. In production, EcoTrace stores the exact emission factor,
+          source, and assumptions per transaction for auditability.
         </div>
       </div>
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
-        <div className="text-sm font-semibold text-slate-900">Results</div>
+      <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+        <div className="text-sm font-semibold text-slate-950">Results</div>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border border-slate-200 bg-white p-4">
             <div className="text-xs font-semibold text-slate-700">CO₂e per order</div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight text-ecotrace-700">{fmtKg(result.co2PerOrderKg)} kg</div>
+            <div className="mt-2 text-2xl font-bold tracking-tight text-ecotrace-800">{fmtKg(result.co2PerOrderKg)} kg</div>
             <div className="mt-2 text-sm text-slate-600">
               A = {fmtKg(result.activityTkm)} tkm · EF = {result.ef} kg/tkm
             </div>
@@ -184,7 +189,7 @@ export function RoiCalculator() {
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-4">
             <div className="text-xs font-semibold text-slate-700">Reputation benefit (proxy)</div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{fmtInt(result.reputationScore)}</div>
+            <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{fmtInt(result.reputationScore)}</div>
             <div className="mt-2 text-sm text-slate-600">Internal narrative metric (non-regulatory)</div>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-4">
@@ -196,6 +201,23 @@ export function RoiCalculator() {
             <div className="text-xs font-semibold text-slate-700">Conversion uplift (proxy)</div>
             <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">+{result.conversionLiftPct.toFixed(2)}%</div>
             <div className="mt-2 text-sm text-slate-600">Radical transparency at checkout (assumption)</div>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <div className="flex items-center justify-between gap-4">
+            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Compliance risk reduction (proxy)</div>
+            <div className="text-xs font-semibold text-slate-700">{result.complianceRiskScore}%</div>
+          </div>
+          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+            <div
+              className="h-full rounded-full bg-ecotrace-600"
+              style={{ width: `${result.complianceRiskScore}%` }}
+              aria-hidden="true"
+            />
+          </div>
+          <div className="mt-3 text-sm text-slate-600">
+            A clean story for legal and sustainability teams: less manual work, better audit readiness.
           </div>
         </div>
       </div>
