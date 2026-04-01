@@ -28,7 +28,7 @@ export function LandingPage() {
                 </Reveal>
 
                 <Reveal>
-                  <h1 className="mt-6 text-5xl font-bold tracking-tight text-slate-950 sm:text-6xl">
+                  <h1 className="mt-6 text-5xl sm:text-6xl">
                     Carbon visibility at checkout. Trusted by merchants.
                   </h1>
                 </Reveal>
@@ -97,7 +97,7 @@ export function LandingPage() {
         <section id="how-it-works">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-2xl">
-              <h2 className="text-3xl font-bold tracking-tight text-slate-950">How it works</h2>
+              <h2 className="text-3xl tracking-tight">How it works</h2>
               <p className="mt-3 text-base leading-relaxed text-slate-600">
                 A clean customer experience at checkout—backed by auditable evidence and exports for sustainability teams.
               </p>
@@ -126,7 +126,7 @@ export function LandingPage() {
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
               <div className="max-w-2xl">
-                <h2 className="text-3xl font-bold tracking-tight text-slate-950">Live widget demo</h2>
+                <h2 className="text-3xl tracking-tight">Live widget demo</h2>
                 <p className="mt-3 text-base leading-relaxed text-slate-600">
                   This is the same vanilla widget merchants embed. The demo below uses realistic inputs and renders in a clean light theme.
                 </p>
@@ -163,7 +163,7 @@ export function LandingPage() {
         <section id="merchants">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-2xl">
-              <h2 className="text-3xl font-bold tracking-tight text-slate-950">Benefits & impact</h2>
+              <h2 className="text-3xl tracking-tight">Benefits & impact</h2>
               <p className="mt-3 text-base leading-relaxed text-slate-600">
                 Designed for CSRD workflows and EU Green Claims-style transparency, with a modern enterprise UX.
               </p>
@@ -190,7 +190,7 @@ export function LandingPage() {
         <section id="resources" className="bg-white">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-2xl">
-              <h2 className="text-3xl font-bold tracking-tight text-slate-950">Trust signals</h2>
+              <h2 className="text-3xl tracking-tight">Trust signals</h2>
               <p className="mt-3 text-base leading-relaxed text-slate-600">
                 Enterprise-grade positioning with transparent methodology and inspectable logs.
               </p>
@@ -223,7 +223,7 @@ export function LandingPage() {
         <section id="pricing">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <div className="max-w-2xl">
-              <h2 className="text-3xl font-bold tracking-tight text-slate-950">Pricing</h2>
+              <h2 className="text-3xl tracking-tight">Pricing</h2>
               <p className="mt-3 text-base leading-relaxed text-slate-600">
                 Simple, merchant-friendly plans. Start with the widget—upgrade to exports and compliance workflows as you scale.
               </p>

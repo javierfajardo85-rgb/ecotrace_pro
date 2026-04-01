@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono, Syne } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -7,6 +7,12 @@ import { Footer } from "@/components/Footer";
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+});
+
+const syne = Syne({
+  variable: "--font-heading",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -36,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${syne.variable} ${geistMono.variable}`}>
       <body className="bg-slate-50 font-sans text-slate-900 antialiased">
         <Nav />
         <main style={{ flex: 1 }}>{children}</main>

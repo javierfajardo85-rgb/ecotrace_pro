@@ -44,7 +44,7 @@ export default function DashboardPage() {
         <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
             <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Merchant dashboard (mock)</div>
-            <h1 className="mt-2 text-4xl font-semibold tracking-tight text-slate-900">Your ESG impact, in one place</h1>
+            <h1 className="mt-2 text-4xl tracking-tight">Your ESG impact, in one place</h1>
             <p className="mt-3 text-lg leading-8 text-slate-600">
               This page is a visual mockup. In production, metrics and the audit log will come from your EcoTrace account and the Render backend.
             </p>

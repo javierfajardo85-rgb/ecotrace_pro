@@ -18,7 +18,7 @@ export default function MethodologyPage() {
     <div className="bg-white text-slate-900">
       <div className="mx-auto max-w-4xl px-6 py-14">
         <header className="max-w-3xl">
-          <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-4xl tracking-tight">
             Our methodology: scientific rigor under <span className="text-ecotrace-700">ISO 14064</span>
           </h1>
           <p className="mt-4 text-lg leading-8 text-slate-600">
@@ -35,8 +35,8 @@ export default function MethodologyPage() {
 
         <section className="mt-10 space-y-6">
           <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-            <h2 className="text-base font-semibold text-slate-900">
-              1) The gold standard: <span className="text-slate-900">ISO 14064-3</span>
+            <h2 className="text-base">
+              1) The gold standard: <span className="text-ecotrace-700">ISO 14064-3</span>
             </h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
               Our backend architecture is built for full traceability of each gram of CO₂e in your logistics chain.
@@ -62,7 +62,7 @@ export default function MethodologyPage() {
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-            <h2 className="text-base font-semibold text-slate-900">2) High-fidelity data sources</h2>
+            <h2 className="text-base">2) High-fidelity data sources</h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
               EcoTrace is designed to reference trusted emission factor databases (depending on configuration and geography), including:
             </p>
@@ -80,8 +80,8 @@ export default function MethodologyPage() {
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-            <h2 className="text-base font-semibold text-slate-900">
-              3) Critical correction factors: <span className="text-slate-900">Radiative forcing</span>
+            <h2 className="text-base">
+              3) Critical correction factors: <span className="text-ecotrace-700">Radiative forcing</span>
             </h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
               Unlike many widgets, EcoTrace applies a <span className="font-semibold text-slate-900">1.9×</span> multiplier for air transport to
@@ -90,7 +90,7 @@ export default function MethodologyPage() {
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-            <h2 className="text-base font-semibold text-slate-900">4) Compensation transparency</h2>
+            <h2 className="text-base">4) Compensation transparency</h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">Every cent collected is designed to remain auditable.</p>
             <ul className="mt-4 space-y-2 text-sm text-slate-600">
               <li>
@@ -104,7 +104,7 @@ export default function MethodologyPage() {
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-            <h2 className="text-base font-semibold text-slate-900">Audit log (example)</h2>
+            <h2 className="text-base">Audit log (example)</h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
               This is the structure an external auditor can use to reconstruct the calculation using the database record alone.
             </p>
@@ -133,7 +133,7 @@ export default function MethodologyPage() {
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-slate-50 p-7">
-            <h2 className="text-base font-semibold text-slate-900">Why sustainability leaders trust EcoTrace</h2>
+            <h2 className="text-base">Why sustainability leaders trust EcoTrace</h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
               Sustainability and legal teams don’t buy promises—they buy evidence. EcoTrace turns each order into a reconstructible engineering
               record that reduces audit friction and supports defensible claims.

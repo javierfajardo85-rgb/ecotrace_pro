@@ -18,7 +18,7 @@ export default function TransparencyPage() {
     <div className="bg-white text-slate-900">
       <div className="mx-auto max-w-4xl px-6 py-14">
         <header className="max-w-3xl">
-          <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-4xl tracking-tight">
             Transparency & traceability under <span className="text-ecotrace-700">ISO 14064</span>
           </h1>
           <p className="mt-4 text-lg leading-8 text-slate-600">
@@ -35,7 +35,7 @@ export default function TransparencyPage() {
 
         <section className="mt-10 space-y-6">
           <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-            <h2 className="text-base font-semibold text-slate-900">Core equation: E=A×EF</h2>
+            <h2 className="text-base">Core equation: E=A×EF</h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
               We persist activity data, emission factors (source + value), and the final result for each transaction.
             </p>
@@ -48,7 +48,7 @@ export default function TransparencyPage() {
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-            <h2 className="text-base font-semibold text-slate-900">What we store per transaction</h2>
+            <h2 className="text-base">What we store per transaction</h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
               Minimum evidence required to support defensible disclosure and reduce audit friction.
             </p>
@@ -78,7 +78,7 @@ export default function TransparencyPage() {
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-slate-50 p-7">
-            <h2 className="text-base font-semibold text-slate-900">Why this matters</h2>
+            <h2 className="text-base">Why this matters</h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
               Trust is earned through precision, sources, and traceability. EcoTrace is built as an engineering system, not a marketing plug-in.
             </p>

@@ -5,6 +5,16 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial"],
+        heading: [
+          "var(--font-heading)",
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica",
+          "Arial",
+        ],
         mono: [
           "var(--font-geist-mono)",
           "ui-monospace",
