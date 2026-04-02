@@ -2,6 +2,7 @@
 
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { Hero } from "@/components/Hero";
+import { HowItWorks } from "@/components/HowItWorks";
 import { RoiCalculator } from "@/components/RoiCalculator";
 import { WidgetPreview } from "@/components/WidgetPreview";
 import { HoverLift, Reveal, Stagger } from "@/components/motion/Motion";
@@ -32,56 +33,7 @@ export function LandingPage() {
         <Hero />
 
         {/* ━━━ How it works ━━━ */}
-        <section id="how-it-works" className="border-t border-slate-100 bg-slate-50/40">
-          <div className="mx-auto max-w-6xl px-6 py-28">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight">How it works</h2>
-              <p className="mt-4 text-base text-slate-600">
-                A transparent fee at checkout — automatically split into
-                environmental compensation and merchant cash-flow recovery.
-              </p>
-            </div>
-
-            <div className="mt-14 grid gap-5 lg:grid-cols-4">
-              {(
-                [
-                  {
-                    n: "01",
-                    t: "Customer opts in",
-                    d: "A single checkbox at checkout. Clean, non-intrusive, Shopify-native.",
-                  },
-                  {
-                    n: "02",
-                    t: "Fee calculated",
-                    d: "Real-time E=A×EF computation with auditable emission factors.",
-                  },
-                  {
-                    n: "03",
-                    t: "Fee split",
-                    d: "Certified Offset Cost → offset projects. Green Operational Credit™ → your account.",
-                  },
-                  {
-                    n: "04",
-                    t: "Cash recovered",
-                    d: "Use accumulated credits to pay Google Ads, Shopify, or other invoices.",
-                  },
-                ] as const
-              ).map((s) => (
-                <Reveal key={s.n}>
-                  <HoverLift className="h-full rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5">
-                    <div className="text-xs font-semibold uppercase tracking-wide text-ecotrace-700">
-                      {s.n}
-                    </div>
-                    <div className="mt-3 text-sm font-semibold text-slate-900">
-                      {s.t}
-                    </div>
-                    <div className="mt-2 text-sm text-slate-600">{s.d}</div>
-                  </HoverLift>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
+        <HowItWorks />
 
         {/* ━━━ Three Solutions ━━━ */}
         <section id="solutions" className="border-t border-slate-100 bg-white">
