@@ -9,6 +9,47 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 const PRICE_STANDARD = 2.2;
 const PRICE_ECO = 2.4;
+const SLOGAN_INTERVAL_MS = 6000;
+const SLOGAN_COUNT = 3;
+
+function RotatingHeadline() {
+  const { t } = useTranslation();
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setIndex((prev) => (prev + 1) % SLOGAN_COUNT);
+    }, SLOGAN_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, []);
+
+  const slogans = [
+    { before: t("hero.slogan1Before"), gold: t("hero.slogan1Gold"), after: t("hero.slogan1After") },
+    { before: t("hero.slogan2Before"), gold: t("hero.slogan2Gold"), after: t("hero.slogan2After") },
+    { before: t("hero.slogan3Before"), gold: t("hero.slogan3Gold"), after: t("hero.slogan3After") },
+  ];
+
+  const current = slogans[index];
+
+  return (
+    <div className="relative min-h-[3.6em] sm:min-h-[3.2em] lg:min-h-[3em]">
+      <AnimatePresence mode="wait">
+        <motion.h1
+          key={index}
+          className="max-w-lg text-3xl font-extrabold !leading-[1.1] tracking-tight text-slate-950 sm:text-4xl lg:text-5xl"
+          initial={{ opacity: 0, y: 24, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: -24, filter: "blur(4px)" }}
+          transition={{ duration: 0.5, ease }}
+        >
+          {current.before}
+          <span className="text-brand-gold-dark">{current.gold}</span>
+          {current.after}
+        </motion.h1>
+      </AnimatePresence>
+    </div>
+  );
+}
 
 function EuroIcon({ className }: { className?: string }) {
   return (
@@ -329,9 +370,9 @@ export function Hero() {
             </Reveal>
 
             <Reveal>
-              <h1 className="mt-8 max-w-lg text-4xl !leading-[1.1] text-slate-950 sm:text-5xl lg:text-[3.5rem]">
-                {t("hero.h1")}
-              </h1>
+              <div className="mt-8">
+                <RotatingHeadline />
+              </div>
             </Reveal>
 
             <Reveal>

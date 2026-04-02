@@ -1,5 +1,8 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { Hero } from "@/components/Hero";
@@ -7,6 +10,8 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { RoiCalculator } from "@/components/RoiCalculator";
 import { ShippingMockup } from "@/components/ShippingMockup";
 import { HoverLift, Reveal } from "@/components/motion/Motion";
+
+const ease = [0.22, 1, 0.36, 1] as const;
 
 function ShieldIcon() {
   return (
@@ -17,14 +22,163 @@ function ShieldIcon() {
   );
 }
 
+function PlusIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+}
+
+function CloseIcon({ className }: { className?: string }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
+function DetailModal({
+  open,
+  onClose,
+  header,
+  bullets,
+  icon,
+}: {
+  open: boolean;
+  onClose: () => void;
+  header: string;
+  bullets: string[];
+  icon: string;
+}) {
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  if (typeof window === "undefined") return null;
+
+  return createPortal(
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {/* Backdrop */}
+          <motion.div
+            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+
+          {/* Panel */}
+          <motion.div
+            className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:max-h-[85vh]"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.25, ease }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={header}
+          >
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute right-4 top-4 z-10 grid h-8 w-8 place-items-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
+              aria-label="Close"
+            >
+              <CloseIcon />
+            </button>
+
+            <div className="p-7 sm:p-9">
+              {/* Icon + Header */}
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{icon}</span>
+                <h3 className="pr-8 text-lg font-bold tracking-tight text-slate-950">
+                  {header}
+                </h3>
+              </div>
+
+              {/* Divider */}
+              <div className="mt-5 h-px bg-slate-100" />
+
+              {/* Body bullets */}
+              <ul className="mt-5 space-y-4">
+                {bullets.map((bullet) => (
+                  <li key={bullet} className="flex items-start gap-3">
+                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-green" />
+                    <p className="text-sm leading-relaxed text-slate-600">{bullet}</p>
+                  </li>
+                ))}
+              </ul>
+
+              {/* ISO footer */}
+              <div className="mt-6 flex items-center gap-2 rounded-xl bg-brand-green/[0.04] px-4 py-3">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-brand-green">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="m9 12 2 2 4-4" />
+                </svg>
+                <span className="text-[11px] font-semibold text-brand-green">ISO 14064 · ISO 14067 · EU 2026</span>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>,
+    document.body,
+  );
+}
+
 export function LandingPage() {
   const { t } = useTranslation();
 
   const profitCards = [
-    { t: t("profitability.card1Title"), d: t("profitability.card1Text") },
-    { t: t("profitability.card2Title"), d: t("profitability.card2Text") },
-    { t: t("profitability.card3Title"), d: t("profitability.card3Text") },
+    {
+      t: t("profitability.card1Title"),
+      d: t("profitability.card1Text"),
+      icon: "💰",
+      modalHeader: t("profitability.modal1Header"),
+      modalBullets: [t("profitability.modal1Body1"), t("profitability.modal1Body2"), t("profitability.modal1Body3")],
+    },
+    {
+      t: t("profitability.card2Title"),
+      d: t("profitability.card2Text"),
+      icon: "🔗",
+      modalHeader: t("profitability.modal2Header"),
+      modalBullets: [t("profitability.modal2Body1"), t("profitability.modal2Body2"), t("profitability.modal2Body3")],
+    },
+    {
+      t: t("profitability.card3Title"),
+      d: t("profitability.card3Text"),
+      icon: "🧠",
+      modalHeader: t("profitability.modal3Header"),
+      modalBullets: [t("profitability.modal3Body1"), t("profitability.modal3Body2"), t("profitability.modal3Body3")],
+    },
   ];
+
+  const [activeModal, setActiveModal] = useState<number | null>(null);
+  const closeModal = useCallback(() => setActiveModal(null), []);
 
   const quotes = [
     { q: t("trust.quote1"), a: t("trust.quote1Author") },
@@ -167,15 +321,37 @@ export function LandingPage() {
               <p className="mt-4 text-base text-slate-600">{t("profitability.subtitle")}</p>
             </div>
             <div className="mt-14 grid gap-5 lg:grid-cols-3">
-              {profitCards.map((b) => (
+              {profitCards.map((b, i) => (
                 <Reveal key={b.t}>
-                  <HoverLift className="h-full rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5">
+                  <HoverLift className="group relative h-full rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5">
                     <div className="text-sm font-semibold text-slate-950">{b.t}</div>
                     <div className="mt-2 text-sm text-slate-600">{b.d}</div>
+
+                    {/* "+" detail trigger */}
+                    <button
+                      type="button"
+                      onClick={() => setActiveModal(i)}
+                      className="absolute bottom-4 right-4 grid h-8 w-8 place-items-center rounded-full bg-brand-green text-white shadow-md transition-transform duration-200 hover:scale-110 group-hover:scale-110"
+                      aria-label="More details"
+                    >
+                      <PlusIcon className="text-white" />
+                    </button>
                   </HoverLift>
                 </Reveal>
               ))}
             </div>
+
+            {/* Detail Modals */}
+            {profitCards.map((b, i) => (
+              <DetailModal
+                key={b.modalHeader}
+                open={activeModal === i}
+                onClose={closeModal}
+                header={b.modalHeader}
+                bullets={b.modalBullets}
+                icon={b.icon}
+              />
+            ))}
           </div>
         </section>
 
