@@ -5,7 +5,7 @@ import { DashboardPreview } from "@/components/DashboardPreview";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { RoiCalculator } from "@/components/RoiCalculator";
-import { WidgetPreview } from "@/components/WidgetPreview";
+import { ShippingMockup } from "@/components/ShippingMockup";
 import { HoverLift, Reveal } from "@/components/motion/Motion";
 
 function ShieldIcon() {
@@ -52,15 +52,15 @@ export function LandingPage() {
               <p className="mt-4 text-base text-slate-600">{t("solutions.subtitle")}</p>
             </div>
 
-            {/* Solution 1: Checkout */}
+            {/* Solution 1: Checkout — Invisible Integration */}
             <div className="mt-20 grid items-center gap-12 lg:grid-cols-2">
               <Reveal>
                 <div>
                   <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">{t("solutions.sol1Badge")}</div>
                   <h3 className="mt-4 text-2xl tracking-tight text-slate-950">{t("solutions.sol1Title")}</h3>
-                  <p className="mt-1 text-sm font-medium text-slate-600">{t("solutions.sol1Sub")}</p>
+                  <p className="mt-1 text-sm font-medium text-brand-green">{t("solutions.sol1Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol1Text")}</p>
-                  <ul className="mt-5 grid gap-2 text-sm text-slate-600">
+                  <ul className="mt-5 grid gap-2.5 text-sm text-slate-600">
                     {[t("solutions.sol1Bullet1"), t("solutions.sol1Bullet2"), t("solutions.sol1Bullet3")].map((b) => (
                       <li key={b} className="flex items-start gap-2">
                         <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-green" />
@@ -71,11 +71,30 @@ export function LandingPage() {
                 </div>
               </Reveal>
               <Reveal>
-                <div className="flex justify-center rounded-2xl border border-slate-100 bg-slate-50 p-10">
-                  <WidgetPreview />
+                <div className="flex justify-center rounded-2xl border border-slate-100 bg-slate-50/60 p-8 sm:p-10">
+                  <ShippingMockup />
                 </div>
               </Reveal>
             </div>
+
+            {/* ── Technical Advantage pill ── */}
+            <Reveal>
+              <div className="mx-auto mt-14 max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-brand-green/15 bg-brand-green/[0.05] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-green">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-brand-green"><path d="m13 2-2 2.5h3L12 7" /><circle cx="12" cy="14" r="7" strokeWidth="1.8" /><path d="M12 10v4l2 2" /></svg>
+                    {t("techAdvantage.badge")}
+                  </div>
+                </div>
+                <h4 className="mt-4 text-lg font-bold tracking-tight text-slate-950">{t("techAdvantage.title")}</h4>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">{t("techAdvantage.text")}</p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {[t("techAdvantage.pill1"), t("techAdvantage.pill2"), t("techAdvantage.pill3"), t("techAdvantage.pill4")].map((p) => (
+                    <span key={p} className="rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-[11px] font-semibold text-slate-500">{p}</span>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
 
             {/* Solution 2: Yield */}
             <div className="mt-28 grid items-center gap-12 lg:grid-cols-2">
