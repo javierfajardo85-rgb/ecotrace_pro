@@ -32,6 +32,7 @@ const FEE2_VERIFY_PCT = 0.05;
 const MIN_COMMISSION = 0.02;
 const LONG_HAUL_RATIO = 0.8;
 const LAST_MILE_RATIO = 0.2;
+const TRANSCONTINENTAL_KM = 4000;
 
 export function RoiCalculator() {
   const { t } = useTranslation();
@@ -52,7 +53,14 @@ export function RoiCalculator() {
     const share = clamp(Number(shareOffsets) || 0, 0, 100) / 100;
     const ads = clamp(Number(monthlyAdsCost) || 0, 0, 100_000);
 
-    const ef = EMISSION_FACTORS[vehicleType] ?? 0.12;
+    const isTranscontinental = d > TRANSCONTINENTAL_KM;
+    const baseEf = EMISSION_FACTORS[vehicleType] ?? 0.12;
+    const ef =
+      isTranscontinental && vehicleType === "truck"
+        ? EMISSION_FACTORS["ship"]
+        : baseEf;
+    const effectiveMode =
+      isTranscontinental && vehicleType === "truck" ? "ship" : vehicleType;
     const wTonnes = w / 1000;
 
     const dLongHaul = d * LONG_HAUL_RATIO;
@@ -86,6 +94,8 @@ export function RoiCalculator() {
 
     return {
       ef,
+      effectiveMode,
+      isTranscontinental,
       cf,
       wTonnes,
       dLongHaul,
@@ -122,7 +132,36 @@ export function RoiCalculator() {
         <div className="mt-4 grid gap-5">
           <Slider label={t("roi.ordersPerMonth")} value={ordersPerMonth} display={fmtInt(ordersPerMonth)} min={0} max={50000} step={100} onChange={setOrdersPerMonth} />
           <Slider label={t("roi.avgWeight")} value={avgWeightKg} display={`${fmtKg(avgWeightKg)} kg`} min={0.1} max={20} step={0.1} onChange={setAvgWeightKg} />
-          <Slider label={t("roi.avgDistance")} value={avgDistanceKm} display={`${fmtInt(avgDistanceKm)} km`} min={10} max={3000} step={10} onChange={setAvgDistanceKm} />
+          <div className="grid gap-2">
+            <Slider label={t("roi.avgDistance")} value={avgDistanceKm} display={`${fmtInt(avgDistanceKm)} km`} min={10} max={12000} step={50} onChange={setAvgDistanceKm} />
+            <div className="flex items-center gap-2">
+              {([
+                { key: "distancePresetLocal", km: 250 },
+                { key: "distancePresetEU", km: 1500 },
+                { key: "distancePresetIntercont", km: 9200 },
+              ] as const).map((p) => (
+                <button
+                  key={p.key}
+                  type="button"
+                  onClick={() => setAvgDistanceKm(p.km)}
+                  className={`rounded-md px-2 py-0.5 text-[10px] font-medium transition ${
+                    avgDistanceKm === p.km
+                      ? "bg-brand-green text-white"
+                      : "border border-slate-200 text-slate-500 hover:border-brand-green/30 hover:text-brand-green"
+                  }`}
+                >
+                  {t(`roi.${p.key}`)}
+                </button>
+              ))}
+            </div>
+            <div className="text-[10px] text-slate-400">{t("roi.distanceHint")}</div>
+            {avgDistanceKm > TRANSCONTINENTAL_KM && (
+              <div className="inline-flex items-center gap-1.5 self-start rounded-md bg-amber-50 px-2 py-1 text-[10px] font-semibold text-amber-700 ring-1 ring-inset ring-amber-200/60">
+                <span>🌍</span>
+                {t("roi.transcontinentalTag")}
+              </div>
+            )}
+          </div>
           <Slider label={t("roi.fillFactor")} value={fillFactor} display={fillFactor.toFixed(2)} min={0.1} max={1} step={0.05} onChange={setFillFactor} />
 
           <label className="grid gap-2">
@@ -166,7 +205,14 @@ export function RoiCalculator() {
 
           {/* Segment breakdown */}
           <div className="mt-4">
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">{t("roi.segBreakdown")}</div>
+            <div className="flex items-center gap-2">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">{t("roi.segBreakdown")}</div>
+              {result.isTranscontinental && (
+                <span className="rounded-md bg-amber-50 px-1.5 py-0.5 text-[9px] font-semibold text-amber-700 ring-1 ring-inset ring-amber-200/60">
+                  🌍 {result.effectiveMode}
+                </span>
+              )}
+            </div>
             <div className="mt-2.5 grid grid-cols-2 gap-2.5">
               <div className="rounded-xl border border-slate-100 bg-white px-3.5 py-2.5">
                 <div className="text-[10px] font-semibold text-slate-500">{t("roi.segLongHaul")}</div>
