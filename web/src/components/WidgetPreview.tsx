@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useCurrency } from "@/providers/CurrencyProvider";
+import { ZeroImpactTooltip } from "@/components/ZeroImpactTooltip";
 
 export function WidgetPreview({ className }: { className?: string }) {
   const { t } = useTranslation();
@@ -49,9 +50,12 @@ export function WidgetPreview({ className }: { className?: string }) {
         {/* Net Zero closing message */}
         {checked && (
           <div className="border-t border-brand-green/10 bg-brand-green/[0.03] px-5 py-3">
-            <p className="text-[11px] leading-relaxed text-brand-green">
-              ✅ {t("widget.netZero")}
-            </p>
+            <div className="flex items-start gap-2">
+              <p className="min-w-0 flex-1 text-[11px] leading-relaxed text-brand-green">
+                ✅ {t("widget.netZero")}
+              </p>
+              <ZeroImpactTooltip />
+            </div>
           </div>
         )}
 

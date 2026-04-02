@@ -246,7 +246,10 @@
     "checkboxText": "Yes, I want to offset the operational impact of my order.",
     "feeLabel": "Green contribution (calculated)",
     "isoFooter": "ISO 14064 · E=∑(W×d×EF×CF) · Auditable per transaction",
-    "netZero": "By completing your order with EcoTrace, the operational carbon footprint of your purchase is ZERO. Thank you for contributing to a cleaner planet!"
+    "netZero": "By completing your order with EcoTrace, the operational carbon footprint of your purchase is ZERO. Thank you for contributing to a cleaner planet!",
+    "zeroImpactTooltipAria": "How we achieve zero impact",
+    "zeroImpactTooltipTitle": "How do we achieve Zero Impact?",
+    "zeroImpactTooltipBody": "Shopping online generates CO₂ from shipping and servers. With EcoTrace, your contribution neutralizes that footprint: 1. Real Offset: You fund the absorption of the exact kg of CO₂ for your package. 2. Clean Tech: You help this store use carbon-neutral hosting and marketing. In the end, the total is Zero. You shop, the planet breathes."
   },
   "dashboardPreview": {
     "walletLabel": "Merchant Financial Wallet",

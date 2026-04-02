@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Reveal, Stagger } from "@/components/motion/Motion";
 import { useCurrency } from "@/providers/CurrencyProvider";
+import { ZeroImpactTooltip } from "@/components/ZeroImpactTooltip";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -280,6 +281,7 @@ function ShippingRateWidget() {
       <AnimatePresence>
         {active && (
           <motion.div
+            className="overflow-hidden"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -298,10 +300,13 @@ function ShippingRateWidget() {
               </div>
             </div>
 
-            <div className="border-t border-brand-green/10 bg-brand-green/[0.03] px-5 py-3">
-              <p className="text-[11px] leading-relaxed text-brand-green">
-                ✅ {t("widget.netZero")}
-              </p>
+            <div className="relative border-t border-brand-green/10 bg-brand-green/[0.03] px-5 py-3">
+              <div className="flex items-start gap-2">
+                <p className="min-w-0 flex-1 text-[11px] leading-relaxed text-brand-green">
+                  ✅ {t("widget.netZero")}
+                </p>
+                <ZeroImpactTooltip />
+              </div>
             </div>
           </motion.div>
         )}
