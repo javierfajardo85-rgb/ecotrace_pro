@@ -1,16 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { InvoiceSimulator } from "@/components/InvoiceSimulator";
 
 export const metadata: Metadata = {
-  title: "Dashboard demo",
-  description: "Mock merchant dashboard: metrics, widget preview, and auditable transaction log.",
+  title: "Dashboard",
+  description:
+    "Merchant dashboard: cash-flow recovery, environmental fees, and auditable transaction log.",
 };
 
-function MetricCard(props: { label: string; value: string; sub: string }) {
+function MetricCard(props: {
+  label: string;
+  value: string;
+  sub: string;
+  accent?: boolean;
+}) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
-      <div className="text-sm font-semibold text-slate-900">{props.label}</div>
-      <div className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">{props.value}</div>
+    <div
+      className={`rounded-3xl border p-6 shadow-soft ${
+        props.accent
+          ? "border-ecotrace-200 bg-ecotrace-50"
+          : "border-slate-200 bg-white"
+      }`}
+    >
+      <div className="text-sm font-semibold text-slate-700">{props.label}</div>
+      <div
+        className={`mt-3 text-3xl font-semibold tracking-tight ${
+          props.accent ? "text-ecotrace-800" : "text-slate-900"
+        }`}
+      >
+        {props.value}
+      </div>
       <div className="mt-2 text-sm text-slate-600">{props.sub}</div>
     </div>
   );
@@ -18,7 +37,13 @@ function MetricCard(props: { label: string; value: string; sub: string }) {
 
 function CheckIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
         d="M20 6L9 17l-5-5"
         stroke="currentColor"
@@ -32,21 +57,56 @@ function CheckIcon() {
 
 export default function DashboardPage() {
   const rows = [
-    { id: "ECO-99821", dest: "Barcelona (08001)", kg: "0.11", status: "Verified" },
-    { id: "ECO-99834", dest: "Paris (75001)", kg: "0.26", status: "Verified" },
-    { id: "ECO-99857", dest: "New York (10001)", kg: "0.48", status: "Verified" },
-    { id: "ECO-99902", dest: "Los Angeles (90001)", kg: "0.92", status: "Verified" },
+    {
+      id: "ECO-99821",
+      dest: "Barcelona (08001)",
+      kg: "0.11",
+      t1: "0.003",
+      t2: "0.66",
+      status: "Confirmed",
+    },
+    {
+      id: "ECO-99834",
+      dest: "Paris (75001)",
+      kg: "0.26",
+      t1: "0.007",
+      t2: "0.81",
+      status: "Confirmed",
+    },
+    {
+      id: "ECO-99857",
+      dest: "New York (10001)",
+      kg: "0.48",
+      t1: "0.012",
+      t2: "1.05",
+      status: "Confirmed",
+    },
+    {
+      id: "ECO-99902",
+      dest: "Los Angeles (90001)",
+      kg: "0.92",
+      t1: "0.023",
+      t2: "1.32",
+      status: "Pending",
+    },
   ];
+
+  const totalTasa2 = rows.reduce((s, r) => s + parseFloat(r.t2), 0);
 
   return (
     <div className="bg-white text-slate-900">
       <div className="mx-auto max-w-6xl px-6 py-14">
         <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Merchant dashboard (mock)</div>
-            <h1 className="mt-2 text-4xl tracking-tight">Your ESG impact, in one place</h1>
+            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Merchant dashboard (mock)
+            </div>
+            <h1 className="mt-2 text-4xl tracking-tight">
+              Sustainable Cash-Flow Optimization
+            </h1>
             <p className="mt-3 text-lg leading-8 text-slate-600">
-              This page is a visual mockup. In production, metrics and the audit log will come from your EcoTrace account and the Render backend.
+              Recover liquidity from environmental fees and reinvest it in
+              your operations. Data below is a visual mockup.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -67,81 +127,72 @@ export default function DashboardPage() {
           </div>
         </header>
 
+        {/* KPIs */}
         <section className="mt-10 grid gap-6 md:grid-cols-3">
-          <MetricCard label="Total contribution (CO₂e)" value="45.3 kg" sub="Transparent shipping emissions month-to-date" />
-          <MetricCard label="Shipments calculated" value="1,200" sub="Count of checkout calculations recorded" />
-          <MetricCard label="Widget conversion rate" value="68%" sub="Share of checkouts with disclosure enabled" />
+          <MetricCard
+            label="Recovered liquidity (Cash Flow)"
+            value={`€${totalTasa2.toFixed(2)}`}
+            sub="Cumulative Tasa 2 returned to your account"
+            accent
+          />
+          <MetricCard
+            label="Environmental compensation (Tasa 1)"
+            value="€0.05"
+            sub="Funds allocated to verified offset projects"
+          />
+          <MetricCard
+            label="Transactions recorded"
+            value={String(rows.length)}
+            sub="Audit-ready calculations this month"
+          />
         </section>
 
+        {/* Transaction log + Invoice Simulator */}
         <section className="mt-12 grid gap-6 lg:grid-cols-2 lg:items-start">
           <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-            <div className="flex items-start justify-between gap-6">
-              <div>
-                <div className="text-sm font-semibold text-slate-900">Widget preview</div>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Inspired by Shopify Planet aesthetics, but engineered for auditable ISO 14064-aligned accounting.
-                </p>
-              </div>
-              <span className="inline-flex items-center rounded-full bg-ecotrace-50 px-3 py-1 text-xs font-semibold text-ecotrace-700 ring-1 ring-inset ring-ecotrace-200">
-                EcoTrace Verified
-              </span>
+            <div className="text-sm font-semibold text-slate-900">
+              Transaction log
             </div>
-
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-              <div className="flex items-start gap-4">
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-ecotrace-50 text-ecotrace-700 ring-1 ring-inset ring-ecotrace-200">
-                  E
-                </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold text-slate-900">Audited shipment</div>
-                  <div className="mt-1 text-sm text-slate-600">
-                    Carbon footprint calculated under <span className="font-semibold text-slate-900">ISO 14064</span> using{" "}
-                    <span className="font-mono text-slate-900">E=A×EF</span>.
-                  </div>
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
-                      <span className="text-ecotrace-700">
-                        <CheckIcon />
-                      </span>
-                      Verified
-                    </span>
-                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
-                      EF source: DEFRA 2024
-                    </span>
-                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">
-                      RF: 1.9× (air)
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-            <div className="text-sm font-semibold text-slate-900">Auditable transaction log</div>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              A readable view of per-order records. In production, each row maps to an audit JSON stored in the database.
+              Per-order breakdown including environmental fees and cash-flow
+              recovery.
             </p>
 
             <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200">
               <table className="w-full border-collapse text-left text-sm">
                 <thead className="bg-slate-50 text-xs font-semibold text-slate-700">
                   <tr>
-                    <th className="px-4 py-3">Order ID</th>
+                    <th className="px-4 py-3">Order</th>
                     <th className="px-4 py-3">Destination</th>
                     <th className="px-4 py-3">kg CO₂e</th>
-                    <th className="px-4 py-3">Audit status</th>
+                    <th className="px-4 py-3">Tasa 1</th>
+                    <th className="px-4 py-3">Tasa 2</th>
+                    <th className="px-4 py-3">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 bg-white">
                   {rows.map((r) => (
                     <tr key={r.id}>
-                      <td className="px-4 py-3 font-mono text-xs text-slate-900">{r.id}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-slate-900">
+                        {r.id}
+                      </td>
                       <td className="px-4 py-3 text-slate-700">{r.dest}</td>
-                      <td className="px-4 py-3 font-semibold text-slate-900">{r.kg}</td>
+                      <td className="px-4 py-3 font-semibold text-slate-900">
+                        {r.kg}
+                      </td>
+                      <td className="px-4 py-3 text-slate-700">€{r.t1}</td>
+                      <td className="px-4 py-3 font-semibold text-ecotrace-700">
+                        €{r.t2}
+                      </td>
                       <td className="px-4 py-3">
-                        <span className="inline-flex items-center gap-2 rounded-full bg-ecotrace-50 px-3 py-1 text-xs font-semibold text-ecotrace-700 ring-1 ring-inset ring-ecotrace-200">
-                          <CheckIcon />
+                        <span
+                          className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${
+                            r.status === "Confirmed"
+                              ? "bg-ecotrace-50 text-ecotrace-700 ring-ecotrace-200"
+                              : "bg-amber-50 text-amber-700 ring-amber-200"
+                          }`}
+                        >
+                          {r.status === "Confirmed" && <CheckIcon />}
                           {r.status}
                         </span>
                       </td>
@@ -151,9 +202,10 @@ export default function DashboardPage() {
               </table>
             </div>
           </div>
+
+          <InvoiceSimulator balance={totalTasa2} />
         </section>
       </div>
     </div>
   );
 }
-

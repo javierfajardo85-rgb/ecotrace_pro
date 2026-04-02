@@ -7,221 +7,284 @@ function clamp(n: number, min: number, max: number) {
 }
 
 function fmtInt(n: number) {
-  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(n);
+  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
+    n,
+  );
 }
 
 function fmtKg(n: number) {
-  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(n);
+  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(
+    n,
+  );
 }
+
+function fmtEur(n: number) {
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 2,
+  }).format(n);
+}
+
+const EMISSION_FACTORS: Record<string, number> = {
+  plane: 0.5,
+  truck: 0.105,
+  train: 0.025,
+  ship: 0.012,
+};
+
+const CARBON_PRICE_EUR_PER_TONNE = 25;
 
 export function RoiCalculator() {
   const [ordersPerMonth, setOrdersPerMonth] = useState(1200);
   const [avgWeightKg, setAvgWeightKg] = useState(1.2);
   const [avgDistanceKm, setAvgDistanceKm] = useState(620);
-  const [shareOffsets, setShareOffsets] = useState(25); // %
-  const [conversionLiftBps, setConversionLiftBps] = useState(30); // 0.30% default
-  const [complianceRiskHoursSaved, setComplianceRiskHoursSaved] = useState(20);
+  const [vehicleType, setVehicleType] = useState("truck");
+  const [shareOffsets, setShareOffsets] = useState(25);
+  const [monthlyAdsCost, setMonthlyAdsCost] = useState(500);
 
   const result = useMemo(() => {
     const orders = clamp(Number(ordersPerMonth) || 0, 0, 1_000_000);
     const w = clamp(Number(avgWeightKg) || 0, 0, 200);
     const d = clamp(Number(avgDistanceKm) || 0, 0, 50_000);
     const share = clamp(Number(shareOffsets) || 0, 0, 100) / 100;
+    const ads = clamp(Number(monthlyAdsCost) || 0, 0, 100_000);
 
+    const ef = EMISSION_FACTORS[vehicleType] ?? 0.12;
     const activityTkm = (w / 1000) * d;
-
-    // Conservative placeholder: road logistics factor ~0.12 kg/(t·km).
-    const ef = 0.12;
     const co2PerOrderKg = activityTkm * ef;
     const totalKg = co2PerOrderKg * orders;
     const totalOffsetsKg = totalKg * share;
 
-    // Internal narrative proxy (non-regulatory).
-    const reputationScore = Math.round(Math.sqrt(totalKg) * 2.4);
+    // Tasa 1: carbon compensation
+    const tasa1PerOrder = co2PerOrderKg * (CARBON_PRICE_EUR_PER_TONNE / 1000);
+    const tasa1Monthly = tasa1PerOrder * orders;
 
-    const conversionLiftPct = clamp(Number(conversionLiftBps) || 0, 0, 300) / 100; // 0-3.00%
-    const complianceHours = clamp(Number(complianceRiskHoursSaved) || 0, 0, 200);
-    const complianceRiskScore = clamp(Math.round((complianceHours / 120) * 100), 0, 100);
+    // Tasa 2: merchant cash-flow return (scaled 0.50–1.50€)
+    const wFactor = Math.min(w / 10, 1);
+    const dFactor = Math.min(d / 2000, 1);
+    const tasa2PerOrder = 0.5 + 1.0 * (0.5 * wFactor + 0.5 * dFactor);
+    const tasa2Monthly = tasa2PerOrder * orders * share;
+
+    const adsCoveragePct = ads > 0 ? Math.min((tasa2Monthly / ads) * 100, 100) : 0;
 
     return {
-      activityTkm,
       ef,
+      activityTkm,
       co2PerOrderKg,
       totalKg,
       totalOffsetsKg,
-      reputationScore,
-      conversionLiftPct,
-      complianceHours,
-      complianceRiskScore,
+      tasa1PerOrder,
+      tasa1Monthly,
+      tasa2PerOrder,
+      tasa2Monthly,
+      adsCoveragePct,
+      ads,
     };
-  }, [ordersPerMonth, avgWeightKg, avgDistanceKm, shareOffsets, conversionLiftBps, complianceRiskHoursSaved]);
+  }, [
+    ordersPerMonth,
+    avgWeightKg,
+    avgDistanceKm,
+    vehicleType,
+    shareOffsets,
+    monthlyAdsCost,
+  ]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
+      {/* Inputs */}
       <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
         <div className="flex items-center justify-between gap-4">
           <div className="text-sm font-semibold text-slate-950">Inputs</div>
-          <div className="text-xs font-semibold text-slate-500">Assumptions are configurable</div>
+          <div className="text-xs font-semibold text-slate-500">
+            Assumptions are configurable
+          </div>
         </div>
         <div className="mt-4 grid gap-5">
-          <label className="grid gap-2">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-xs font-semibold text-slate-700">Orders per month</span>
-              <span className="text-xs font-semibold text-slate-900">{fmtInt(ordersPerMonth)}</span>
-            </div>
-            <input
-              value={ordersPerMonth}
-              type="range"
-              min={0}
-              max={50000}
-              step={100}
-              onChange={(e) => setOrdersPerMonth(Number(e.target.value))}
-              className="h-2 w-full accent-ecotrace-600"
-            />
-          </label>
+          <Slider
+            label="Orders per month"
+            value={ordersPerMonth}
+            display={fmtInt(ordersPerMonth)}
+            min={0}
+            max={50000}
+            step={100}
+            onChange={setOrdersPerMonth}
+          />
+          <Slider
+            label="Average weight (kg)"
+            value={avgWeightKg}
+            display={`${fmtKg(avgWeightKg)} kg`}
+            min={0.1}
+            max={20}
+            step={0.1}
+            onChange={setAvgWeightKg}
+          />
+          <Slider
+            label="Average distance (km)"
+            value={avgDistanceKm}
+            display={`${fmtInt(avgDistanceKm)} km`}
+            min={10}
+            max={3000}
+            step={10}
+            onChange={setAvgDistanceKm}
+          />
 
           <label className="grid gap-2">
             <div className="flex items-center justify-between gap-4">
-              <span className="text-xs font-semibold text-slate-700">Average weight (kg)</span>
-              <span className="text-xs font-semibold text-slate-900">{fmtKg(avgWeightKg)} kg</span>
+              <span className="text-xs font-semibold text-slate-700">
+                Transport mode
+              </span>
             </div>
-            <input
-              value={avgWeightKg}
-              type="range"
-              min={0.1}
-              max={20}
-              step={0.1}
-              onChange={(e) => setAvgWeightKg(Number(e.target.value))}
-              className="h-2 w-full accent-ecotrace-600"
-            />
+            <select
+              value={vehicleType}
+              onChange={(e) => setVehicleType(e.target.value)}
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
+            >
+              <option value="truck">Truck (road)</option>
+              <option value="plane">Plane (air)</option>
+              <option value="train">Train (rail)</option>
+              <option value="ship">Ship (maritime)</option>
+            </select>
           </label>
 
-          <label className="grid gap-2">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-xs font-semibold text-slate-700">Average distance (km)</span>
-              <span className="text-xs font-semibold text-slate-900">{fmtInt(avgDistanceKm)} km</span>
-            </div>
-            <input
-              value={avgDistanceKm}
-              type="range"
-              min={10}
-              max={3000}
-              step={10}
-              onChange={(e) => setAvgDistanceKm(Number(e.target.value))}
-              className="h-2 w-full accent-ecotrace-600"
-            />
-          </label>
-
-          <label className="grid gap-2">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-xs font-semibold text-slate-700">% customers who offset</span>
-              <span className="text-xs font-semibold text-slate-900">{fmtInt(shareOffsets)}%</span>
-            </div>
-            <input
-              value={shareOffsets}
-              type="range"
-              min={0}
-              max={100}
-              step={5}
-              onChange={(e) => setShareOffsets(Number(e.target.value))}
-              className="h-2 w-full accent-ecotrace-600"
-            />
-          </label>
-
-          <label className="grid gap-2">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-xs font-semibold text-slate-700">Conversion uplift (assumption)</span>
-              <span className="text-xs font-semibold text-slate-900">{result.conversionLiftPct.toFixed(2)}%</span>
-            </div>
-            <input
-              value={conversionLiftBps}
-              type="range"
-              min={0}
-              max={300}
-              step={5}
-              onChange={(e) => setConversionLiftBps(Number(e.target.value))}
-              className="h-2 w-full accent-ecotrace-600"
-            />
-          </label>
-
-          <label className="grid gap-2">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-xs font-semibold text-slate-700">Compliance risk time saved (assumption)</span>
-              <span className="text-xs font-semibold text-slate-900">{fmtInt(result.complianceHours)} hrs/mo</span>
-            </div>
-            <input
-              value={complianceRiskHoursSaved}
-              type="range"
-              min={0}
-              max={120}
-              step={5}
-              onChange={(e) => setComplianceRiskHoursSaved(Number(e.target.value))}
-              className="h-2 w-full accent-ecotrace-600"
-            />
-          </label>
-        </div>
-
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
-          This calculator uses a conservative road logistics factor as a placeholder. In production, EcoTrace stores the exact emission factor,
-          source, and assumptions per transaction for auditability.
+          <Slider
+            label="% customers who offset"
+            value={shareOffsets}
+            display={`${fmtInt(shareOffsets)}%`}
+            min={0}
+            max={100}
+            step={5}
+            onChange={setShareOffsets}
+          />
+          <Slider
+            label="Monthly marketing cost (Ads)"
+            value={monthlyAdsCost}
+            display={fmtEur(monthlyAdsCost)}
+            min={0}
+            max={10000}
+            step={50}
+            onChange={setMonthlyAdsCost}
+          />
         </div>
       </div>
 
+      {/* Results */}
       <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
         <div className="text-sm font-semibold text-slate-950">Results</div>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="text-xs font-semibold text-slate-700">CO₂e per order</div>
-            <div className="mt-2 text-2xl font-bold tracking-tight text-ecotrace-800">{fmtKg(result.co2PerOrderKg)} kg</div>
-            <div className="mt-2 text-sm text-slate-600">
-              A = {fmtKg(result.activityTkm)} tkm · EF = {result.ef} kg/tkm
-            </div>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="text-xs font-semibold text-slate-700">Monthly transparency volume</div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{fmtInt(result.totalKg)} kg</div>
-            <div className="mt-2 text-sm text-slate-600">Audit-ready reporting per transaction</div>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="text-xs font-semibold text-slate-700">Estimated offsettable CO₂e</div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{fmtInt(result.totalOffsetsKg)} kg</div>
-            <div className="mt-2 text-sm text-slate-600">Based on checkout adoption rate</div>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="text-xs font-semibold text-slate-700">Reputation benefit (proxy)</div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{fmtInt(result.reputationScore)}</div>
-            <div className="mt-2 text-sm text-slate-600">Internal narrative metric (non-regulatory)</div>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="text-xs font-semibold text-slate-700">Compliance risk savings (proxy)</div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{fmtInt(result.complianceHours)} hrs/mo</div>
-            <div className="mt-2 text-sm text-slate-600">Reduced manual ESG data ops (assumption)</div>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="text-xs font-semibold text-slate-700">Conversion uplift (proxy)</div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">+{result.conversionLiftPct.toFixed(2)}%</div>
-            <div className="mt-2 text-sm text-slate-600">Radical transparency at checkout (assumption)</div>
-          </div>
+          <ResultCard
+            label="CO₂e per order"
+            value={`${fmtKg(result.co2PerOrderKg)} kg`}
+            sub={`A = ${fmtKg(result.activityTkm)} tkm · EF = ${result.ef} kg/tkm`}
+            accent
+          />
+          <ResultCard
+            label="Monthly CO₂e volume"
+            value={`${fmtInt(result.totalKg)} kg`}
+            sub="Audit-ready reporting per transaction"
+          />
+          <ResultCard
+            label="Tasa 1 – Compensation (monthly)"
+            value={fmtEur(result.tasa1Monthly)}
+            sub={`${fmtEur(result.tasa1PerOrder)} / order → offset projects`}
+          />
+          <ResultCard
+            label="Tasa 2 – Cash-flow return (monthly)"
+            value={fmtEur(result.tasa2Monthly)}
+            sub={`${fmtEur(result.tasa2PerOrder)} / order → your account`}
+            accent
+          />
         </div>
 
+        {/* Ads coverage bar */}
         <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
           <div className="flex items-center justify-between gap-4">
-            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Compliance risk reduction (proxy)</div>
-            <div className="text-xs font-semibold text-slate-700">{result.complianceRiskScore}%</div>
+            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Marketing cost coverage (Tasa 2 vs Ads)
+            </div>
+            <div className="text-xs font-semibold text-ecotrace-700">
+              {result.adsCoveragePct.toFixed(1)}%
+            </div>
           </div>
           <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-200">
             <div
-              className="h-full rounded-full bg-ecotrace-600"
-              style={{ width: `${result.complianceRiskScore}%` }}
+              className="h-full rounded-full bg-ecotrace-600 transition-all duration-300"
+              style={{ width: `${result.adsCoveragePct}%` }}
               aria-hidden="true"
             />
           </div>
           <div className="mt-3 text-sm text-slate-600">
-            A clean story for legal and sustainability teams: less manual work, better audit readiness.
+            {result.adsCoveragePct >= 100
+              ? "Your Tasa 2 recovery fully covers your monthly ad spend."
+              : `Tasa 2 covers ${fmtEur(result.tasa2Monthly)} of your ${fmtEur(result.ads)} monthly ad budget. Increase order volume or offset adoption to close the gap.`}
           </div>
+        </div>
+
+        <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+          Calculation based on auditable ISO Emission Factors. Operational
+          savings are an estimate of Tasa 2 reinvestment in green digital
+          assets.
         </div>
       </div>
     </div>
   );
 }
 
+function Slider(props: {
+  label: string;
+  value: number;
+  display: string;
+  min: number;
+  max: number;
+  step: number;
+  onChange: (v: number) => void;
+}) {
+  return (
+    <label className="grid gap-2">
+      <div className="flex items-center justify-between gap-4">
+        <span className="text-xs font-semibold text-slate-700">
+          {props.label}
+        </span>
+        <span className="text-xs font-semibold text-slate-900">
+          {props.display}
+        </span>
+      </div>
+      <input
+        value={props.value}
+        type="range"
+        min={props.min}
+        max={props.max}
+        step={props.step}
+        onChange={(e) => props.onChange(Number(e.target.value))}
+        className="h-2 w-full accent-ecotrace-600"
+      />
+    </label>
+  );
+}
+
+function ResultCard(props: {
+  label: string;
+  value: string;
+  sub: string;
+  accent?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-2xl border p-4 ${
+        props.accent
+          ? "border-ecotrace-200 bg-ecotrace-50"
+          : "border-slate-200 bg-white"
+      }`}
+    >
+      <div className="text-xs font-semibold text-slate-700">{props.label}</div>
+      <div
+        className={`mt-2 text-2xl font-bold tracking-tight ${
+          props.accent ? "text-ecotrace-800" : "text-slate-900"
+        }`}
+      >
+        {props.value}
+      </div>
+      <div className="mt-2 text-sm text-slate-600">{props.sub}</div>
+    </div>
+  );
+}
