@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from .config import settings
 from .database import Base, DATABASE_URL, engine, get_db
-from .models import Log, Store, User
+from .models import Log, Store, Transaction, User
 from .green_models import Activity, AuditTrail, Calculation, EmissionFactor, Facility, Membership, Organization, SpendCategory  # noqa: F401
 from .rate_limit import rate_limit
 from .compliance import CSRD_MVP_REQUIREMENTS
@@ -41,7 +41,7 @@ from .security import (
     hash_password,
     verify_password,
 )
-from .services.carbon import estimate_shipping_co2_kg, fallback_co2_kg
+from .services.carbon import EMISSION_FACTORS, estimate_shipping_co2_kg, fallback_co2_kg
 from .services.equivalents import kgco2_to_smartphone_charges, kgco2_to_tree_days
 from .services.geo import coords_for_zip, haversine_km
 
@@ -719,29 +719,45 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
 
     activity_tkm = (float(weight_kg) / 1000.0) * float(distance_km)
 
-    co2_kg = estimate_shipping_co2_kg(weight_kg=weight_kg, distance_km=distance_km, vehicle_type=payload.vehicle_type)
-    if co2_kg is None:
-        base_co2_kg = fallback_co2_kg(weight_kg=weight_kg, distance_km=distance_km)
+    v = (payload.vehicle_type or "truck").lower().strip()
+
+    co2_ext = estimate_shipping_co2_kg(weight_kg=weight_kg, distance_km=distance_km, vehicle_type=payload.vehicle_type)
+    if co2_ext is None:
+        base_co2_kg, fallback_ef = fallback_co2_kg(
+            weight_kg=weight_kg, distance_km=distance_km, vehicle_type=v,
+        )
         source = "fallback"
     else:
-        base_co2_kg = float(co2_kg)
+        base_co2_kg = float(co2_ext)
+        fallback_ef = None
         source = "carbon_interface"
 
-    v = (payload.vehicle_type or "truck").lower().strip()
     inferred_air = bool(float(distance_km) > 1000.0) or v in {"plane", "air"}
     radiative_forcing_multiplier = 1.9 if inferred_air else 1.0
     uncertainty_multiplier = 1.1 if float(distance_km) > 1000.0 else 1.0
     co2_kg = float(base_co2_kg) * float(radiative_forcing_multiplier) * float(uncertainty_multiplier)
 
     emission_factor_source = "DEFRA_2024_v1.2" if source == "fallback" else "CARBON_INTERFACE_live"
-    emission_factor_used = None
+    emission_factor_used: float | None = None
     if source == "fallback":
-        emission_factor_used = 0.12  # kg CO2e / (t·km)
+        emission_factor_used = fallback_ef
     else:
         try:
             emission_factor_used = float(base_co2_kg) / float(activity_tkm) if float(activity_tkm) > 0 else None
         except Exception:
             emission_factor_used = None
+
+    # --- Fee logic (Tasa 1 + Tasa 2) ---
+    CARBON_PRICE_EUR_PER_TONNE = 25.0
+    tasa_1_compensacion = round(co2_kg * (CARBON_PRICE_EUR_PER_TONNE / 1000.0), 4)
+
+    # Tasa 2: scaled fixed fee for the merchant [0.50€ – 1.50€]
+    # based on normalized weight/distance contribution.
+    weight_factor = min(float(weight_kg) / 10.0, 1.0)
+    distance_factor = min(float(distance_km) / 2000.0, 1.0)
+    tasa_2_devolucion = round(0.50 + 1.00 * (0.5 * weight_factor + 0.5 * distance_factor), 2)
+
+    total_tasa_cliente = round(tasa_1_compensacion + tasa_2_devolucion, 2)
 
     transport_mode = "truck_heavy"
     if v in {"train", "rail"}:
@@ -817,12 +833,25 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
         is_offset_purchased=bool(payload.is_offset_purchased),
     )
     db.add(log)
+
+    txn = Transaction(
+        store_id=store.id,
+        order_id=transaction_id,
+        carbon_kg=float(co2_kg),
+        tasa_1_compensacion=tasa_1_compensacion,
+        tasa_2_devolucion=tasa_2_devolucion,
+        status="confirmed" if bool(payload.is_offset_purchased) else "pending",
+    )
+    db.add(txn)
     db.commit()
 
     return CalculateResponse(
         co2_kg=float(co2_kg),
         distance_km=float(distance_km),
         source=source,
+        tasa_1_eur=tasa_1_compensacion,
+        tasa_2_eur=tasa_2_devolucion,
+        total_tasa_cliente=total_tasa_cliente,
         smartphone_charges=kgco2_to_smartphone_charges(float(co2_kg)),
         tree_days=kgco2_to_tree_days(float(co2_kg)),
     )

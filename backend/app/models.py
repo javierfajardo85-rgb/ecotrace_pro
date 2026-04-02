@@ -1,7 +1,8 @@
 import datetime as dt
+import enum
 import uuid
 
-from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, Enum, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .database import Base
@@ -75,4 +76,32 @@ class Log(Base):
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, nullable=False, index=True)
 
     store: Mapped[Store] = relationship(back_populates="logs")
+
+
+class TransactionStatus(str, enum.Enum):
+    pending = "pending"
+    confirmed = "confirmed"
+
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    store_id: Mapped[int] = mapped_column(ForeignKey("stores.id"), nullable=False, index=True)
+    order_id: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
+    carbon_kg: Mapped[float] = mapped_column(Float, nullable=False)
+    tasa_1_compensacion: Mapped[float] = mapped_column(Float, nullable=False)
+    tasa_2_devolucion: Mapped[float] = mapped_column(Float, nullable=False)
+    status: Mapped[str] = mapped_column(
+        Enum(TransactionStatus, native_enum=False, length=20),
+        nullable=False,
+        default=TransactionStatus.pending,
+    )
+    created_at: Mapped[dt.datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, nullable=False, index=True,
+    )
+
+    store: Mapped[Store] = relationship()
 

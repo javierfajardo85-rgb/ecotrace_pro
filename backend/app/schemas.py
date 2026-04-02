@@ -45,6 +45,10 @@ class CalculateResponse(BaseModel):
     distance_km: float
     source: str
 
+    tasa_1_eur: float
+    tasa_2_eur: float
+    total_tasa_cliente: float
+
     smartphone_charges: int
     tree_days: int
 

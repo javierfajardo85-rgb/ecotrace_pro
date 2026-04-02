@@ -55,12 +55,27 @@ def estimate_shipping_co2_kg(*, weight_kg: float, distance_km: float, vehicle_ty
         return None
 
 
-def fallback_co2_kg(*, weight_kg: float, distance_km: float) -> float:
+EMISSION_FACTORS: dict[str, float] = {
+    "plane": 0.500,
+    "truck": 0.105,
+    "train": 0.025,
+    "ship":  0.012,
+    "default": 0.120,
+}
+
+
+def fallback_co2_kg(
+    *,
+    weight_kg: float,
+    distance_km: float,
+    vehicle_type: str = "default",
+) -> tuple[float, float]:
     """
-    Fallback factor: 0.12 kg / (t·km).
-    weight_kg -> tonnes = weight_kg/1000
+    ISO 14064-aligned deterministic fallback.
+    Returns (co2_kg, emission_factor_used).
     """
-    ef = 0.12
+    v = (vehicle_type or "").lower().strip()
+    ef = EMISSION_FACTORS.get(v, EMISSION_FACTORS["default"])
     tonnes = weight_kg / 1000.0
-    return distance_km * tonnes * ef
+    return distance_km * tonnes * ef, ef
 
