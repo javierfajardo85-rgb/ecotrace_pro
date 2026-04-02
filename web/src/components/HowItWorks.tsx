@@ -310,7 +310,7 @@ function EcoLogicAlgorithm() {
         </div>
       </motion.div>
 
-      {/* Fee split — balanced values */}
+      {/* Fee split — offset-first priority: Fee 1 > Fee 2 */}
       <motion.div
         className="mt-4 grid grid-cols-2 gap-3"
         initial={{ opacity: 0 }}
@@ -319,13 +319,27 @@ function EcoLogicAlgorithm() {
       >
         <div className="rounded-xl border border-brand-green/10 bg-brand-green/[0.04] px-4 py-3 text-center">
           <div className="text-[10px] font-semibold text-brand-green">{t("common.fee1Short")}</div>
-          <div className="mt-0.5 text-sm font-bold text-brand-green">€0.10</div>
+          <div className="mt-0.5 text-sm font-bold text-brand-green">€0.16</div>
           <div className="mt-0.5 text-[9px] text-slate-400">{t("howItWorks.ecoLogicFee1Sub")}</div>
         </div>
         <div className="rounded-xl border border-brand-gold/15 bg-brand-gold/[0.06] px-4 py-3 text-center">
           <div className="text-[10px] font-semibold text-brand-gold-dark">{t("common.fee2Short")}</div>
-          <div className="mt-0.5 text-sm font-bold text-brand-gold-dark">€0.68</div>
+          <div className="mt-0.5 text-sm font-bold text-brand-gold-dark">€0.04</div>
           <div className="mt-0.5 text-[9px] text-slate-400">{t("howItWorks.ecoLogicFee2Sub")}</div>
+        </div>
+      </motion.div>
+
+      {/* Total Green Fee */}
+      <motion.div
+        className="mt-3 flex items-center justify-between rounded-xl border-2 border-brand-green/20 bg-brand-green/[0.03] px-5 py-3"
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.9, ease }}
+      >
+        <div className="text-[10px] font-bold text-brand-green">{t("howItWorks.ecoLogicTotalLabel")}</div>
+        <div className="flex items-center gap-2">
+          <span className="text-base font-extrabold tracking-tight text-brand-green">€0.20</span>
+          <span className="text-[9px] text-slate-400">{t("howItWorks.ecoLogicTotalSub")}</span>
         </div>
       </motion.div>
     </div>

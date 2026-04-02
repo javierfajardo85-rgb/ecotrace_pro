@@ -69,16 +69,16 @@ export function ShippingMockup() {
             </div>
             <div className="text-[10px] text-slate-400">2–4 business days</div>
           </div>
-          <span className="text-lg font-bold tabular-nums tracking-tight text-brand-green">€2.60</span>
+          <span className="text-lg font-bold tabular-nums tracking-tight text-brand-green">€2.40</span>
         </div>
         <div className="mt-3 flex items-center justify-between gap-2 px-1 text-[10px] text-slate-400">
           <span className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-            {t("hero.widgetFee1")} <span className="font-semibold text-brand-green">€0.10</span>
+            {t("hero.widgetFee1")} <span className="font-semibold text-brand-green">€0.16</span>
           </span>
           <span className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" />
-            {t("hero.widgetFee2")} <span className="font-semibold text-brand-gold-dark">€0.30</span>
+            {t("hero.widgetFee2")} <span className="font-semibold text-brand-gold-dark">€0.04</span>
           </span>
         </div>
       </div>

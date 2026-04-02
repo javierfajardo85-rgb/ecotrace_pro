@@ -8,7 +8,7 @@ import { Reveal, Stagger } from "@/components/motion/Motion";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const PRICE_STANDARD = 2.2;
-const PRICE_ECO = 2.6;
+const PRICE_ECO = 2.4;
 
 function EuroIcon({ className }: { className?: string }) {
   return (
@@ -226,11 +226,11 @@ function ShippingRateWidget() {
               <div className="flex items-center justify-between gap-2 text-[10px]">
                 <span className="flex items-center gap-1.5 text-slate-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-                  {t("hero.widgetFee1")} <span className="font-semibold text-brand-green">€0.10</span>
+                  {t("hero.widgetFee1")} <span className="font-semibold text-brand-green">€0.16</span>
                 </span>
                 <span className="flex items-center gap-1.5 text-slate-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" />
-                  {t("hero.widgetFee2")} <span className="font-semibold text-brand-gold-dark">€0.30</span>
+                  {t("hero.widgetFee2")} <span className="font-semibold text-brand-gold-dark">€0.04</span>
                 </span>
               </div>
             </div>

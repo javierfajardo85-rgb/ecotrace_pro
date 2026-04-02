@@ -27,9 +27,10 @@ const EMISSION_FACTORS: Record<string, number> = {
 };
 
 const EF_TRUCK = 0.105;
-const CARBON_PRICE_EUR_PER_TONNE = 25;
+const CERTIFIED_OFFSET_EUR_PER_TONNE = 700;
 const FEE1_FIXED = 0.1;
 const FEE1_COMMISSION_PCT = 0.05;
+const FEE2_RATIO = 0.25;
 const LONG_HAUL_RATIO = 0.8;
 const LAST_MILE_RATIO = 0.2;
 
@@ -40,7 +41,6 @@ export function RoiCalculator() {
   const [avgDistanceKm, setAvgDistanceKm] = useState(620);
   const [vehicleType, setVehicleType] = useState("truck");
   const [fillFactor, setFillFactor] = useState(0.7);
-  const [avgOrderValue, setAvgOrderValue] = useState(45);
   const [shareOffsets, setShareOffsets] = useState(25);
   const [monthlyAdsCost, setMonthlyAdsCost] = useState(500);
 
@@ -49,7 +49,6 @@ export function RoiCalculator() {
     const w = clamp(Number(avgWeightKg) || 0, 0, 200);
     const d = clamp(Number(avgDistanceKm) || 0, 0, 50_000);
     const cf = clamp(Number(fillFactor) || 0, 0.1, 1);
-    const orderVal = clamp(Number(avgOrderValue) || 0, 1, 10_000);
     const share = clamp(Number(shareOffsets) || 0, 0, 100) / 100;
     const ads = clamp(Number(monthlyAdsCost) || 0, 0, 100_000);
 
@@ -64,16 +63,11 @@ export function RoiCalculator() {
     const co2PerOrderKg = co2LongHaul + co2LastMile;
     const totalKg = co2PerOrderKg * orders;
 
-    // Fee 1: Base carbon cost + €0.10 fixed + 5% variable commission
-    const baseCarbonCost = co2PerOrderKg * (CARBON_PRICE_EUR_PER_TONNE / 1000);
-    const fee1PerOrder = baseCarbonCost + FEE1_FIXED + baseCarbonCost * FEE1_COMMISSION_PCT;
+    const carbonBaseCost = co2PerOrderKg * (CERTIFIED_OFFSET_EUR_PER_TONNE / 1000);
+    const fee1PerOrder = carbonBaseCost + FEE1_FIXED + (carbonBaseCost + FEE1_FIXED) * FEE1_COMMISSION_PCT;
     const fee1Monthly = fee1PerOrder * orders * share;
 
-    // Fee 2: 1-2% of order value (interpolated by weight & distance)
-    const wFactor = Math.min(w / 10, 1);
-    const dFactor = Math.min(d / 2000, 1);
-    const fee2Pct = 0.01 + 0.01 * (0.5 * wFactor + 0.5 * dFactor);
-    const fee2PerOrder = orderVal * fee2Pct;
+    const fee2PerOrder = fee1PerOrder * FEE2_RATIO;
     const fee2Monthly = fee2PerOrder * orders * share;
 
     const totalFeePerOrder = fee1PerOrder + fee2PerOrder;
@@ -90,18 +84,16 @@ export function RoiCalculator() {
       co2LastMile,
       co2PerOrderKg,
       totalKg,
-      baseCarbonCost,
+      carbonBaseCost,
       fee1PerOrder,
       fee1Monthly,
-      fee2Pct,
       fee2PerOrder,
       fee2Monthly,
       totalFeePerOrder,
       adsCoveragePct,
       ads,
-      orderVal,
     };
-  }, [ordersPerMonth, avgWeightKg, avgDistanceKm, vehicleType, fillFactor, avgOrderValue, shareOffsets, monthlyAdsCost]);
+  }, [ordersPerMonth, avgWeightKg, avgDistanceKm, vehicleType, fillFactor, shareOffsets, monthlyAdsCost]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
@@ -115,7 +107,6 @@ export function RoiCalculator() {
           <Slider label={t("roi.ordersPerMonth")} value={ordersPerMonth} display={fmtInt(ordersPerMonth)} min={0} max={50000} step={100} onChange={setOrdersPerMonth} />
           <Slider label={t("roi.avgWeight")} value={avgWeightKg} display={`${fmtKg(avgWeightKg)} kg`} min={0.1} max={20} step={0.1} onChange={setAvgWeightKg} />
           <Slider label={t("roi.avgDistance")} value={avgDistanceKm} display={`${fmtInt(avgDistanceKm)} km`} min={10} max={3000} step={10} onChange={setAvgDistanceKm} />
-          <Slider label={t("roi.avgOrderValue")} value={avgOrderValue} display={fmtEur(avgOrderValue)} min={5} max={500} step={5} onChange={setAvgOrderValue} />
           <Slider label={t("roi.fillFactor")} value={fillFactor} display={fillFactor.toFixed(2)} min={0.1} max={1} step={0.05} onChange={setFillFactor} />
 
           <label className="grid gap-2">
@@ -195,9 +186,9 @@ export function RoiCalculator() {
               sub={t("roi.monthlyCO2Sub")}
             />
 
-            {/* Fee 1 — green accent */}
+            {/* Certified Impact Offset — green accent */}
             <div className="rounded-xl border border-brand-green/15 bg-brand-green/[0.04] p-4">
-              <div className="text-xs font-bold text-brand-green">{t("roi.fee1Monthly")}</div>
+              <div className="text-[10px] font-bold text-brand-green">{t("roi.fee1Monthly")}</div>
               <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
                 {fmtEur(result.fee1Monthly)}
               </div>
@@ -207,26 +198,32 @@ export function RoiCalculator() {
               <div className="mt-1 text-[10px] text-brand-green/60">{t("roi.fee1Detail")}</div>
             </div>
 
-            {/* Fee 2 — gold hero card */}
-            <div className="rounded-xl border-2 border-brand-gold/30 bg-brand-gold/[0.06] p-4">
-              <div className="text-xs font-bold text-brand-gold-dark">{t("roi.fee2Monthly")}</div>
-              <div className="mt-2 text-3xl font-extrabold tracking-tight text-slate-950">
+            {/* Green Operational Credit™ — gold accent */}
+            <div className="rounded-xl border border-brand-gold/20 bg-brand-gold/[0.04] p-4">
+              <div className="text-[10px] font-bold text-brand-gold-dark">{t("roi.fee2Monthly")}</div>
+              <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
                 {fmtEur(result.fee2Monthly)}
               </div>
               <div className="mt-2 text-sm text-slate-600">
                 {fmtEur(result.fee2PerOrder)} {t("roi.fee2PerOrder")}
               </div>
-              <div className="mt-1 text-[10px] text-brand-gold-dark/60">
-                {t("roi.fee2Detail", {
-                  pct: (result.fee2Pct * 100).toFixed(1),
-                  orderValue: result.orderVal.toFixed(0),
-                })}
-              </div>
+              <div className="mt-1 text-[10px] text-brand-gold-dark/60">{t("roi.fee2Detail")}</div>
+            </div>
+          </div>
+
+          {/* Total Green Fee — prominent */}
+          <div className="mt-5 flex items-center justify-between rounded-xl border-2 border-brand-green/20 bg-brand-green/[0.03] px-5 py-4">
+            <div>
+              <div className="text-xs font-bold text-brand-green">{t("roi.totalGreenFee")}</div>
+              <div className="mt-0.5 text-[10px] text-slate-500">{t("roi.totalGreenFeeSub")}</div>
+            </div>
+            <div className="text-2xl font-extrabold tracking-tight text-brand-green">
+              {fmtEur(result.totalFeePerOrder)}
             </div>
           </div>
 
           {/* Ads coverage bar */}
-          <div className="mt-6 rounded-xl border border-slate-100 bg-slate-50 p-5">
+          <div className="mt-5 rounded-xl border border-slate-100 bg-slate-50 p-5">
             <div className="flex items-center justify-between gap-4">
               <div className="text-xs font-medium uppercase tracking-wide text-slate-400">
                 {t("roi.coverageLabel")}
