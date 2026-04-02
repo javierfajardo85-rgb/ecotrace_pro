@@ -28,9 +28,10 @@ const EMISSION_FACTORS: Record<string, number> = {
 
 const EF_TRUCK = 0.105;
 const CERTIFIED_OFFSET_EUR_PER_TONNE = 700;
-const FEE1_FIXED = 0.1;
-const FEE1_COMMISSION_PCT = 0.05;
-const FEE2_RATIO = 0.25;
+const FEE1_AUDIT_FIXED = 0.1;
+const FEE1_SERVICE_PCT = 0.05;
+const FEE2_REINVEST_RATIO = 0.75;
+const FEE2_VERIFY_PCT = 0.05;
 const LONG_HAUL_RATIO = 0.8;
 const LAST_MILE_RATIO = 0.2;
 
@@ -63,11 +64,17 @@ export function RoiCalculator() {
     const co2PerOrderKg = co2LongHaul + co2LastMile;
     const totalKg = co2PerOrderKg * orders;
 
-    const carbonBaseCost = co2PerOrderKg * (CERTIFIED_OFFSET_EUR_PER_TONNE / 1000);
-    const fee1PerOrder = carbonBaseCost + FEE1_FIXED + (carbonBaseCost + FEE1_FIXED) * FEE1_COMMISSION_PCT;
+    // Fee 1: A (carbon cost) + B (audit fixed) + 5% of A
+    const carbonCostA = co2PerOrderKg * (CERTIFIED_OFFSET_EUR_PER_TONNE / 1000);
+    const auditFixedB = FEE1_AUDIT_FIXED;
+    const serviceCommission = carbonCostA * FEE1_SERVICE_PCT;
+    const fee1PerOrder = carbonCostA + auditFixedB + serviceCommission;
     const fee1Monthly = fee1PerOrder * orders * share;
 
-    const fee2PerOrder = fee1PerOrder * FEE2_RATIO;
+    // Fee 2: 75% of A (reinvestment credit) + 5% verification on that
+    const reinvestBase = carbonCostA * FEE2_REINVEST_RATIO;
+    const verifyCommission = reinvestBase * FEE2_VERIFY_PCT;
+    const fee2PerOrder = reinvestBase + verifyCommission;
     const fee2Monthly = fee2PerOrder * orders * share;
 
     const totalFeePerOrder = fee1PerOrder + fee2PerOrder;
@@ -84,7 +91,11 @@ export function RoiCalculator() {
       co2LastMile,
       co2PerOrderKg,
       totalKg,
-      carbonBaseCost,
+      carbonCostA,
+      auditFixedB,
+      serviceCommission,
+      reinvestBase,
+      verifyCommission,
       fee1PerOrder,
       fee1Monthly,
       fee2PerOrder,
@@ -186,7 +197,7 @@ export function RoiCalculator() {
               sub={t("roi.monthlyCO2Sub")}
             />
 
-            {/* Certified Impact Offset — green accent */}
+            {/* Certified Impact Offset — green accent with breakdown */}
             <div className="rounded-xl border border-brand-green/15 bg-brand-green/[0.04] p-4">
               <div className="text-[10px] font-bold text-brand-green">{t("roi.fee1Monthly")}</div>
               <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
@@ -195,10 +206,23 @@ export function RoiCalculator() {
               <div className="mt-2 text-sm text-slate-600">
                 {fmtEur(result.fee1PerOrder)} {t("roi.fee1PerOrder")}
               </div>
-              <div className="mt-1 text-[10px] text-brand-green/60">{t("roi.fee1Detail")}</div>
+              <div className="mt-2 space-y-1 border-t border-brand-green/10 pt-2">
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-slate-500">{t("howItWorks.breakdown.fee1CarbonOffset")} (A)</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.carbonCostA)}</span>
+                </div>
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-slate-500">{t("howItWorks.breakdown.fee1AuditFee")} (B)</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.auditFixedB)}</span>
+                </div>
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-slate-500">{t("howItWorks.breakdown.fee1Commission")}</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.serviceCommission)}</span>
+                </div>
+              </div>
             </div>
 
-            {/* Green Operational Credit™ — gold accent */}
+            {/* Green Operational Credit™ — gold accent with breakdown */}
             <div className="rounded-xl border border-brand-gold/20 bg-brand-gold/[0.04] p-4">
               <div className="text-[10px] font-bold text-brand-gold-dark">{t("roi.fee2Monthly")}</div>
               <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
@@ -207,7 +231,16 @@ export function RoiCalculator() {
               <div className="mt-2 text-sm text-slate-600">
                 {fmtEur(result.fee2PerOrder)} {t("roi.fee2PerOrder")}
               </div>
-              <div className="mt-1 text-[10px] text-brand-gold-dark/60">{t("roi.fee2Detail")}</div>
+              <div className="mt-2 space-y-1 border-t border-brand-gold/10 pt-2">
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-slate-500">{t("howItWorks.breakdown.fee2EcoCredit")} (75% A)</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.reinvestBase)}</span>
+                </div>
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-slate-500">{t("howItWorks.breakdown.fee2Verification")}</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.verifyCommission)}</span>
+                </div>
+              </div>
             </div>
           </div>
 

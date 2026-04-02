@@ -99,10 +99,19 @@
     "ecoLogicSegLastMileVal": "84 km · truck",
     "ecoLogicResultLabel": "Result",
     "ecoLogicResultSub": "Estimated CO₂e emissions",
-    "ecoLogicFee1Sub": "€0.05 + €0.10 fixed + 5%",
-    "ecoLogicFee2Sub": "25% of offset fee",
+    "ecoLogicFee1Sub": "A + €0.10 + 5% of A",
+    "ecoLogicFee2Sub": "75% of A × 1.05",
     "ecoLogicTotalLabel": "Total Green Fee",
-    "ecoLogicTotalSub": "Added to shipping rate"
+    "ecoLogicTotalSub": "Added to shipping rate",
+    "ecoLogicClickToExpand": "Click for open-book breakdown",
+    "breakdown": {
+      "fee1CarbonOffset": "Carbon Offset Cost",
+      "fee1AuditFee": "Audit Fixed Fee",
+      "fee1Commission": "EcoTrace Service Fee (5%)",
+      "fee2EcoCredit": "Eco Energy Credit",
+      "fee2Verification": "Verification Fee (5%)",
+      "total": "TOTAL"
+    }
   },
   "solutions": {
     "title": "Three solutions, one platform",
@@ -167,9 +176,9 @@
     "fee1Monthly": "Certified Impact Offset (monthly)",
     "fee2Monthly": "Green Operational Credit™ (monthly)",
     "fee1PerOrder": "/ order → offset projects",
-    "fee1Detail": "Carbon cost + €0.10 fixed + 5% commission",
+    "fee1Detail": "Carbon cost (A) + €0.10 audit + 5% of A",
     "fee2PerOrder": "/ order → your account",
-    "fee2Detail": "25% of offset fee → merchant credit",
+    "fee2Detail": "75% of A + 5% verification fee",
     "totalGreenFee": "Total Green Fee (per order)",
     "totalGreenFeeSub": "Added to Eco+ Shipping rate",
     "coverageLabel": "Marketing cost coverage (Green Credit vs Ads)",

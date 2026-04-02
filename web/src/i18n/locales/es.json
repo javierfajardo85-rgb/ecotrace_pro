@@ -99,10 +99,19 @@
     "ecoLogicSegLastMileVal": "84 km · camión",
     "ecoLogicResultLabel": "Resultado",
     "ecoLogicResultSub": "Emisiones CO₂e estimadas",
-    "ecoLogicFee1Sub": "€0.05 + €0.10 fijo + 5%",
-    "ecoLogicFee2Sub": "25% de la tasa de compensación",
+    "ecoLogicFee1Sub": "A + €0.10 + 5% de A",
+    "ecoLogicFee2Sub": "75% de A × 1.05",
     "ecoLogicTotalLabel": "Tasa Verde Total",
-    "ecoLogicTotalSub": "Se añade a la tarifa de envío"
+    "ecoLogicTotalSub": "Se añade a la tarifa de envío",
+    "ecoLogicClickToExpand": "Clic para ver desglose abierto",
+    "breakdown": {
+      "fee1CarbonOffset": "Compensación Carbono",
+      "fee1AuditFee": "Coste Auditoría (Fijo)",
+      "fee1Commission": "Comisión EcoTrace (5%)",
+      "fee2EcoCredit": "Crédito Energía Eco",
+      "fee2Verification": "Comisión Verificación (5%)",
+      "total": "TOTAL"
+    }
   },
   "solutions": {
     "title": "Tres soluciones, una plataforma",
@@ -167,9 +176,9 @@
     "fee1Monthly": "Compensación de Impacto Certificada (mensual)",
     "fee2Monthly": "Crédito Operativo Verde™ (mensual)",
     "fee1PerOrder": "/ pedido → proyectos de compensación",
-    "fee1Detail": "Coste de carbono + €0.10 fijo + 5% comisión",
+    "fee1Detail": "Coste carbono (A) + €0.10 auditoría + 5% de A",
     "fee2PerOrder": "/ pedido → tu cuenta",
-    "fee2Detail": "25% de la tasa de compensación → crédito comercio",
+    "fee2Detail": "75% de A + 5% comisión verificación",
     "totalGreenFee": "Tasa Verde Total (por pedido)",
     "totalGreenFeeSub": "Se añade a la tarifa Eco+ Shipping",
     "coverageLabel": "Cobertura de coste de marketing (Crédito Verde vs Ads)",

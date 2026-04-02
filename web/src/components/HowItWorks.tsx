@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Reveal } from "@/components/motion/Motion";
 
@@ -202,6 +202,98 @@ function Tasa2Column() {
   );
 }
 
+function ShieldIcon({ className }: { className?: string }) {
+  return (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+}
+
+function FeeBreakdownCard({
+  variant,
+  title,
+  total,
+  subtitle,
+  lines,
+  totalLabel,
+  totalValue,
+  expandHint,
+}: {
+  variant: "green" | "gold";
+  title: string;
+  total: string;
+  subtitle: string;
+  lines: { label: string; value: string; badge?: string }[];
+  totalLabel: string;
+  totalValue: string;
+  expandHint: string;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const isGreen = variant === "green";
+
+  const borderClass = isGreen ? "border-brand-green/10" : "border-brand-gold/15";
+  const bgClass = isGreen ? "bg-brand-green/[0.04]" : "bg-brand-gold/[0.06]";
+  const titleClass = isGreen ? "text-brand-green" : "text-brand-gold-dark";
+  const totalClass = isGreen ? "text-brand-green" : "text-brand-gold-dark";
+  const dotClass = isGreen ? "bg-brand-green" : "bg-brand-gold";
+
+  return (
+    <div
+      className={`cursor-pointer rounded-xl border ${borderClass} ${bgClass} px-4 py-3 transition-shadow hover:shadow-sm`}
+      onClick={() => setExpanded(!expanded)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setExpanded(!expanded); }}
+    >
+      <div className="text-center">
+        <div className={`text-[10px] font-semibold ${titleClass}`}>{title}</div>
+        <div className={`mt-0.5 text-sm font-bold ${totalClass}`}>{total}</div>
+        <div className="mt-0.5 text-[9px] text-slate-400">{subtitle}</div>
+      </div>
+
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease }}
+            className="overflow-hidden"
+          >
+            <div className="mt-3 space-y-1.5 border-t border-slate-100 pt-3">
+              {lines.map((line) => (
+                <div key={line.label} className="flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-1.5 text-[10px] text-slate-600">
+                    <span className={`h-1 w-1 shrink-0 rounded-full ${dotClass}`} />
+                    {line.label}
+                    {line.badge && (
+                      <span className="inline-flex items-center gap-0.5 rounded bg-brand-green/10 px-1 py-0.5 text-[8px] font-bold text-brand-green">
+                        <ShieldIcon className="text-brand-green" />
+                        {line.badge}
+                      </span>
+                    )}
+                  </span>
+                  <span className="text-[10px] font-semibold text-slate-950 tabular-nums">{line.value}</span>
+                </div>
+              ))}
+
+              <div className={`mt-1.5 flex items-center justify-between border-t pt-1.5 ${isGreen ? "border-brand-green/10" : "border-brand-gold/15"}`}>
+                <span className={`text-[10px] font-bold ${titleClass}`}>{totalLabel}</span>
+                <span className={`text-xs font-extrabold ${totalClass}`}>{totalValue}</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {!expanded && (
+        <div className="mt-2 text-center text-[8px] text-slate-400">{expandHint}</div>
+      )}
+    </div>
+  );
+}
+
 function EcoLogicAlgorithm() {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
@@ -310,23 +402,40 @@ function EcoLogicAlgorithm() {
         </div>
       </motion.div>
 
-      {/* Fee split — offset-first priority: Fee 1 > Fee 2 */}
+      {/* Fee split — expandable "Open Book" breakdown cards */}
       <motion.div
         className="mt-4 grid grid-cols-2 gap-3"
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: 0.4, delay: 0.8, ease }}
       >
-        <div className="rounded-xl border border-brand-green/10 bg-brand-green/[0.04] px-4 py-3 text-center">
-          <div className="text-[10px] font-semibold text-brand-green">{t("common.fee1Short")}</div>
-          <div className="mt-0.5 text-sm font-bold text-brand-green">€0.16</div>
-          <div className="mt-0.5 text-[9px] text-slate-400">{t("howItWorks.ecoLogicFee1Sub")}</div>
-        </div>
-        <div className="rounded-xl border border-brand-gold/15 bg-brand-gold/[0.06] px-4 py-3 text-center">
-          <div className="text-[10px] font-semibold text-brand-gold-dark">{t("common.fee2Short")}</div>
-          <div className="mt-0.5 text-sm font-bold text-brand-gold-dark">€0.04</div>
-          <div className="mt-0.5 text-[9px] text-slate-400">{t("howItWorks.ecoLogicFee2Sub")}</div>
-        </div>
+        <FeeBreakdownCard
+          variant="green"
+          title={t("common.fee1Short")}
+          total="€0.16"
+          subtitle={t("howItWorks.ecoLogicFee1Sub")}
+          lines={[
+            { label: t("howItWorks.breakdown.fee1CarbonOffset"), value: "€0.05" },
+            { label: t("howItWorks.breakdown.fee1AuditFee"), value: "€0.10", badge: "ISO 14064" },
+            { label: t("howItWorks.breakdown.fee1Commission"), value: "€0.0025" },
+          ]}
+          totalLabel={t("howItWorks.breakdown.total")}
+          totalValue="€0.16"
+          expandHint={t("howItWorks.ecoLogicClickToExpand")}
+        />
+        <FeeBreakdownCard
+          variant="gold"
+          title={t("common.fee2Short")}
+          total="€0.04"
+          subtitle={t("howItWorks.ecoLogicFee2Sub")}
+          lines={[
+            { label: t("howItWorks.breakdown.fee2EcoCredit"), value: "€0.038" },
+            { label: t("howItWorks.breakdown.fee2Verification"), value: "€0.002" },
+          ]}
+          totalLabel={t("howItWorks.breakdown.total")}
+          totalValue="€0.04"
+          expandHint={t("howItWorks.ecoLogicClickToExpand")}
+        />
       </motion.div>
 
       {/* Total Green Fee */}
