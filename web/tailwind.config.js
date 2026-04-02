@@ -30,6 +30,13 @@ module.exports = {
           800: "#065f46",
           900: "#064e3b",
         },
+        brand: {
+          green: "#0A3D2A",
+          "green-light": "#0F5C3F",
+          gold: "#D4AF77",
+          "gold-light": "#E8D5B5",
+          "gold-dark": "#B8924E",
+        },
       },
       boxShadow: {
         soft: "0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04)",

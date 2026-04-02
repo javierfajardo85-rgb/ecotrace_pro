@@ -1,6 +1,7 @@
 "use client";
 
 import { DashboardPreview } from "@/components/DashboardPreview";
+import { Hero } from "@/components/Hero";
 import { RoiCalculator } from "@/components/RoiCalculator";
 import { WidgetPreview } from "@/components/WidgetPreview";
 import { HoverLift, Reveal, Stagger } from "@/components/motion/Motion";
@@ -26,70 +27,12 @@ function ShieldIcon() {
 
 export function LandingPage() {
   return (
-    <div className="bg-slate-50 text-slate-900">
+    <div className="bg-white text-slate-900">
       <main>
-        {/* ━━━ Hero ━━━ */}
-        <section className="relative overflow-hidden">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(900px 520px at 18% 8%, rgba(6,78,59,0.06), transparent 60%), radial-gradient(900px 520px at 86% 12%, rgba(16,185,129,0.04), transparent 60%), linear-gradient(180deg, #ffffff, #f8fafc)",
-            }}
-          />
-
-          <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-28">
-            <div className="mx-auto max-w-3xl text-center">
-              <Stagger>
-                <Reveal>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-slate-100 bg-white px-3.5 py-1 text-xs font-medium text-slate-500 shadow-sm">
-                    <span
-                      className="h-1.5 w-1.5 rounded-full bg-ecotrace-600"
-                      aria-hidden="true"
-                    />
-                    ISO 14064 · ISO 14067 · EU 2026 Compliant
-                  </div>
-                </Reveal>
-
-                <Reveal>
-                  <h1 className="mt-8 text-4xl sm:text-5xl lg:text-6xl">
-                    Recover your E-commerce Operating Margin with Audited
-                    Sustainability.
-                  </h1>
-                </Reveal>
-
-                <Reveal>
-                  <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
-                    Collect a Green Fee from your customers to auto-subsidize
-                    your Google Ads and Shopify costs. Compliance with EU 2026
-                    regulations, without touching your cash flow.
-                  </p>
-                </Reveal>
-
-                <Reveal>
-                  <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-                    <a
-                      href="#solutions"
-                      className="inline-flex h-12 items-center justify-center rounded-xl bg-ecotrace-900 px-7 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-slate-800"
-                    >
-                      Install EcoTrace for Shopify
-                    </a>
-                    <a
-                      href="#roi"
-                      className="inline-flex h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-7 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-slate-50"
-                    >
-                      View ROI Calculator
-                    </a>
-                  </div>
-                </Reveal>
-              </Stagger>
-            </div>
-          </div>
-        </section>
+        <Hero />
 
         {/* ━━━ How it works ━━━ */}
-        <section id="how-it-works" className="border-t border-slate-100">
+        <section id="how-it-works" className="border-t border-slate-100 bg-slate-50/40">
           <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
               <h2 className="text-3xl tracking-tight">How it works</h2>
@@ -302,7 +245,7 @@ export function LandingPage() {
         </section>
 
         {/* ━━━ The Profitability Engine ━━━ */}
-        <section id="merchants" className="border-t border-slate-100">
+        <section id="merchants" className="border-t border-slate-100 bg-slate-50/40">
           <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
               <h2 className="text-3xl tracking-tight">
@@ -362,7 +305,7 @@ export function LandingPage() {
         </section>
 
         {/* ━━━ Trust & Compliance ━━━ */}
-        <section id="resources" className="border-t border-slate-100">
+        <section id="resources" className="border-t border-slate-100 bg-slate-50/40">
           <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
               <h2 className="text-3xl tracking-tight">Trust & compliance</h2>
