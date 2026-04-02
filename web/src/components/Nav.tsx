@@ -52,10 +52,8 @@ export function Nav() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b bg-white/80 backdrop-blur-md transition-[border-color,box-shadow] duration-300 ${
-        scrolled
-          ? "border-slate-200/90 shadow-[0_8px_30px_rgba(15,23,42,0.06)]"
-          : "border-slate-100/80 shadow-none"
+      className={`sticky top-0 z-50 border-b bg-white/80 backdrop-blur-md transition-[border-color] duration-300 ${
+        scrolled ? "border-gray-100" : "border-transparent"
       }`}
     >
       <div className="relative z-50 mx-auto max-w-7xl px-6">

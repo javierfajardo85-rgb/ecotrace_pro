@@ -389,7 +389,7 @@ export function Hero() {
         style={{ background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(10,61,42,0.04), transparent 70%)" }}
       />
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-28 pt-32 sm:pt-36 lg:pb-32 lg:pt-40">
+      <div className="relative mx-auto max-w-6xl px-6 pb-28 pt-20 lg:pb-32">
         <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
           <Stagger>
             <Reveal>
