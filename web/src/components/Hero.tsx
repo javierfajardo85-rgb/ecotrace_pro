@@ -2,25 +2,14 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Reveal, Stagger } from "@/components/motion/Motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-/* ── Inline SVG icons ── */
-
 function EuroIcon({ className }: { className?: string }) {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <circle cx="12" cy="12" r="10" />
       <path d="M8 12h5M8 9h7a4 4 0 0 1 0 6H8" />
     </svg>
@@ -29,17 +18,7 @@ function EuroIcon({ className }: { className?: string }) {
 
 function LeafIcon({ className }: { className?: string }) {
   return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 2 8 0 5.5-4.8 10-10 10Z" />
       <path d="M2 21c0-3 1.9-5.5 4.5-6.3" />
     </svg>
@@ -48,17 +27,7 @@ function LeafIcon({ className }: { className?: string }) {
 
 function WalletIcon({ className }: { className?: string }) {
   return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
       <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
       <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
@@ -66,38 +35,22 @@ function WalletIcon({ className }: { className?: string }) {
   );
 }
 
-/* ── Animated money-flow diagram ── */
+function CheckMark({ className }: { className?: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+      <path d="m5 12 5 5L20 7" />
+    </svg>
+  );
+}
 
-function CoinParticle({
-  delay,
-  pathVariant,
-}: {
-  delay: number;
-  pathVariant: "offset" | "credit";
-}) {
+function CoinParticle({ delay, pathVariant }: { delay: number; pathVariant: "offset" | "credit" }) {
   const isOffset = pathVariant === "offset";
-
   return (
     <motion.div
-      className={`absolute left-1/2 top-0 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full text-[10px] font-bold ${
-        isOffset
-          ? "bg-brand-green text-white"
-          : "bg-brand-gold text-brand-green"
-      }`}
+      className={`absolute left-1/2 top-0 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full text-[10px] font-bold ${isOffset ? "bg-brand-green text-white" : "bg-brand-gold text-brand-green"}`}
       initial={{ y: 0, x: 0, opacity: 0, scale: 0.7 }}
-      animate={{
-        y: [0, 40, 80],
-        x: isOffset ? [0, -40, -70] : [0, 40, 70],
-        opacity: [0, 1, 0],
-        scale: [0.7, 1, 0.7],
-      }}
-      transition={{
-        duration: 2.4,
-        delay,
-        repeat: Infinity,
-        repeatDelay: 1.2,
-        ease: "easeInOut",
-      }}
+      animate={{ y: [0, 40, 80], x: isOffset ? [0, -40, -70] : [0, 40, 70], opacity: [0, 1, 0], scale: [0.7, 1, 0.7] }}
+      transition={{ duration: 2.4, delay, repeat: Infinity, repeatDelay: 1.2, ease: "easeInOut" }}
     >
       €
     </motion.div>
@@ -105,68 +58,40 @@ function CoinParticle({
 }
 
 function MoneyFlowDiagram() {
+  const { t } = useTranslation();
   return (
     <div className="relative mx-auto w-full max-w-xs py-4">
-      {/* Source label */}
       <div className="flex justify-center">
         <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm">
           <EuroIcon className="text-brand-green" />
-          <span className="text-xs font-semibold text-slate-900">
-            Green Fee
-          </span>
+          <span className="text-xs font-semibold text-slate-900">{t("common.greenFee")}</span>
         </div>
       </div>
 
-      {/* Animated particles */}
       <div className="relative h-24">
         <CoinParticle delay={0} pathVariant="offset" />
         <CoinParticle delay={0.6} pathVariant="credit" />
         <CoinParticle delay={1.2} pathVariant="offset" />
         <CoinParticle delay={1.8} pathVariant="credit" />
-
-        {/* Connecting lines (decorative) */}
-        <svg
-          className="absolute inset-0 h-full w-full"
-          viewBox="0 0 200 80"
-          fill="none"
-          preserveAspectRatio="xMidYMid meet"
-        >
-          <path
-            d="M100 8 Q70 40 40 72"
-            stroke="#0A3D2A"
-            strokeWidth="1"
-            strokeDasharray="4 4"
-            opacity="0.25"
-          />
-          <path
-            d="M100 8 Q130 40 160 72"
-            stroke="#D4AF77"
-            strokeWidth="1"
-            strokeDasharray="4 4"
-            opacity="0.35"
-          />
+        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 200 80" fill="none" preserveAspectRatio="xMidYMid meet">
+          <path d="M100 8 Q70 40 40 72" stroke="#0A3D2A" strokeWidth="1" strokeDasharray="4 4" opacity="0.25" />
+          <path d="M100 8 Q130 40 160 72" stroke="#D4AF77" strokeWidth="1" strokeDasharray="4 4" opacity="0.35" />
         </svg>
       </div>
 
-      {/* Destinations */}
       <div className="flex justify-between px-2">
         <div className="flex items-center gap-2 rounded-full border border-brand-green/20 bg-brand-green/5 px-3 py-1.5">
           <LeafIcon className="text-brand-green" />
           <div className="text-left">
-            <div className="text-[10px] font-bold text-brand-green">
-              Tasa 1
-            </div>
-            <div className="text-[9px] text-slate-500">CO₂ offset</div>
+            <div className="text-[10px] font-bold text-brand-green">{t("hero.flowFee1")}</div>
+            <div className="text-[9px] text-slate-500">{t("hero.flowFee1Sub")}</div>
           </div>
         </div>
-
         <div className="flex items-center gap-2 rounded-full border border-brand-gold/30 bg-brand-gold/10 px-3 py-1.5">
           <WalletIcon className="text-brand-gold-dark" />
           <div className="text-left">
-            <div className="text-[10px] font-bold text-brand-gold-dark">
-              Tasa 2
-            </div>
-            <div className="text-[9px] text-slate-500">Tu cuenta</div>
+            <div className="text-[10px] font-bold text-brand-gold-dark">{t("hero.flowFee2")}</div>
+            <div className="text-[9px] text-slate-500">{t("hero.flowFee2Sub")}</div>
           </div>
         </div>
       </div>
@@ -174,40 +99,28 @@ function MoneyFlowDiagram() {
   );
 }
 
-/* ── Mini widget preview (checkout style) ── */
-
 function CheckoutWidget() {
+  const { t } = useTranslation();
   const [active, setActive] = useState(true);
 
   return (
     <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-3">
-        <div className="grid h-7 w-7 place-items-center rounded-lg bg-brand-green text-[10px] font-bold text-white">
-          E
-        </div>
-        <span className="text-xs font-medium text-slate-400">
-          EcoTrace · Checkout
-        </span>
+        <div className="grid h-7 w-7 place-items-center rounded-lg bg-brand-green text-[10px] font-bold text-white">E</div>
+        <span className="text-xs font-medium text-slate-400">{t("hero.widgetLabel")}</span>
       </div>
 
       <div className="px-5 py-4">
         <label className="flex cursor-pointer items-center justify-between gap-3">
-          <span className="text-sm text-slate-700">Activar EcoTrace</span>
-          {/* Toggle */}
+          <span className="text-sm text-slate-700">{t("hero.widgetActivate")}</span>
           <button
             type="button"
             role="switch"
             aria-checked={active}
             onClick={() => setActive(!active)}
-            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 ${
-              active ? "bg-brand-green" : "bg-slate-200"
-            }`}
+            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 ${active ? "bg-brand-green" : "bg-slate-200"}`}
           >
-            <span
-              className={`inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${
-                active ? "translate-x-6" : "translate-x-1"
-              }`}
-            />
+            <span className={`inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${active ? "translate-x-6" : "translate-x-1"}`} />
           </button>
         </label>
 
@@ -219,85 +132,75 @@ function CheckoutWidget() {
             transition={{ duration: 0.25, ease }}
           >
             <div className="mt-4 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
-              <span className="text-xs font-medium text-slate-500">
-                Tasa verde estimada
-              </span>
-              <span className="text-lg font-bold tracking-tight text-brand-green">
-                +€0.95
-              </span>
+              <span className="text-xs font-medium text-slate-500">{t("hero.widgetEstimatedFee")}</span>
+              <span className="text-lg font-bold tracking-tight text-brand-green">+€0.78</span>
             </div>
-            <div className="mt-3 flex items-center gap-4 text-[10px] text-slate-400">
-              <span className="flex items-center gap-1">
+            <div className="mt-3 flex items-center justify-between gap-2 text-[10px]">
+              <span className="flex items-center gap-1.5 text-slate-400">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-                Tasa 1 · Compensación
+                {t("hero.widgetFee1")} <span className="font-semibold text-brand-green">€0.10</span>
               </span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1.5 text-slate-400">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" />
-                Tasa 2 · Tu crédito
+                {t("hero.widgetFee2")} <span className="font-semibold text-brand-gold-dark">€0.68</span>
               </span>
             </div>
           </motion.div>
         )}
       </div>
 
+      {/* Net Zero message */}
+      {active && (
+        <div className="border-t border-brand-green/10 bg-brand-green/[0.03] px-5 py-3">
+          <p className="text-[11px] leading-relaxed text-brand-green">
+            ✅ {t("widget.netZero")}
+          </p>
+        </div>
+      )}
+
       <div className="border-t border-slate-100 px-5 py-2">
-        <span className="text-[9px] font-medium text-slate-300">
-          ISO 14064 · E=A×EF · Auditable por transacción
-        </span>
+        <span className="text-[9px] font-medium text-slate-300">{t("hero.widgetISO")}</span>
       </div>
     </div>
   );
 }
 
-/* ── Hero section ── */
-
 export function Hero() {
+  const { t } = useTranslation();
+
   return (
     <section className="relative overflow-hidden bg-white">
-      {/* Subtle decorative gradient */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(10,61,42,0.04), transparent 70%)",
-        }}
+        style={{ background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(10,61,42,0.04), transparent 70%)" }}
       />
 
       <div className="relative mx-auto max-w-6xl px-6 pb-28 pt-28 lg:pb-32 lg:pt-32">
         <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
-          {/* Left: Copy */}
           <Stagger>
             <Reveal>
               <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-500 shadow-sm">
-                <span
-                  className="h-1.5 w-1.5 rounded-full bg-brand-green"
-                  aria-hidden="true"
-                />
-                ISO 14064 · EU 2026 · Shopify &amp; WooCommerce
+                <span className="h-1.5 w-1.5 rounded-full bg-brand-green" aria-hidden="true" />
+                {t("hero.badge")}
               </div>
             </Reveal>
 
             <Reveal>
-              <h1 className="mt-8 max-w-lg text-4xl !leading-[1.1] sm:text-5xl lg:text-[3.5rem]">
-                Tus clientes pagan para que tú ganes más.
+              <h1 className="mt-8 max-w-lg text-4xl !leading-[1.1] text-slate-950 sm:text-5xl lg:text-[3.5rem]">
+                {t("hero.h1")}
               </h1>
             </Reveal>
 
             <Reveal>
               <p className="mt-6 max-w-lg text-lg text-slate-600">
-                Sostenibilidad que financia tu crecimiento. La{" "}
-                <span className="font-semibold text-brand-green">
-                  Tasa Verde
-                </span>{" "}
-                se divide:{" "}
-                <span className="font-semibold text-brand-green">Tasa 1</span>{" "}
-                compensa carbono real,{" "}
-                <span className="font-semibold text-brand-gold-dark">
-                  Tasa 2
-                </span>{" "}
-                va directamente a tu cuenta para pagar Google Ads, Shopify y
-                hosting.
+                {t("hero.sub1")}{" "}
+                <span className="font-semibold text-brand-green">{t("common.greenFee")}</span>{" "}
+                {t("hero.sub2")}{" "}
+                <span className="font-semibold text-brand-green">{t("common.fee1Name")}</span>{" "}
+                {t("hero.sub3")}{" "}
+                <span className="font-semibold text-brand-gold-dark">{t("common.fee2Name")}</span>{" "}
+                {t("hero.sub4")}
               </p>
             </Reveal>
 
@@ -305,10 +208,10 @@ export function Hero() {
               <div className="mt-10 flex flex-wrap items-center gap-4">
                 <a
                   href="#solutions"
-                  className="inline-flex h-13 items-center justify-center rounded-xl bg-brand-green px-8 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light"
+                  className="inline-flex items-center justify-center rounded-xl bg-brand-green px-8 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light"
                   style={{ height: 52 }}
                 >
-                  Instalar widget gratis en Shopify/WooCommerce
+                  {t("hero.cta")}
                 </a>
               </div>
             </Reveal>
@@ -316,52 +219,21 @@ export function Hero() {
             <Reveal>
               <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400">
                 <span className="flex items-center gap-1.5">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="text-brand-green"
-                  >
-                    <path d="m5 12 5 5L20 7" />
-                  </svg>
-                  Sin costes de integración
+                  <CheckMark className="text-brand-green" />
+                  {t("hero.checkIntegration")}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="text-brand-green"
-                  >
-                    <path d="m5 12 5 5L20 7" />
-                  </svg>
-                  Setup en 5 minutos
+                  <CheckMark className="text-brand-green" />
+                  {t("hero.check5min")}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="text-brand-green"
-                  >
-                    <path d="m5 12 5 5L20 7" />
-                  </svg>
-                  Auditable ISO 14064
+                  <CheckMark className="text-brand-green" />
+                  {t("hero.checkISO")}
                 </span>
               </div>
             </Reveal>
           </Stagger>
 
-          {/* Right: Widget + flow animation */}
           <Reveal>
             <div className="flex flex-col items-center gap-8">
               <CheckoutWidget />

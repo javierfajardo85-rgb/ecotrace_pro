@@ -1,6 +1,19 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 export function Nav() {
+  const { t, i18n } = useTranslation();
+  const isEs = i18n.language === "es";
+
+  function switchLang(lang: string) {
+    i18n.changeLanguage(lang);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ecotrace-lang", lang);
+    }
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur">
       <div className="mx-auto max-w-7xl px-6">
@@ -17,31 +30,57 @@ export function Nav() {
 
           <nav className="hidden flex-1 items-center justify-center gap-1 md:flex" aria-label="Primary">
             <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-slate-950" href="#product">
-              Product
+              {t("nav.product")}
             </a>
             <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-slate-950" href="#how-it-works">
-              How it works
+              {t("nav.howItWorks")}
             </a>
             <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-slate-950" href="#merchants">
-              For merchants
+              {t("nav.forMerchants")}
             </a>
             <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-slate-950" href="#resources">
-              Resources
+              {t("nav.resources")}
             </a>
           </nav>
 
           <div className="flex items-center gap-3">
+            {/* Language switcher */}
+            <div className="flex items-center gap-0.5 rounded-lg border border-slate-200 p-0.5 text-xs font-medium">
+              <button
+                type="button"
+                onClick={() => switchLang("en")}
+                className={`rounded-md px-2 py-1 transition ${
+                  !isEs
+                    ? "bg-brand-green text-white"
+                    : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => switchLang("es")}
+                className={`rounded-md px-2 py-1 transition ${
+                  isEs
+                    ? "bg-brand-green text-white"
+                    : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                ES
+              </button>
+            </div>
+
             <Link
               className="hidden h-10 items-center justify-center rounded-lg px-4 text-sm font-semibold text-slate-700 transition duration-300 ease-out hover:text-slate-950 sm:inline-flex"
               href="/dashboard"
             >
-              Login
+              {t("nav.login")}
             </Link>
             <a
-              className="inline-flex h-10 items-center justify-center rounded-xl bg-ecotrace-900 px-4 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-slate-800"
+              className="inline-flex h-10 items-center justify-center rounded-xl bg-brand-green px-4 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light"
               href="#add-widget"
             >
-              Add to my store
+              {t("nav.addToStore")}
             </a>
           </div>
         </div>
@@ -49,4 +88,3 @@ export function Nav() {
     </header>
   );
 }
-

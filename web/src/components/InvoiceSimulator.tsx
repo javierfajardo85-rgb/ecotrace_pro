@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const DEFAULT_INVOICES = [
   { label: "Shopify Subscription", amount: 29 },
@@ -10,6 +11,7 @@ const DEFAULT_INVOICES = [
 ];
 
 export function InvoiceSimulator({ balance }: { balance: number }) {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState<number | null>(null);
 
   const invoice = selected !== null ? DEFAULT_INVOICES[selected] : null;
@@ -17,19 +19,18 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
 
   return (
     <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-sm">
-      <div className="text-sm font-semibold text-slate-900">
-        Invoice Simulator
+      <div className="text-sm font-semibold text-slate-950">
+        {t("invoice.title")}
       </div>
       <p className="mt-2 text-sm leading-6 text-slate-600">
-        See how recovered environmental fees can cover your typical operating
-        costs.
+        {t("invoice.subtitle")}
       </p>
 
-      <div className="mt-5 flex items-center justify-between gap-4 rounded-xl border border-ecotrace-100 bg-ecotrace-50/60 p-4">
-        <span className="text-sm font-semibold text-ecotrace-800">
-          Available Green Operational Credit™
+      <div className="mt-5 flex items-center justify-between gap-4 rounded-xl border border-brand-gold/20 bg-brand-gold/[0.06] p-4">
+        <span className="text-sm font-semibold text-brand-gold-dark">
+          {t("invoice.availableCredit")}
         </span>
-        <span className="text-xl font-bold tracking-tight text-ecotrace-800">
+        <span className="text-xl font-bold tracking-tight text-slate-950">
           €{balance.toFixed(2)}
         </span>
       </div>
@@ -42,11 +43,11 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
               onClick={() => setSelected(i === selected ? null : i)}
               className={`flex w-full items-center justify-between gap-4 rounded-2xl border p-4 text-left transition ${
                 selected === i
-                  ? "border-ecotrace-200 bg-ecotrace-50/50"
+                  ? "border-brand-gold/30 bg-brand-gold/[0.04]"
                   : "border-slate-100 bg-white hover:bg-slate-50"
               }`}
             >
-              <span className="text-sm font-semibold text-slate-900">
+              <span className="text-sm font-semibold text-slate-950">
                 {inv.label}
               </span>
               <span className="text-sm font-semibold text-slate-700">
@@ -61,21 +62,24 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
         <div
           className={`mt-5 rounded-2xl border p-4 text-sm leading-6 ${
             covered
-              ? "border-ecotrace-200 bg-ecotrace-50 text-ecotrace-800"
+              ? "border-brand-green/20 bg-brand-green/[0.04] text-brand-green"
               : "border-amber-200 bg-amber-50 text-amber-800"
           }`}
         >
           {covered ? (
             <>
-              <strong>Covered.</strong> This invoice (€{invoice.amount}) can be
-              paid from your customers&apos; EcoTrace contributions. Remaining
-              balance: €{(balance - invoice.amount).toFixed(2)}.
+              <strong>{t("invoice.coveredTitle")}</strong>{" "}
+              {t("invoice.coveredText", {
+                amount: invoice.amount,
+                remaining: (balance - invoice.amount).toFixed(2),
+              })}
             </>
           ) : (
             <>
-              <strong>Not yet covered.</strong> You need €
-              {(invoice.amount - balance).toFixed(2)} more in Green Credit to cover
-              this invoice. Keep growing your order volume.
+              <strong>{t("invoice.notCoveredTitle")}</strong>{" "}
+              {t("invoice.notCoveredText", {
+                amount: (invoice.amount - balance).toFixed(2),
+              })}
             </>
           )}
         </div>

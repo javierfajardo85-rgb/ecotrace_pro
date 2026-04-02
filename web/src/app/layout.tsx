@@ -3,6 +3,7 @@ import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { I18nProvider } from "@/providers/I18nProvider";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -38,9 +39,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable}`}>
       <body className="bg-white font-sans text-slate-900 antialiased">
-        <Nav />
-        <main style={{ flex: 1 }}>{children}</main>
-        <Footer />
+        <I18nProvider>
+          <Nav />
+          <main style={{ flex: 1 }}>{children}</main>
+          <Footer />
+        </I18nProvider>
       </body>
     </html>
   );
