@@ -5,16 +5,6 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial"],
-        heading: [
-          "var(--font-heading)",
-          "ui-sans-serif",
-          "system-ui",
-          "-apple-system",
-          "Segoe UI",
-          "Roboto",
-          "Helvetica",
-          "Arial",
-        ],
         mono: [
           "var(--font-geist-mono)",
           "ui-monospace",
@@ -42,7 +32,7 @@ module.exports = {
         },
       },
       boxShadow: {
-        soft: "0 20px 60px -40px rgba(2, 6, 23, 0.25)",
+        soft: "0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04)",
       },
     },
   },

@@ -16,10 +16,10 @@ function MetricCard(props: {
 }) {
   return (
     <div
-      className={`rounded-3xl border p-6 shadow-soft ${
+      className={`rounded-2xl border p-6 shadow-sm ${
         props.accent
-          ? "border-ecotrace-200 bg-ecotrace-50"
-          : "border-slate-200 bg-white"
+          ? "border-ecotrace-100 bg-ecotrace-50/60"
+          : "border-slate-100 bg-white"
       }`}
     >
       <div className="text-sm font-semibold text-slate-700">{props.label}</div>
@@ -132,11 +132,11 @@ export default function DashboardPage() {
           <MetricCard
             label="Recovered liquidity (Cash Flow)"
             value={`€${totalTasa2.toFixed(2)}`}
-            sub="Cumulative Tasa 2 returned to your account"
+            sub="Cumulative Green Operational Credit™ returned to your account"
             accent
           />
           <MetricCard
-            label="Environmental compensation (Tasa 1)"
+            label="Certified Offset Cost"
             value="€0.05"
             sub="Funds allocated to verified offset projects"
           />
@@ -149,7 +149,7 @@ export default function DashboardPage() {
 
         {/* Transaction log + Invoice Simulator */}
         <section className="mt-12 grid gap-6 lg:grid-cols-2 lg:items-start">
-          <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+          <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-sm">
             <div className="text-sm font-semibold text-slate-900">
               Transaction log
             </div>
@@ -158,15 +158,15 @@ export default function DashboardPage() {
               recovery.
             </p>
 
-            <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200">
+            <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100">
               <table className="w-full border-collapse text-left text-sm">
                 <thead className="bg-slate-50 text-xs font-semibold text-slate-700">
                   <tr>
                     <th className="px-4 py-3">Order</th>
                     <th className="px-4 py-3">Destination</th>
                     <th className="px-4 py-3">kg CO₂e</th>
-                    <th className="px-4 py-3">Tasa 1</th>
-                    <th className="px-4 py-3">Tasa 2</th>
+                    <th className="px-4 py-3">Offset Cost</th>
+                    <th className="px-4 py-3">Green Credit</th>
                     <th className="px-4 py-3">Status</th>
                   </tr>
                 </thead>

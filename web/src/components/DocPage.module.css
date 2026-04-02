@@ -9,7 +9,7 @@
 }
 
 .h h1 {
-  font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 34px;
   letter-spacing: -0.02em;
   font-weight: 800;
@@ -27,7 +27,7 @@
 
 .card h2 {
   margin-top: 0;
-  font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;

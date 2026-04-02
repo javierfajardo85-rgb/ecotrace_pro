@@ -93,9 +93,9 @@ export function RoiCalculator() {
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       {/* Inputs */}
-      <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+      <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-sm">
         <div className="flex items-center justify-between gap-4">
-          <div className="text-sm font-semibold text-slate-950">Inputs</div>
+          <div className="text-sm font-semibold text-slate-900">Inputs</div>
           <div className="text-xs font-semibold text-slate-500">
             Assumptions are configurable
           </div>
@@ -169,8 +169,8 @@ export function RoiCalculator() {
       </div>
 
       {/* Results */}
-      <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
-        <div className="text-sm font-semibold text-slate-950">Results</div>
+      <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-sm">
+        <div className="text-sm font-semibold text-slate-900">Results</div>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <ResultCard
             label="CO₂e per order"
@@ -184,12 +184,12 @@ export function RoiCalculator() {
             sub="Audit-ready reporting per transaction"
           />
           <ResultCard
-            label="Tasa 1 – Compensation (monthly)"
+            label="Certified Offset Cost (monthly)"
             value={fmtEur(result.tasa1Monthly)}
-            sub={`${fmtEur(result.tasa1PerOrder)} / order → offset projects`}
+            sub={`${fmtEur(result.tasa1PerOrder)} / order → verified offset projects`}
           />
           <ResultCard
-            label="Tasa 2 – Cash-flow return (monthly)"
+            label="Green Operational Credit™ (monthly)"
             value={fmtEur(result.tasa2Monthly)}
             sub={`${fmtEur(result.tasa2PerOrder)} / order → your account`}
             accent
@@ -197,10 +197,10 @@ export function RoiCalculator() {
         </div>
 
         {/* Ads coverage bar */}
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+        <div className="mt-6 rounded-xl border border-slate-100 bg-slate-50 p-5">
           <div className="flex items-center justify-between gap-4">
-            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Marketing cost coverage (Tasa 2 vs Ads)
+            <div className="text-xs font-medium uppercase tracking-wide text-slate-400">
+              Marketing cost coverage (Green Credit vs Ads)
             </div>
             <div className="text-xs font-semibold text-ecotrace-700">
               {result.adsCoveragePct.toFixed(1)}%
@@ -215,15 +215,15 @@ export function RoiCalculator() {
           </div>
           <div className="mt-3 text-sm text-slate-600">
             {result.adsCoveragePct >= 100
-              ? "Your Tasa 2 recovery fully covers your monthly ad spend."
-              : `Tasa 2 covers ${fmtEur(result.tasa2Monthly)} of your ${fmtEur(result.ads)} monthly ad budget. Increase order volume or offset adoption to close the gap.`}
+              ? "Your Green Operational Credit™ fully covers your monthly ad spend."
+              : `Green Credit covers ${fmtEur(result.tasa2Monthly)} of your ${fmtEur(result.ads)} monthly ad budget. Increase order volume or offset adoption to close the gap.`}
           </div>
         </div>
 
-        <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+        <div className="mt-5 rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-600">
           Calculation based on auditable ISO Emission Factors. Operational
-          savings are an estimate of Tasa 2 reinvestment in green digital
-          assets.
+          savings are an estimate of Green Operational Credit™ reinvestment
+          in verified digital assets.
         </div>
       </div>
     </div>
@@ -270,10 +270,10 @@ function ResultCard(props: {
 }) {
   return (
     <div
-      className={`rounded-2xl border p-4 ${
+      className={`rounded-xl border p-4 ${
         props.accent
-          ? "border-ecotrace-200 bg-ecotrace-50"
-          : "border-slate-200 bg-white"
+          ? "border-ecotrace-100 bg-ecotrace-50/60"
+          : "border-slate-100 bg-white"
       }`}
     >
       <div className="text-xs font-semibold text-slate-700">{props.label}</div>

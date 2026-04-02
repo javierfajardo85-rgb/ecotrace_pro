@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Nav() {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/80 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex h-16 items-center justify-between gap-6">
           <Link className="flex items-center gap-4" href="/" aria-label="EcoTrace home">
@@ -38,7 +38,7 @@ export function Nav() {
               Login
             </Link>
             <a
-              className="inline-flex h-10 items-center justify-center rounded-xl bg-ecotrace-700 px-4 text-sm font-semibold text-white shadow-soft transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-ecotrace-800"
+              className="inline-flex h-10 items-center justify-center rounded-xl bg-ecotrace-900 px-4 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-slate-800"
               href="#add-widget"
             >
               Add to my store

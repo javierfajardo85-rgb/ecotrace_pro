@@ -16,7 +16,7 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
   const covered = invoice ? balance >= invoice.amount : false;
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+    <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-sm">
       <div className="text-sm font-semibold text-slate-900">
         Invoice Simulator
       </div>
@@ -25,9 +25,9 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
         costs.
       </p>
 
-      <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl border border-ecotrace-200 bg-ecotrace-50 p-4">
+      <div className="mt-5 flex items-center justify-between gap-4 rounded-xl border border-ecotrace-100 bg-ecotrace-50/60 p-4">
         <span className="text-sm font-semibold text-ecotrace-800">
-          Available Tasa 2 balance
+          Available Green Operational Credit™
         </span>
         <span className="text-xl font-bold tracking-tight text-ecotrace-800">
           €{balance.toFixed(2)}
@@ -42,8 +42,8 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
               onClick={() => setSelected(i === selected ? null : i)}
               className={`flex w-full items-center justify-between gap-4 rounded-2xl border p-4 text-left transition ${
                 selected === i
-                  ? "border-ecotrace-400 bg-ecotrace-50"
-                  : "border-slate-200 bg-white hover:bg-slate-50"
+                  ? "border-ecotrace-200 bg-ecotrace-50/50"
+                  : "border-slate-100 bg-white hover:bg-slate-50"
               }`}
             >
               <span className="text-sm font-semibold text-slate-900">
@@ -74,7 +74,7 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
           ) : (
             <>
               <strong>Not yet covered.</strong> You need €
-              {(invoice.amount - balance).toFixed(2)} more in Tasa 2 to cover
+              {(invoice.amount - balance).toFixed(2)} more in Green Credit to cover
               this invoice. Keep growing your order volume.
             </>
           )}

@@ -6,8 +6,8 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
-    @apply text-ecotrace-800;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    @apply text-slate-900;
   }
 
   h1 {
@@ -17,10 +17,16 @@
 
   h2 {
     font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   h3 {
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  body {
+    line-height: 1.6;
   }
 }
 

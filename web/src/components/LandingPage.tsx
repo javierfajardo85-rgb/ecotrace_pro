@@ -5,26 +5,45 @@ import { RoiCalculator } from "@/components/RoiCalculator";
 import { WidgetPreview } from "@/components/WidgetPreview";
 import { HoverLift, Reveal, Stagger } from "@/components/motion/Motion";
 
+function ShieldIcon() {
+  return (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-ecotrace-700"
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  );
+}
+
 export function LandingPage() {
   return (
     <div className="bg-slate-50 text-slate-900">
       <main>
-        {/* ─── Hero ─── */}
-        <section className="relative overflow-hidden border-b border-slate-200">
+        {/* ━━━ Hero ━━━ */}
+        <section className="relative overflow-hidden">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                "radial-gradient(900px 520px at 18% 8%, rgba(6,78,59,0.08), transparent 60%), radial-gradient(900px 520px at 86% 12%, rgba(16,185,129,0.06), transparent 60%), linear-gradient(180deg, #ffffff, #f8fafc)",
+                "radial-gradient(900px 520px at 18% 8%, rgba(6,78,59,0.06), transparent 60%), radial-gradient(900px 520px at 86% 12%, rgba(16,185,129,0.04), transparent 60%), linear-gradient(180deg, #ffffff, #f8fafc)",
             }}
           />
 
-          <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-24">
-            <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-28">
+            <div className="mx-auto max-w-3xl text-center">
               <Stagger>
                 <Reveal>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-slate-100 bg-white px-3.5 py-1 text-xs font-medium text-slate-500 shadow-sm">
                     <span
                       className="h-1.5 w-1.5 rounded-full bg-ecotrace-600"
                       aria-hidden="true"
@@ -34,14 +53,14 @@ export function LandingPage() {
                 </Reveal>
 
                 <Reveal>
-                  <h1 className="mt-6 text-5xl sm:text-6xl">
+                  <h1 className="mt-8 text-4xl sm:text-5xl lg:text-6xl">
                     Recover your E-commerce Operating Margin with Audited
                     Sustainability.
                   </h1>
                 </Reveal>
 
                 <Reveal>
-                  <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
+                  <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
                     Collect a Green Fee from your customers to auto-subsidize
                     your Google Ads and Shopify costs. Compliance with EU 2026
                     regulations, without touching your cash flow.
@@ -49,75 +68,38 @@ export function LandingPage() {
                 </Reveal>
 
                 <Reveal>
-                  <div
-                    id="add-widget"
-                    className="mt-8 flex flex-wrap items-center gap-3"
-                  >
+                  <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
                     <a
-                      href="#widget-live"
-                      className="inline-flex h-12 items-center justify-center rounded-xl bg-ecotrace-900 px-6 text-sm font-semibold text-white shadow-soft transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-slate-800"
+                      href="#solutions"
+                      className="inline-flex h-12 items-center justify-center rounded-xl bg-ecotrace-900 px-7 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-slate-800"
                     >
                       Install EcoTrace for Shopify
                     </a>
                     <a
                       href="#roi"
-                      className="inline-flex h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 text-sm font-semibold text-slate-900 transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-slate-50"
+                      className="inline-flex h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-7 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-slate-50"
                     >
                       View ROI Calculator
                     </a>
                   </div>
                 </Reveal>
-
-                <div className="mt-10 grid gap-5 sm:grid-cols-3" id="product">
-                  {(
-                    [
-                      {
-                        t: "Operational Self-Funding",
-                        d: "Use accumulated Green Credits (Fee 2) to pay for verified marketing and technology invoices.",
-                      },
-                      {
-                        t: "Conversion that Scales",
-                        d: "A minimalist widget that increases conversion by up to 3% through transparent commitment.",
-                      },
-                      {
-                        t: "EU 2026 Legal Shield",
-                        d: "Monthly Scope 3 reports ready for audit (ISO 14064/14067). Zero external consultants.",
-                      },
-                    ] as const
-                  ).map((k) => (
-                    <Reveal key={k.t}>
-                      <HoverLift className="h-full rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition duration-300 ease-out hover:-translate-y-0.5">
-                        <div className="text-sm font-semibold text-slate-900">
-                          {k.t}
-                        </div>
-                        <div className="mt-2 text-sm leading-6 text-slate-600">
-                          {k.d}
-                        </div>
-                      </HoverLift>
-                    </Reveal>
-                  ))}
-                </div>
               </Stagger>
-
-              <Reveal>
-                <WidgetPreview />
-              </Reveal>
             </div>
           </div>
         </section>
 
-        {/* ─── How it works ─── */}
-        <section id="how-it-works">
-          <div className="mx-auto max-w-6xl px-6 py-20">
+        {/* ━━━ How it works ━━━ */}
+        <section id="how-it-works" className="border-t border-slate-100">
+          <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
               <h2 className="text-3xl tracking-tight">How it works</h2>
-              <p className="mt-3 text-base leading-relaxed text-slate-600">
+              <p className="mt-4 text-base text-slate-600">
                 A transparent fee at checkout — automatically split into
                 environmental compensation and merchant cash-flow recovery.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-6 lg:grid-cols-4">
+            <div className="mt-14 grid gap-5 lg:grid-cols-4">
               {(
                 [
                   {
@@ -133,7 +115,7 @@ export function LandingPage() {
                   {
                     n: "03",
                     t: "Fee split",
-                    d: "Fee 1 → offset projects. Fee 2 → your merchant account.",
+                    d: "Certified Offset Cost → offset projects. Green Operational Credit™ → your account.",
                   },
                   {
                     n: "04",
@@ -143,16 +125,14 @@ export function LandingPage() {
                 ] as const
               ).map((s) => (
                 <Reveal key={s.n}>
-                  <HoverLift className="h-full rounded-3xl border border-slate-200 bg-white p-6 shadow-soft transition duration-300 ease-out hover:-translate-y-0.5">
-                    <div className="text-xs font-semibold uppercase tracking-wide text-ecotrace-800">
+                  <HoverLift className="h-full rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-ecotrace-700">
                       {s.n}
                     </div>
                     <div className="mt-3 text-sm font-semibold text-slate-900">
                       {s.t}
                     </div>
-                    <div className="mt-2 text-sm leading-6 text-slate-600">
-                      {s.d}
-                    </div>
+                    <div className="mt-2 text-sm text-slate-600">{s.d}</div>
                   </HoverLift>
                 </Reveal>
               ))}
@@ -160,117 +140,239 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* ─── Widget demo + Dashboard Preview ─── */}
-        <section id="widget-live" className="bg-white">
-          <div className="mx-auto max-w-6xl px-6 py-20">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight">
-                The checkout experience
-              </h2>
-              <p className="mt-3 text-base leading-relaxed text-slate-600">
-                A minimal, Shopify Planet-style widget your customers already
-                trust. One toggle, one price, zero friction.
+        {/* ━━━ Three Solutions ━━━ */}
+        <section id="solutions" className="border-t border-slate-100 bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-28">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="text-3xl tracking-tight">Three solutions, one platform</h2>
+              <p className="mt-4 text-base text-slate-600">
+                Each layer of EcoTrace solves a different business problem —
+                from fee collection to financial recovery to compliance.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:items-start">
-              <div>
-                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-8">
-                  <div className="text-sm font-semibold text-slate-900">
-                    Widget preview
+            {/* Solution 1: Checkout */}
+            <div className="mt-20 grid items-center gap-12 lg:grid-cols-2">
+              <Reveal>
+                <div>
+                  <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">
+                    Solution 1
                   </div>
-                  <p className="mt-2 text-sm text-slate-600">
-                    This is how it appears in a live Shopify checkout.
+                  <h3 className="mt-4 text-2xl tracking-tight">
+                    EcoTrace Checkout
+                  </h3>
+                  <p className="mt-1 text-sm font-medium text-slate-600">
+                    The Collector
                   </p>
-                  <div className="mt-6 flex justify-center">
-                    <WidgetPreview />
-                  </div>
+                  <p className="mt-4 text-base text-slate-600">
+                    A minimalist widget for automated fee collection at
+                    checkout. One toggle, one dynamic price, zero friction.
+                    Designed to feel native in Shopify, WooCommerce, or any
+                    headless stack.
+                  </p>
+                  <ul className="mt-5 grid gap-2 text-sm text-slate-600">
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ecotrace-600" />
+                      Shopify Planet-style UX, increases conversion by up to 3%
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ecotrace-600" />
+                      Real-time fee calculation (E=A×EF)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ecotrace-600" />
+                      Auditable per transaction — no black boxes
+                    </li>
+                  </ul>
                 </div>
+              </Reveal>
+              <Reveal>
+                <div className="flex justify-center rounded-2xl border border-slate-100 bg-slate-50 p-10">
+                  <WidgetPreview />
+                </div>
+              </Reveal>
+            </div>
 
-                {/* Profitability Engine points */}
-                <div className="mt-6" id="merchants">
-                  <div className="text-sm font-semibold text-slate-900">
-                    The Profitability Engine
-                  </div>
-                  <div className="mt-4 grid gap-3">
-                    {(
-                      [
-                        {
-                          t: "Green Fee = Direct Cashback",
-                          d: "Every fee is split: Fee 1 funds verified offset projects. Fee 2 is credited directly to the seller's account.",
-                        },
-                        {
-                          t: "Automated Audit",
-                          d: "Google Ads & Shopify APIs validate that funds are reinvested correctly — useful for tax-shield purposes.",
-                        },
-                        {
-                          t: "Trust Premium",
-                          d: "Customers pay more for brands with verifiable, immutable data hashes. Transparency converts.",
-                        },
-                      ] as const
-                    ).map((b) => (
-                      <div
-                        key={b.t}
-                        className="rounded-2xl border border-slate-200 bg-white p-5"
-                      >
-                        <div className="text-sm font-semibold text-slate-900">
-                          {b.t}
-                        </div>
-                        <div className="mt-1 text-sm leading-6 text-slate-600">
-                          {b.d}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div className="text-sm font-semibold text-slate-900">
-                  Financial Wallet preview
-                </div>
-                <p className="mt-2 text-sm text-slate-600">
-                  See where your Green Credits go — in real time.
-                </p>
-                <div className="mt-6">
+            {/* Solution 2: Yield */}
+            <div className="mt-28 grid items-center gap-12 lg:grid-cols-2">
+              <Reveal>
+                <div className="order-2 lg:order-1">
                   <DashboardPreview />
                 </div>
-              </div>
+              </Reveal>
+              <Reveal>
+                <div className="order-1 lg:order-2">
+                  <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">
+                    Solution 2
+                  </div>
+                  <h3 className="mt-4 text-2xl tracking-tight">
+                    EcoTrace Yield
+                  </h3>
+                  <p className="mt-1 text-sm font-medium text-slate-600">
+                    The Financial Engine
+                  </p>
+                  <p className="mt-4 text-base text-slate-600">
+                    Manage Green Operational Credits™ to fund your Google Ads,
+                    Shopify subscription, and other operating costs. Your
+                    customers subsidize your margins — automatically.
+                  </p>
+                  <ul className="mt-5 grid gap-2 text-sm text-slate-600">
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ecotrace-600" />
+                      Automated invoice matching & settlement
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ecotrace-600" />
+                      Google Ads & Shopify API integration for tax-shield
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ecotrace-600" />
+                      Real-time wallet balance and transaction log
+                    </li>
+                  </ul>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* Solution 3: Audit */}
+            <div className="mt-28 grid items-center gap-12 lg:grid-cols-2">
+              <Reveal>
+                <div>
+                  <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">
+                    Solution 3
+                  </div>
+                  <h3 className="mt-4 text-2xl tracking-tight">
+                    EcoTrace Audit
+                  </h3>
+                  <p className="mt-1 text-sm font-medium text-slate-600">
+                    The Compliance Layer
+                  </p>
+                  <p className="mt-4 text-base text-slate-600">
+                    ISO 14064 / ISO 14067 reporting for EU 2026 regulations.
+                    Per-transaction evidence that sustainability directors and
+                    external auditors can reconstruct without consultants.
+                  </p>
+                  <ul className="mt-5 grid gap-2 text-sm text-slate-600">
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ecotrace-600" />
+                      Monthly Scope 3 reports ready for external audit
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ecotrace-600" />
+                      CSRD-ready posture — zero agency dependency
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-ecotrace-600" />
+                      Immutable data hashes for defensible green claims
+                    </li>
+                  </ul>
+                </div>
+              </Reveal>
+              <Reveal>
+                <div className="flex items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 p-10">
+                  <div className="flex flex-col items-center gap-5 text-center">
+                    <div className="grid h-16 w-16 place-items-center rounded-2xl bg-ecotrace-50 ring-1 ring-inset ring-ecotrace-200">
+                      <ShieldIcon />
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold tracking-tight text-slate-900">
+                        Audit-ready
+                      </div>
+                      <div className="mt-1 text-sm text-slate-600">
+                        ISO 14064 · ISO 14067
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {(["GHG Protocol", "CSRD / EU 2026", "DEFRA 2024"] as const).map(
+                        (tag) => (
+                          <span
+                            key={tag}
+                            className="rounded-full border border-slate-100 bg-white px-3 py-1 text-xs font-medium text-slate-500"
+                          >
+                            {tag}
+                          </span>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
             </div>
           </div>
         </section>
 
-        {/* ─── ROI Calculator ─── */}
-        <section id="roi">
-          <div className="mx-auto max-w-6xl px-6 py-20">
+        {/* ━━━ The Profitability Engine ━━━ */}
+        <section id="merchants" className="border-t border-slate-100">
+          <div className="mx-auto max-w-6xl px-6 py-28">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl tracking-tight">
+                The Profitability Engine
+              </h2>
+              <p className="mt-4 text-base text-slate-600">
+                Every green fee is split into two streams. One funds the planet.
+                The other funds your business.
+              </p>
+            </div>
+
+            <div className="mt-14 grid gap-5 lg:grid-cols-3">
+              {(
+                [
+                  {
+                    t: "Green Fee = Direct Cashback",
+                    d: "Every fee is split: Certified Offset Cost funds verified projects. Green Operational Credit™ is credited directly to the seller's account.",
+                  },
+                  {
+                    t: "Automated Audit",
+                    d: "Google Ads & Shopify APIs validate that funds are reinvested correctly — useful for tax-shield purposes.",
+                  },
+                  {
+                    t: "Trust Premium",
+                    d: "Customers pay more for brands with verifiable, immutable data hashes. Transparency converts.",
+                  },
+                ] as const
+              ).map((b) => (
+                <Reveal key={b.t}>
+                  <HoverLift className="h-full rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5">
+                    <div className="text-sm font-semibold text-slate-900">
+                      {b.t}
+                    </div>
+                    <div className="mt-2 text-sm text-slate-600">{b.d}</div>
+                  </HoverLift>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ━━━ ROI Calculator ━━━ */}
+        <section id="roi" className="border-t border-slate-100 bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
               <h2 className="text-3xl tracking-tight">ROI Calculator</h2>
-              <p className="mt-3 text-base leading-relaxed text-slate-600">
+              <p className="mt-4 text-base text-slate-600">
                 Model your cash-flow recovery, environmental impact, and
                 marketing cost coverage based on your order volume.
               </p>
             </div>
 
-            <div className="mt-12">
+            <div className="mt-14">
               <RoiCalculator />
             </div>
           </div>
         </section>
 
-        {/* ─── Trust Signals & Compliance ─── */}
-        <section id="resources" className="bg-white">
-          <div className="mx-auto max-w-6xl px-6 py-20">
+        {/* ━━━ Trust & Compliance ━━━ */}
+        <section id="resources" className="border-t border-slate-100">
+          <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight">
-                Trust & compliance
-              </h2>
-              <p className="mt-3 text-base leading-relaxed text-slate-600">
+              <h2 className="text-3xl tracking-tight">Trust & compliance</h2>
+              <p className="mt-4 text-base text-slate-600">
                 Enterprise-grade compliance infrastructure. Designed for
                 sustainability directors, legal teams, and external auditors.
               </p>
             </div>
 
-            <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
+            <div className="mt-10 flex flex-wrap items-center gap-2">
               {(
                 [
                   "ISO 14064",
@@ -283,14 +385,14 @@ export function LandingPage() {
               ).map((label) => (
                 <span
                   key={label}
-                  className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600"
+                  className="rounded-full border border-slate-100 bg-white px-3 py-1 text-xs font-medium text-slate-500"
                 >
                   {label}
                 </span>
               ))}
             </div>
 
-            <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            <div className="mt-14 grid gap-5 lg:grid-cols-3">
               {(
                 [
                   {
@@ -308,11 +410,11 @@ export function LandingPage() {
                 ] as const
               ).map((t) => (
                 <Reveal key={t.a}>
-                  <HoverLift className="h-full rounded-3xl border border-slate-200 bg-white p-7 shadow-soft transition duration-300 ease-out hover:-translate-y-0.5">
-                    <blockquote className="text-sm leading-6 text-slate-700">
+                  <HoverLift className="h-full rounded-2xl border border-slate-100 bg-white p-7 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5">
+                    <blockquote className="text-sm text-slate-600">
                       {t.q}
                     </blockquote>
-                    <div className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <div className="mt-5 text-xs font-semibold uppercase tracking-wide text-slate-400">
                       {t.a}
                     </div>
                   </HoverLift>
@@ -322,25 +424,25 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* ─── Pricing ─── */}
-        <section id="pricing">
-          <div className="mx-auto max-w-6xl px-6 py-20">
+        {/* ━━━ Pricing ━━━ */}
+        <section id="pricing" className="border-t border-slate-100 bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
               <h2 className="text-3xl tracking-tight">Pricing</h2>
-              <p className="mt-3 text-base leading-relaxed text-slate-600">
+              <p className="mt-4 text-base text-slate-600">
                 Start recovering cash flow from day one. Upgrade as your
                 compliance and reporting needs grow.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            <div className="mt-14 grid gap-5 lg:grid-cols-3">
               {(
                 [
                   {
                     name: "Starter",
                     price: "€29",
                     period: "/mo",
-                    d: "Green Fee collection, widget, and basic cash-flow dashboard.",
+                    d: "Green Fee collection, checkout widget, and basic cash-flow dashboard.",
                     cta: "Start free trial",
                     featured: false,
                   },
@@ -364,10 +466,10 @@ export function LandingPage() {
               ).map((p) => (
                 <Reveal key={p.name}>
                   <HoverLift
-                    className={`h-full rounded-3xl border p-7 shadow-soft transition duration-300 ease-out hover:-translate-y-0.5 ${
+                    className={`h-full rounded-2xl border p-7 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 ${
                       p.featured
-                        ? "border-ecotrace-200 bg-ecotrace-50"
-                        : "border-slate-200 bg-white"
+                        ? "border-ecotrace-200 bg-ecotrace-50/50"
+                        : "border-slate-100 bg-white"
                     }`}
                   >
                     <div className="flex items-baseline justify-between gap-4">
@@ -379,15 +481,13 @@ export function LandingPage() {
                           {p.price}
                         </span>
                         {p.period && (
-                          <span className="text-sm text-slate-500">
+                          <span className="text-sm text-slate-400">
                             {p.period}
                           </span>
                         )}
                       </div>
                     </div>
-                    <div className="mt-3 text-sm leading-6 text-slate-600">
-                      {p.d}
-                    </div>
+                    <div className="mt-3 text-sm text-slate-600">{p.d}</div>
                     <div className="mt-7">
                       <a
                         href="#add-widget"
