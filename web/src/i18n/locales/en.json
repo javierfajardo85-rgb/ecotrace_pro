@@ -247,6 +247,9 @@
     "feeLabel": "Green contribution (calculated)",
     "isoFooter": "ISO 14064 · E=∑(W×d×EF×CF) · Auditable per transaction",
     "netZero": "By completing your order with EcoTrace, the operational carbon footprint of your purchase is ZERO. Thank you for contributing to a cleaner planet!",
+    "netZeroLead": "By completing your order with EcoTrace, the operational carbon footprint of your purchase is",
+    "netZeroHighlight": "ZERO",
+    "netZeroTail": ". Thank you for contributing to a cleaner planet!",
     "zeroImpactTooltipAria": "How we achieve zero impact",
     "zeroImpactTooltipTitle": "How do we achieve Zero Impact?",
     "zeroImpactTooltipBody": "Shopping online generates CO₂ from shipping and servers. With EcoTrace, your contribution neutralizes that footprint: 1. Real Offset: You fund the absorption of the exact kg of CO₂ for your package. 2. Clean Tech: You help this store use carbon-neutral hosting and marketing. In the end, the total is Zero. You shop, the planet breathes."
@@ -261,7 +264,8 @@
     "autoMatched": "Automatically matched & settled",
     "successBold": "Success!",
     "successText1": "Your customers have automatically funded",
-    "successText2": "of your marketing spend this month."
+    "successText2": "of your marketing spend this month.",
+    "successMessage": "Success! Your customers have automatically funded 30% of your marketing investment this month."
   },
   "invoice": {
     "title": "Invoice Simulator",

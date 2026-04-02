@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 
-type CurrencyCode = "EUR" | "GBP" | "USD";
+export type CurrencyCode = "EUR" | "GBP" | "USD";
 
 interface CurrencyCtx {
   code: CurrencyCode;

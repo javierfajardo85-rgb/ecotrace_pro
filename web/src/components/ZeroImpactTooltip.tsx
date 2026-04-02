@@ -97,9 +97,9 @@ export function ZeroImpactTooltip() {
               width: POPOVER_W,
               transform: "translateY(-100%)",
             }}
-            className="z-[100] rounded-xl border border-slate-200 bg-white p-4 shadow-lg"
+            className="z-[110] rounded-xl border border-slate-200/90 bg-white/95 p-4 shadow-[0_12px_40px_rgba(15,23,42,0.12)] ring-1 ring-slate-900/[0.04] backdrop-blur-md"
           >
-            <div className="text-xs font-bold text-slate-950">{t("widget.zeroImpactTooltipTitle")}</div>
+            <div className="text-xs font-bold tracking-tight text-slate-950">{t("widget.zeroImpactTooltipTitle")}</div>
             <p className="mt-2.5 text-[11px] leading-relaxed text-slate-600">{t("widget.zeroImpactTooltipBody")}</p>
           </motion.div>
         )}

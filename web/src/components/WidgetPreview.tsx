@@ -50,12 +50,14 @@ export function WidgetPreview({ className }: { className?: string }) {
         {/* Net Zero closing message */}
         {checked && (
           <div className="border-t border-brand-green/10 bg-brand-green/[0.03] px-5 py-3">
-            <div className="flex items-start gap-2">
-              <p className="min-w-0 flex-1 text-[11px] leading-relaxed text-brand-green">
-                ✅ {t("widget.netZero")}
-              </p>
-              <ZeroImpactTooltip />
-            </div>
+            <p className="text-[11px] leading-relaxed text-brand-green">
+              ✅ {t("widget.netZeroLead")}{" "}
+              <span className="inline-flex items-center gap-1 font-semibold whitespace-nowrap">
+                <span>{t("widget.netZeroHighlight")}</span>
+                <ZeroImpactTooltip />
+              </span>
+              {t("widget.netZeroTail")}
+            </p>
           </div>
         )}
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useCurrency } from "@/providers/CurrencyProvider";
 
@@ -31,6 +32,16 @@ function CurrencySwitcher() {
 export function Nav() {
   const { t, i18n } = useTranslation();
   const isEs = i18n.language === "es";
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 10);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   function switchLang(lang: string) {
     i18n.changeLanguage(lang);
@@ -40,8 +51,14 @@ export function Nav() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur">
-      <div className="mx-auto max-w-7xl px-6">
+    <header
+      className={`sticky top-0 z-50 border-b bg-white/80 backdrop-blur-md transition-[border-color,box-shadow] duration-300 ${
+        scrolled
+          ? "border-slate-200/90 shadow-[0_8px_30px_rgba(15,23,42,0.06)]"
+          : "border-slate-100/80 shadow-none"
+      }`}
+    >
+      <div className="relative z-50 mx-auto max-w-7xl px-6">
         <div className="flex h-16 items-center justify-between gap-6">
           <Link className="flex items-center gap-4" href="/" aria-label="EcoTrace home">
             <img
@@ -105,7 +122,7 @@ export function Nav() {
               {t("nav.login")}
             </Link>
             <a
-              className="inline-flex h-10 items-center justify-center rounded-xl bg-brand-green px-4 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light"
+              className="relative z-[60] inline-flex h-10 items-center justify-center rounded-xl bg-brand-green px-4 text-sm font-semibold text-white shadow-md shadow-[0_4px_14px_rgba(10,61,42,0.35)] ring-1 ring-white/20 transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light hover:shadow-lg hover:shadow-[0_8px_24px_rgba(10,61,42,0.4)]"
               href="#add-widget"
             >
               {t("nav.addToStore")}

@@ -1,11 +1,35 @@
 "use client";
 
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useCurrency } from "@/providers/CurrencyProvider";
+import { useCurrency, type CurrencyCode } from "@/providers/CurrencyProvider";
+
+/** Canonical mock amounts per currency (marketing demo — not derived from EUR × rate). */
+const WALLET_MOCK: Record<CurrencyCode, { balance: number; ads: number }> = {
+  GBP: { balance: 374.4, ads: 1248 },
+  USD: { balance: 412, ads: 1372 },
+  EUR: { balance: 440.47, ads: 1468.24 },
+};
+
+function formatMoney(code: CurrencyCode, amount: number) {
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: code,
+    maximumFractionDigits: 2,
+  }).format(amount);
+}
 
 export function DashboardPreview() {
   const { t } = useTranslation();
-  const { format: fmt } = useCurrency();
+  const { code } = useCurrency();
+
+  const { balanceFmt, adsFmt } = useMemo(() => {
+    const m = WALLET_MOCK[code];
+    return {
+      balanceFmt: formatMoney(code, m.balance),
+      adsFmt: formatMoney(code, -m.ads),
+    };
+  }, [code]);
 
   return (
     <div className="w-full overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
@@ -26,7 +50,7 @@ export function DashboardPreview() {
             {t("dashboardPreview.balanceLabel")}
           </div>
           <div className="mt-2 text-3xl font-extrabold tracking-tight text-slate-950">
-            {fmt(452.5)}
+            {balanceFmt}
           </div>
           <div className="mt-1 text-sm text-slate-600">
             {t("dashboardPreview.balanceSub")}
@@ -61,16 +85,13 @@ export function DashboardPreview() {
               </div>
             </div>
           </div>
-          <span className="text-sm font-bold text-slate-950">−{fmt(300)}</span>
+          <span className="text-sm font-bold text-slate-950 tabular-nums">{adsFmt}</span>
         </div>
       </div>
 
       <div className="border-t border-slate-50 bg-slate-50/50 px-6 py-4">
-        <p className="text-sm text-slate-600">
-          <span className="font-semibold text-brand-green">{t("dashboardPreview.successBold")}</span>{" "}
-          {t("dashboardPreview.successText1")}{" "}
-          <span className="font-semibold text-slate-950">66%</span>{" "}
-          {t("dashboardPreview.successText2")}
+        <p className="text-sm leading-relaxed text-slate-600">
+          {t("dashboardPreview.successMessage")}
         </p>
       </div>
     </div>

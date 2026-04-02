@@ -36,6 +36,7 @@
 
 html {
   height: 100%;
+  scroll-padding-top: 5rem;
 }
 
 html,

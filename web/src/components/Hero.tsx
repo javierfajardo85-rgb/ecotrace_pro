@@ -301,12 +301,14 @@ function ShippingRateWidget() {
             </div>
 
             <div className="relative border-t border-brand-green/10 bg-brand-green/[0.03] px-5 py-3">
-              <div className="flex items-start gap-2">
-                <p className="min-w-0 flex-1 text-[11px] leading-relaxed text-brand-green">
-                  ✅ {t("widget.netZero")}
-                </p>
-                <ZeroImpactTooltip />
-              </div>
+              <p className="text-[11px] leading-relaxed text-brand-green">
+                ✅ {t("widget.netZeroLead")}{" "}
+                <span className="inline-flex items-center gap-1 font-semibold whitespace-nowrap">
+                  <span>{t("widget.netZeroHighlight")}</span>
+                  <ZeroImpactTooltip />
+                </span>
+                {t("widget.netZeroTail")}
+              </p>
             </div>
           </motion.div>
         )}
@@ -387,7 +389,7 @@ export function Hero() {
         style={{ background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(10,61,42,0.04), transparent 70%)" }}
       />
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-28 pt-28 lg:pb-32 lg:pt-32">
+      <div className="relative mx-auto max-w-6xl px-6 pb-28 pt-32 sm:pt-36 lg:pb-32 lg:pt-40">
         <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
           <Stagger>
             <Reveal>

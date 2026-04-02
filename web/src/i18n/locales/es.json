@@ -247,6 +247,9 @@
     "feeLabel": "Contribución verde (calculada)",
     "isoFooter": "ISO 14064 · E=∑(W×d×EF×CF) · Auditable por transacción",
     "netZero": "Al completar tu pedido con EcoTrace, la huella de carbono operativa de tu compra es CERO. ¡Gracias por contribuir a un planeta más limpio!",
+    "netZeroLead": "Al completar tu pedido con EcoTrace, la huella de carbono operativa de tu compra es",
+    "netZeroHighlight": "CERO",
+    "netZeroTail": ". ¡Gracias por contribuir a un planeta más limpio!",
     "zeroImpactTooltipAria": "Cómo logramos el impacto cero",
     "zeroImpactTooltipTitle": "¿Cómo logramos el Impacto Cero?",
     "zeroImpactTooltipBody": "Comprar online genera CO₂ por el transporte y los servidores. Con EcoTrace, tu contribución neutraliza esa huella: 1. Compensación Real: Financias la absorción de los kg de CO₂ exactos de tu paquete. 2. Tecnología Limpia: Apoyas que esta tienda use hosting y marketing neutros. Al final, la suma es Cero. Tú compras, el planeta respira."
@@ -261,7 +264,8 @@
     "autoMatched": "Conciliado y liquidado automáticamente",
     "successBold": "¡Éxito!",
     "successText1": "Tus clientes han financiado automáticamente el",
-    "successText2": "de tu gasto en marketing este mes."
+    "successText2": "de tu gasto en marketing este mes.",
+    "successMessage": "¡Éxito! Tus clientes han financiado automáticamente el 30% de tu inversión en marketing este mes."
   },
   "invoice": {
     "title": "Simulador de Facturas",
