@@ -122,7 +122,8 @@
       "fee1Commission": "EcoTrace Service Fee (5%)",
       "fee2EcoCredit": "Eco Energy Credit",
       "fee2Verification": "Verification Fee (5%)",
-      "total": "TOTAL"
+      "total": "TOTAL",
+      "minFeeNote": "Min. verification fee applied (0.02)"
     }
   },
   "solutions": {
@@ -210,7 +211,8 @@
     "coveragePartial": "Green Credit covers {{covered}} of your {{total}} monthly ad budget. Increase order volume or offset adoption to close the gap.",
     "disclaimer": "Calculation based on auditable ISO Emission Factors (E = ∑ W×d×EF×CF). Operational savings are an estimate of Green Operational Credit™ reinvestment in verified digital assets.",
     "isoCompliant": "ISO 14064 / ISO 14067 Compliant",
-    "ecoStatement": "ZERO operational footprint. Offset completed and margin recovered."
+    "ecoStatement": "ZERO operational footprint. Offset completed and margin recovered.",
+    "minFeeApplied": "Minimum verification fee applied (0.02)."
   },
   "trust": {
     "title": "Trust & compliance",

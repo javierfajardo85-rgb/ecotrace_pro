@@ -3,6 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useCurrency } from "@/providers/CurrencyProvider";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -149,6 +150,7 @@ function DistributionCard({
 
 function FeeFlowChart() {
   const { t } = useTranslation();
+  const { format: fmt } = useCurrency();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.4 });
 
@@ -174,7 +176,7 @@ function FeeFlowChart() {
       <div className="mt-6">
         <div className="flex items-center justify-between text-xs">
           <span className="font-medium text-slate-600">{t("wallet.flowTotal")}</span>
-          <span className="font-bold text-slate-950">€{totalFee.toLocaleString()}</span>
+          <span className="font-bold text-slate-950">{fmt(totalFee)}</span>
         </div>
         <div className="mt-2 flex h-8 w-full overflow-hidden rounded-xl">
           <motion.div
@@ -209,7 +211,7 @@ function FeeFlowChart() {
             <div className="text-[10px] font-semibold uppercase tracking-wider text-brand-green/60">{t("common.fee1Short")}</div>
             <div className="text-xs font-semibold text-slate-950">{t("wallet.flowFee1Label")}</div>
           </div>
-          <div className="text-sm font-bold text-brand-green">€{fee1}</div>
+          <div className="text-sm font-bold text-brand-green">{fmt(fee1)}</div>
         </motion.div>
 
         <motion.div
@@ -223,7 +225,7 @@ function FeeFlowChart() {
             <div className="text-[10px] font-semibold uppercase tracking-wider text-brand-gold-dark/60">{t("common.fee2Short")}</div>
             <div className="text-xs font-semibold text-slate-950">{t("wallet.flowFee2Label")}</div>
           </div>
-          <div className="text-sm font-bold text-brand-gold-dark">€{fee2.toLocaleString()}</div>
+          <div className="text-sm font-bold text-brand-gold-dark">{fmt(fee2)}</div>
         </motion.div>
       </div>
 
@@ -296,14 +298,15 @@ function ComplianceCard() {
 
 export function FinancialDashboard() {
   const { t } = useTranslation();
+  const { format: fmt } = useCurrency();
   const heroRef = useRef<HTMLDivElement>(null);
   const heroInView = useInView(heroRef, { once: true, amount: 0.4 });
 
   const distributions = [
-    { icon: "📢", nameKey: "wallet.dest1", amount: "€1,240", statusKey: "wallet.dest1Status", type: "settled" as const, pct: 44 },
-    { icon: "🛒", nameKey: "wallet.dest2", amount: "€680", statusKey: "wallet.dest2Status", type: "settled" as const, pct: 24 },
-    { icon: "🌱", nameKey: "wallet.dest3", amount: "€320", statusKey: "wallet.dest3Status", type: "pending" as const, pct: 11 },
-    { icon: "🛡", nameKey: "wallet.dest4", amount: "€607", statusKey: "wallet.dest4Status", type: "accumulated" as const, pct: 21 },
+    { icon: "📢", nameKey: "wallet.dest1", amount: fmt(1240), statusKey: "wallet.dest1Status", type: "settled" as const, pct: 44 },
+    { icon: "🛒", nameKey: "wallet.dest2", amount: fmt(680), statusKey: "wallet.dest2Status", type: "settled" as const, pct: 24 },
+    { icon: "🌱", nameKey: "wallet.dest3", amount: fmt(320), statusKey: "wallet.dest3Status", type: "pending" as const, pct: 11 },
+    { icon: "🛡", nameKey: "wallet.dest4", amount: fmt(607), statusKey: "wallet.dest4Status", type: "accumulated" as const, pct: 21 },
   ];
 
   return (
@@ -346,7 +349,7 @@ export function FinancialDashboard() {
                 animate={heroInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.2, ease }}
               >
-                {t("wallet.heroValue")}
+                {fmt(2847)}
               </motion.div>
               <div className="mt-2 max-w-md text-sm text-slate-600">
                 {t("wallet.heroLabel")}
@@ -364,7 +367,7 @@ export function FinancialDashboard() {
               </div>
               <div className="h-10 w-px bg-slate-100 hidden lg:block" />
               <div className="text-center">
-                <div className="text-2xl font-bold tracking-tight text-brand-green">€393</div>
+                <div className="text-2xl font-bold tracking-tight text-brand-green">{fmt(393)}</div>
                 <div className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-400">{t("wallet.statFee1Total")}</div>
               </div>
               <div className="h-10 w-px bg-slate-100 hidden lg:block" />

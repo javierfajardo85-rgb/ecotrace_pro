@@ -4,6 +4,7 @@ import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { I18nProvider } from "@/providers/I18nProvider";
+import { CurrencyProvider } from "@/providers/CurrencyProvider";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -40,9 +41,11 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${geistMono.variable}`}>
       <body className="bg-white font-sans text-slate-900 antialiased">
         <I18nProvider>
-          <Nav />
-          <main style={{ flex: 1 }}>{children}</main>
-          <Footer />
+          <CurrencyProvider>
+            <Nav />
+            <main style={{ flex: 1 }}>{children}</main>
+            <Footer />
+          </CurrencyProvider>
         </I18nProvider>
       </body>
     </html>

@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Reveal } from "@/components/motion/Motion";
+import { useCurrency } from "@/providers/CurrencyProvider";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -56,7 +57,7 @@ function SegmentedBar({ segments, color, delay = 0 }: { segments: number; color:
   );
 }
 
-function FloatingCoin({ color, delay, x = 0 }: { color: "green" | "gold"; delay: number; x?: number }) {
+function FloatingCoin({ color, delay, x = 0, symbol }: { color: "green" | "gold"; delay: number; x?: number; symbol: string }) {
   const bg = color === "green" ? "bg-brand-green text-white" : "bg-brand-gold text-brand-green";
   return (
     <motion.div
@@ -66,13 +67,14 @@ function FloatingCoin({ color, delay, x = 0 }: { color: "green" | "gold"; delay:
       animate={{ y: [0, 28, 56], opacity: [0, 1, 0], scale: [0.6, 1, 0.6] }}
       transition={{ duration: 2, delay, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
     >
-      €
+      {symbol}
     </motion.div>
   );
 }
 
 function Tasa1Column() {
   const { t } = useTranslation();
+  const { symbol } = useCurrency();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
 
@@ -96,9 +98,9 @@ function Tasa1Column() {
 
       <div className="relative mx-auto my-4 h-16 w-full">
         <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-brand-green/10" />
-        <FloatingCoin color="green" delay={0} x={-8} />
-        <FloatingCoin color="green" delay={0.8} x={6} />
-        <FloatingCoin color="green" delay={1.6} x={-3} />
+        <FloatingCoin color="green" delay={0} x={-8} symbol={symbol} />
+        <FloatingCoin color="green" delay={0.8} x={6} symbol={symbol} />
+        <FloatingCoin color="green" delay={1.6} x={-3} symbol={symbol} />
       </div>
 
       <div className="flex-1 rounded-2xl border border-brand-green/10 bg-brand-green/[0.03] p-5">
@@ -133,6 +135,7 @@ function Tasa1Column() {
 
 function Tasa2Column() {
   const { t } = useTranslation();
+  const { symbol } = useCurrency();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
 
@@ -157,9 +160,9 @@ function Tasa2Column() {
 
       <div className="relative mx-auto my-4 h-16 w-full">
         <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-brand-gold/20" />
-        <FloatingCoin color="gold" delay={0.3} x={5} />
-        <FloatingCoin color="gold" delay={1.1} x={-7} />
-        <FloatingCoin color="gold" delay={1.9} x={2} />
+        <FloatingCoin color="gold" delay={0.3} x={5} symbol={symbol} />
+        <FloatingCoin color="gold" delay={1.1} x={-7} symbol={symbol} />
+        <FloatingCoin color="gold" delay={1.9} x={2} symbol={symbol} />
       </div>
 
       <div className="flex-1 rounded-2xl border border-brand-gold/15 bg-brand-gold/[0.04] p-5">
@@ -224,7 +227,7 @@ function FeeBreakdownCard({
   title: string;
   total: string;
   subtitle: string;
-  lines: { label: string; value: string; badge?: string }[];
+  lines: { label: string; value: string; badge?: string; note?: string }[];
   totalLabel: string;
   totalValue: string;
   expandHint: string;
@@ -263,18 +266,25 @@ function FeeBreakdownCard({
           >
             <div className="mt-3 space-y-1.5 border-t border-slate-100 pt-3">
               {lines.map((line) => (
-                <div key={line.label} className="flex items-center justify-between gap-2">
-                  <span className="flex items-center gap-1.5 text-[10px] text-slate-600">
-                    <span className={`h-1 w-1 shrink-0 rounded-full ${dotClass}`} />
-                    {line.label}
-                    {line.badge && (
-                      <span className="inline-flex items-center gap-0.5 rounded bg-brand-green/10 px-1 py-0.5 text-[8px] font-bold text-brand-green">
-                        <ShieldIcon className="text-brand-green" />
-                        {line.badge}
-                      </span>
-                    )}
-                  </span>
-                  <span className="text-[10px] font-semibold text-slate-950 tabular-nums">{line.value}</span>
+                <div key={line.label}>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-1.5 text-[10px] text-slate-600">
+                      <span className={`h-1 w-1 shrink-0 rounded-full ${dotClass}`} />
+                      {line.label}
+                      {line.badge && (
+                        <span className="inline-flex items-center gap-0.5 rounded bg-brand-green/10 px-1 py-0.5 text-[8px] font-bold text-brand-green">
+                          <ShieldIcon className="text-brand-green" />
+                          {line.badge}
+                        </span>
+                      )}
+                    </span>
+                    <span className="text-[10px] font-semibold text-slate-950 tabular-nums">{line.value}</span>
+                  </div>
+                  {line.note && (
+                    <div className={`ml-2.5 mt-0.5 text-[8px] italic ${isGreen ? "text-brand-green/60" : "text-brand-gold-dark/60"}`}>
+                      {line.note}
+                    </div>
+                  )}
                 </div>
               ))}
 
@@ -296,6 +306,7 @@ function FeeBreakdownCard({
 
 function EcoLogicAlgorithm() {
   const { t } = useTranslation();
+  const { format: fmt } = useCurrency();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.5 });
 
@@ -412,28 +423,28 @@ function EcoLogicAlgorithm() {
         <FeeBreakdownCard
           variant="green"
           title={t("common.fee1Short")}
-          total="€0.16"
+          total={fmt(0.17)}
           subtitle={t("howItWorks.ecoLogicFee1Sub")}
           lines={[
-            { label: t("howItWorks.breakdown.fee1CarbonOffset"), value: "€0.05" },
-            { label: t("howItWorks.breakdown.fee1AuditFee"), value: "€0.10", badge: "ISO 14064" },
-            { label: t("howItWorks.breakdown.fee1Commission"), value: "€0.0025" },
+            { label: t("howItWorks.breakdown.fee1CarbonOffset"), value: fmt(0.05) },
+            { label: t("howItWorks.breakdown.fee1AuditFee"), value: fmt(0.10), badge: "ISO 14064" },
+            { label: t("howItWorks.breakdown.fee1Commission"), value: fmt(0.02), note: t("howItWorks.breakdown.minFeeNote") },
           ]}
           totalLabel={t("howItWorks.breakdown.total")}
-          totalValue="€0.16"
+          totalValue={fmt(0.17)}
           expandHint={t("howItWorks.ecoLogicClickToExpand")}
         />
         <FeeBreakdownCard
           variant="gold"
           title={t("common.fee2Short")}
-          total="€0.04"
+          total={fmt(0.06)}
           subtitle={t("howItWorks.ecoLogicFee2Sub")}
           lines={[
-            { label: t("howItWorks.breakdown.fee2EcoCredit"), value: "€0.038" },
-            { label: t("howItWorks.breakdown.fee2Verification"), value: "€0.002" },
+            { label: t("howItWorks.breakdown.fee2EcoCredit"), value: fmt(0.0375) },
+            { label: t("howItWorks.breakdown.fee2Verification"), value: fmt(0.02), note: t("howItWorks.breakdown.minFeeNote") },
           ]}
           totalLabel={t("howItWorks.breakdown.total")}
-          totalValue="€0.04"
+          totalValue={fmt(0.06)}
           expandHint={t("howItWorks.ecoLogicClickToExpand")}
         />
       </motion.div>
@@ -447,7 +458,7 @@ function EcoLogicAlgorithm() {
       >
         <div className="text-[10px] font-bold text-brand-green">{t("howItWorks.ecoLogicTotalLabel")}</div>
         <div className="flex items-center gap-2">
-          <span className="text-base font-extrabold tracking-tight text-brand-green">€0.20</span>
+          <span className="text-base font-extrabold tracking-tight text-brand-green">{fmt(0.23)}</span>
           <span className="text-[9px] text-slate-400">{t("howItWorks.ecoLogicTotalSub")}</span>
         </div>
       </motion.div>

@@ -1,9 +1,11 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
+import { useCurrency } from "@/providers/CurrencyProvider";
 
 export function DashboardPreview() {
   const { t } = useTranslation();
+  const { format: fmt } = useCurrency();
 
   return (
     <div className="w-full overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
@@ -24,7 +26,7 @@ export function DashboardPreview() {
             {t("dashboardPreview.balanceLabel")}
           </div>
           <div className="mt-2 text-3xl font-extrabold tracking-tight text-slate-950">
-            €452.50
+            {fmt(452.5)}
           </div>
           <div className="mt-1 text-sm text-slate-600">
             {t("dashboardPreview.balanceSub")}
@@ -59,7 +61,7 @@ export function DashboardPreview() {
               </div>
             </div>
           </div>
-          <span className="text-sm font-bold text-slate-950">−€300.00</span>
+          <span className="text-sm font-bold text-slate-950">−{fmt(300)}</span>
         </div>
       </div>
 

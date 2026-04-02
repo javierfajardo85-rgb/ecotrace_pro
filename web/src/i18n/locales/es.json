@@ -122,7 +122,8 @@
       "fee1Commission": "Comisión EcoTrace (5%)",
       "fee2EcoCredit": "Crédito Energía Eco",
       "fee2Verification": "Comisión Verificación (5%)",
-      "total": "TOTAL"
+      "total": "TOTAL",
+      "minFeeNote": "Comisión mín. de verificación aplicada (0.02)"
     }
   },
   "solutions": {
@@ -210,7 +211,8 @@
     "coveragePartial": "El Crédito Verde cubre {{covered}} de tu presupuesto de {{total}} en publicidad mensual. Aumenta el volumen de pedidos o la adopción de compensación para cerrar la brecha.",
     "disclaimer": "Cálculo basado en Factores de Emisión auditables ISO (E = ∑ W×d×EF×CF). El ahorro operativo es una estimación de reinversión del Crédito Operativo Verde™ en activos digitales verificados.",
     "isoCompliant": "ISO 14064 / ISO 14067 Compliant",
-    "ecoStatement": "Huella operativa CERO. Pedido compensado y margen recuperado."
+    "ecoStatement": "Huella operativa CERO. Pedido compensado y margen recuperado.",
+    "minFeeApplied": "Comisión mínima de verificación aplicada (0.02)."
   },
   "trust": {
     "title": "Confianza y cumplimiento",

@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Reveal, Stagger } from "@/components/motion/Motion";
+import { useCurrency } from "@/providers/CurrencyProvider";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const PRICE_STANDARD = 2.2;
-const PRICE_ECO = 2.4;
+const PRICE_ECO = 2.43;
 const SLOGAN_INTERVAL_MS = 30_000;
 const SLOGAN_COUNT = 3;
 
@@ -208,6 +209,7 @@ function TransparencyTooltip() {
 
 function ShippingRateWidget() {
   const { t } = useTranslation();
+  const { format: fmt, symbol } = useCurrency();
   const [active, setActive] = useState(false);
   const price = useCountUp(PRICE_ECO, 0.6, active);
 
@@ -249,7 +251,7 @@ function ShippingRateWidget() {
           <div className="flex items-center gap-2">
             <div className="text-right">
               <span className={`text-lg font-bold tabular-nums tracking-tight transition-colors duration-300 ${active ? "text-brand-green" : "text-slate-950"}`}>
-                €{price.toFixed(2)}
+                {fmt(price)}
               </span>
             </div>
             <TransparencyTooltip />
@@ -287,11 +289,11 @@ function ShippingRateWidget() {
               <div className="flex items-center justify-between gap-2 text-[10px]">
                 <span className="flex items-center gap-1.5 text-slate-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-                  {t("hero.widgetFee1")} <span className="font-semibold text-brand-green">€0.16</span>
+                  {t("hero.widgetFee1")} <span className="font-semibold text-brand-green">{fmt(0.16)}</span>
                 </span>
                 <span className="flex items-center gap-1.5 text-slate-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" />
-                  {t("hero.widgetFee2")} <span className="font-semibold text-brand-gold-dark">€0.04</span>
+                  {t("hero.widgetFee2")} <span className="font-semibold text-brand-gold-dark">{fmt(0.04)}</span>
                 </span>
               </div>
             </div>
@@ -312,7 +314,7 @@ function ShippingRateWidget() {
   );
 }
 
-function CoinParticle({ delay, pathVariant }: { delay: number; pathVariant: "offset" | "credit" }) {
+function CoinParticle({ delay, pathVariant, symbol }: { delay: number; pathVariant: "offset" | "credit"; symbol: string }) {
   const isOffset = pathVariant === "offset";
   return (
     <motion.div
@@ -321,13 +323,14 @@ function CoinParticle({ delay, pathVariant }: { delay: number; pathVariant: "off
       animate={{ y: [0, 40, 80], x: isOffset ? [0, -40, -70] : [0, 40, 70], opacity: [0, 1, 0], scale: [0.7, 1, 0.7] }}
       transition={{ duration: 2.4, delay, repeat: Infinity, repeatDelay: 1.2, ease: "easeInOut" }}
     >
-      €
+      {symbol}
     </motion.div>
   );
 }
 
 function MoneyFlowDiagram() {
   const { t } = useTranslation();
+  const { symbol } = useCurrency();
   return (
     <div className="relative mx-auto w-full max-w-xs py-4">
       <div className="flex justify-center">
@@ -338,10 +341,10 @@ function MoneyFlowDiagram() {
       </div>
 
       <div className="relative h-24">
-        <CoinParticle delay={0} pathVariant="offset" />
-        <CoinParticle delay={0.6} pathVariant="credit" />
-        <CoinParticle delay={1.2} pathVariant="offset" />
-        <CoinParticle delay={1.8} pathVariant="credit" />
+        <CoinParticle delay={0} pathVariant="offset" symbol={symbol} />
+        <CoinParticle delay={0.6} pathVariant="credit" symbol={symbol} />
+        <CoinParticle delay={1.2} pathVariant="offset" symbol={symbol} />
+        <CoinParticle delay={1.8} pathVariant="credit" symbol={symbol} />
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 200 80" fill="none" preserveAspectRatio="xMidYMid meet">
           <path d="M100 8 Q70 40 40 72" stroke="#0A3D2A" strokeWidth="1" strokeDasharray="4 4" opacity="0.25" />
           <path d="M100 8 Q130 40 160 72" stroke="#D4AF77" strokeWidth="1" strokeDasharray="4 4" opacity="0.35" />

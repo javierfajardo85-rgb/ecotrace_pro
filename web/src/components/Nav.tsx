@@ -2,6 +2,31 @@
 
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { useCurrency } from "@/providers/CurrencyProvider";
+
+const CURRENCIES = ["EUR", "USD", "GBP"] as const;
+
+function CurrencySwitcher() {
+  const { code, setCode } = useCurrency();
+  return (
+    <div className="flex items-center gap-0.5 rounded-lg border border-slate-200 p-0.5 text-xs font-medium">
+      {CURRENCIES.map((c) => (
+        <button
+          key={c}
+          type="button"
+          onClick={() => setCode(c)}
+          className={`rounded-md px-2 py-1 transition ${
+            code === c
+              ? "bg-brand-gold text-white"
+              : "text-slate-500 hover:text-slate-900"
+          }`}
+        >
+          {c === "EUR" ? "€" : c === "GBP" ? "£" : "$"}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function Nav() {
   const { t, i18n } = useTranslation();
@@ -69,6 +94,9 @@ export function Nav() {
                 ES
               </button>
             </div>
+
+            {/* Currency switcher */}
+            <CurrencySwitcher />
 
             <Link
               className="hidden h-10 items-center justify-center rounded-lg px-4 text-sm font-semibold text-slate-700 transition duration-300 ease-out hover:text-slate-950 sm:inline-flex"

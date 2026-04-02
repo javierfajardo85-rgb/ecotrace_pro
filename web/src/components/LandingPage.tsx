@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useCurrency } from "@/providers/CurrencyProvider";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
@@ -152,6 +153,7 @@ function DetailModal({
 
 export function LandingPage() {
   const { t } = useTranslation();
+  const { format: fmt } = useCurrency();
 
   const profitCards = [
     {
@@ -187,8 +189,8 @@ export function LandingPage() {
   ];
 
   const plans = [
-    { name: t("pricing.starter"), price: "€29", period: "/mo", d: t("pricing.starterDesc"), cta: t("pricing.startTrial"), featured: false },
-    { name: t("pricing.growth"), price: "€99", period: "/mo", d: t("pricing.growthDesc"), cta: t("pricing.startTrial"), featured: true },
+    { name: t("pricing.starter"), price: fmt(29), period: "/mo", d: t("pricing.starterDesc"), cta: t("pricing.startTrial"), featured: false },
+    { name: t("pricing.growth"), price: fmt(99), period: "/mo", d: t("pricing.growthDesc"), cta: t("pricing.startTrial"), featured: true },
     { name: t("pricing.enterprise"), price: "Custom", period: "", d: t("pricing.enterpriseDesc"), cta: t("pricing.contactSales"), featured: false },
   ];
 

@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useCurrency } from "@/providers/CurrencyProvider";
 
 export function WidgetPreview({ className }: { className?: string }) {
   const { t } = useTranslation();
+  const { format: fmt } = useCurrency();
   const [checked, setChecked] = useState(true);
 
   return (
@@ -38,7 +40,7 @@ export function WidgetPreview({ className }: { className?: string }) {
                 {t("widget.feeLabel")}
               </span>
               <span className="text-base font-bold tracking-tight text-brand-green">
-                +€0.95
+                +{fmt(0.95)}
               </span>
             </div>
           )}

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useCurrency } from "@/providers/CurrencyProvider";
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
@@ -13,10 +14,6 @@ function fmtInt(n: number) {
 
 function fmtKg(n: number) {
   return new Intl.NumberFormat(undefined, { maximumFractionDigits: 3 }).format(n);
-}
-
-function fmtEur(n: number) {
-  return new Intl.NumberFormat(undefined, { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(n);
 }
 
 const EMISSION_FACTORS: Record<string, number> = {
@@ -32,11 +29,13 @@ const FEE1_AUDIT_FIXED = 0.1;
 const FEE1_SERVICE_PCT = 0.05;
 const FEE2_REINVEST_RATIO = 0.75;
 const FEE2_VERIFY_PCT = 0.05;
+const MIN_COMMISSION = 0.02;
 const LONG_HAUL_RATIO = 0.8;
 const LAST_MILE_RATIO = 0.2;
 
 export function RoiCalculator() {
   const { t } = useTranslation();
+  const { format: fmt } = useCurrency();
   const [ordersPerMonth, setOrdersPerMonth] = useState(1200);
   const [avgWeightKg, setAvgWeightKg] = useState(1.2);
   const [avgDistanceKm, setAvgDistanceKm] = useState(620);
@@ -64,16 +63,20 @@ export function RoiCalculator() {
     const co2PerOrderKg = co2LongHaul + co2LastMile;
     const totalKg = co2PerOrderKg * orders;
 
-    // Fee 1: A (carbon cost) + B (audit fixed) + 5% of A
+    // Fee 1: A + B + MAX(0.02, A * 5%)
     const carbonCostA = co2PerOrderKg * (CERTIFIED_OFFSET_EUR_PER_TONNE / 1000);
     const auditFixedB = FEE1_AUDIT_FIXED;
-    const serviceCommission = carbonCostA * FEE1_SERVICE_PCT;
+    const rawServiceComm = carbonCostA * FEE1_SERVICE_PCT;
+    const serviceCommission = Math.max(MIN_COMMISSION, rawServiceComm);
+    const fee1MinApplied = rawServiceComm < MIN_COMMISSION;
     const fee1PerOrder = carbonCostA + auditFixedB + serviceCommission;
     const fee1Monthly = fee1PerOrder * orders * share;
 
-    // Fee 2: 75% of A (reinvestment credit) + 5% verification on that
+    // Fee 2: creditBase + MAX(0.02, creditBase * 5%)
     const reinvestBase = carbonCostA * FEE2_REINVEST_RATIO;
-    const verifyCommission = reinvestBase * FEE2_VERIFY_PCT;
+    const rawVerifyComm = reinvestBase * FEE2_VERIFY_PCT;
+    const verifyCommission = Math.max(MIN_COMMISSION, rawVerifyComm);
+    const fee2MinApplied = rawVerifyComm < MIN_COMMISSION;
     const fee2PerOrder = reinvestBase + verifyCommission;
     const fee2Monthly = fee2PerOrder * orders * share;
 
@@ -98,8 +101,10 @@ export function RoiCalculator() {
       verifyCommission,
       fee1PerOrder,
       fee1Monthly,
+      fee1MinApplied,
       fee2PerOrder,
       fee2Monthly,
+      fee2MinApplied,
       totalFeePerOrder,
       adsCoveragePct,
       ads,
@@ -137,7 +142,7 @@ export function RoiCalculator() {
           </label>
 
           <Slider label={t("roi.pctOffset")} value={shareOffsets} display={`${fmtInt(shareOffsets)}%`} min={0} max={100} step={5} onChange={setShareOffsets} />
-          <Slider label={t("roi.monthlyAds")} value={monthlyAdsCost} display={fmtEur(monthlyAdsCost)} min={0} max={10000} step={50} onChange={setMonthlyAdsCost} />
+          <Slider label={t("roi.monthlyAds")} value={monthlyAdsCost} display={fmt(monthlyAdsCost)} min={0} max={10000} step={50} onChange={setMonthlyAdsCost} />
         </div>
       </div>
 
@@ -201,24 +206,27 @@ export function RoiCalculator() {
             <div className="rounded-xl border border-brand-green/15 bg-brand-green/[0.04] p-4">
               <div className="text-[10px] font-bold text-brand-green">{t("roi.fee1Monthly")}</div>
               <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
-                {fmtEur(result.fee1Monthly)}
+                {fmt(result.fee1Monthly)}
               </div>
               <div className="mt-2 text-sm text-slate-600">
-                {fmtEur(result.fee1PerOrder)} {t("roi.fee1PerOrder")}
+                {fmt(result.fee1PerOrder)} {t("roi.fee1PerOrder")}
               </div>
               <div className="mt-2 space-y-1 border-t border-brand-green/10 pt-2">
                 <div className="flex justify-between text-[10px]">
                   <span className="text-slate-500">{t("howItWorks.breakdown.fee1CarbonOffset")} (A)</span>
-                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.carbonCostA)}</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmt(result.carbonCostA)}</span>
                 </div>
                 <div className="flex justify-between text-[10px]">
                   <span className="text-slate-500">{t("howItWorks.breakdown.fee1AuditFee")} (B)</span>
-                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.auditFixedB)}</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmt(result.auditFixedB)}</span>
                 </div>
                 <div className="flex justify-between text-[10px]">
                   <span className="text-slate-500">{t("howItWorks.breakdown.fee1Commission")}</span>
-                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.serviceCommission)}</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmt(result.serviceCommission)}</span>
                 </div>
+                {result.fee1MinApplied && (
+                  <div className="text-[9px] italic text-brand-green/70">{t("roi.minFeeApplied")}</div>
+                )}
               </div>
             </div>
 
@@ -226,20 +234,23 @@ export function RoiCalculator() {
             <div className="rounded-xl border border-brand-gold/20 bg-brand-gold/[0.04] p-4">
               <div className="text-[10px] font-bold text-brand-gold-dark">{t("roi.fee2Monthly")}</div>
               <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
-                {fmtEur(result.fee2Monthly)}
+                {fmt(result.fee2Monthly)}
               </div>
               <div className="mt-2 text-sm text-slate-600">
-                {fmtEur(result.fee2PerOrder)} {t("roi.fee2PerOrder")}
+                {fmt(result.fee2PerOrder)} {t("roi.fee2PerOrder")}
               </div>
               <div className="mt-2 space-y-1 border-t border-brand-gold/10 pt-2">
                 <div className="flex justify-between text-[10px]">
                   <span className="text-slate-500">{t("howItWorks.breakdown.fee2EcoCredit")} (75% A)</span>
-                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.reinvestBase)}</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmt(result.reinvestBase)}</span>
                 </div>
                 <div className="flex justify-between text-[10px]">
                   <span className="text-slate-500">{t("howItWorks.breakdown.fee2Verification")}</span>
-                  <span className="font-semibold text-slate-700 tabular-nums">{fmtEur(result.verifyCommission)}</span>
+                  <span className="font-semibold text-slate-700 tabular-nums">{fmt(result.verifyCommission)}</span>
                 </div>
+                {result.fee2MinApplied && (
+                  <div className="text-[9px] italic text-brand-gold-dark/70">{t("roi.minFeeApplied")}</div>
+                )}
               </div>
             </div>
           </div>
@@ -251,7 +262,7 @@ export function RoiCalculator() {
               <div className="mt-0.5 text-[10px] text-slate-500">{t("roi.totalGreenFeeSub")}</div>
             </div>
             <div className="text-2xl font-extrabold tracking-tight text-brand-green">
-              {fmtEur(result.totalFeePerOrder)}
+              {fmt(result.totalFeePerOrder)}
             </div>
           </div>
 
@@ -276,8 +287,8 @@ export function RoiCalculator() {
               {result.adsCoveragePct >= 100
                 ? t("roi.coverageFull")
                 : t("roi.coveragePartial", {
-                    covered: fmtEur(result.fee2Monthly),
-                    total: fmtEur(result.ads),
+                    covered: fmt(result.fee2Monthly),
+                    total: fmt(result.ads),
                   })}
             </div>
           </div>
