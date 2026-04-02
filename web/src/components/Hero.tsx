@@ -47,11 +47,11 @@ function RotatingNarrative() {
   const current = sets[index];
 
   return (
-    <div className="flex min-h-[220px] flex-col justify-start sm:min-h-[200px] lg:min-h-[210px]">
+    <div className="flex min-h-[420px] flex-col justify-start sm:min-h-[360px] lg:min-h-[320px]">
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
-          className="flex flex-col gap-5"
+          className="flex flex-col gap-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -62,7 +62,7 @@ function RotatingNarrative() {
             <span className="text-brand-gold-dark">{current.gold}</span>
             {current.after}
           </h1>
-          <p className="max-w-lg text-base font-medium leading-relaxed text-slate-600 sm:text-lg">
+          <p className="max-w-2xl text-base leading-[1.7] text-slate-600 sm:text-lg sm:leading-[1.75]">
             {current.sub}
           </p>
         </motion.div>
