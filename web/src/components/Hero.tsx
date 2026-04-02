@@ -9,10 +9,10 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 const PRICE_STANDARD = 2.2;
 const PRICE_ECO = 2.4;
-const SLOGAN_INTERVAL_MS = 6000;
+const SLOGAN_INTERVAL_MS = 30_000;
 const SLOGAN_COUNT = 3;
 
-function RotatingHeadline() {
+function RotatingNarrative() {
   const { t } = useTranslation();
   const [index, setIndex] = useState(0);
 
@@ -23,29 +23,49 @@ function RotatingHeadline() {
     return () => clearInterval(id);
   }, []);
 
-  const slogans = [
-    { before: t("hero.slogan1Before"), gold: t("hero.slogan1Gold"), after: t("hero.slogan1After") },
-    { before: t("hero.slogan2Before"), gold: t("hero.slogan2Gold"), after: t("hero.slogan2After") },
-    { before: t("hero.slogan3Before"), gold: t("hero.slogan3Gold"), after: t("hero.slogan3After") },
+  const sets = [
+    {
+      before: t("hero.slogan1Before"),
+      gold: t("hero.slogan1Gold"),
+      after: t("hero.slogan1After"),
+      sub: t("hero.slogan1Sub"),
+    },
+    {
+      before: t("hero.slogan2Before"),
+      gold: t("hero.slogan2Gold"),
+      after: t("hero.slogan2After"),
+      sub: t("hero.slogan2Sub"),
+    },
+    {
+      before: t("hero.slogan3Before"),
+      gold: t("hero.slogan3Gold"),
+      after: t("hero.slogan3After"),
+      sub: t("hero.slogan3Sub"),
+    },
   ];
 
-  const current = slogans[index];
+  const current = sets[index];
 
   return (
-    <div className="relative min-h-[3.6em] sm:min-h-[3.2em] lg:min-h-[3em]">
+    <div className="flex min-h-[220px] flex-col justify-start sm:min-h-[200px] lg:min-h-[210px]">
       <AnimatePresence mode="wait">
-        <motion.h1
+        <motion.div
           key={index}
-          className="max-w-lg text-3xl font-extrabold !leading-[1.1] tracking-tight text-slate-950 sm:text-4xl lg:text-5xl"
-          initial={{ opacity: 0, y: 24, filter: "blur(4px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, y: -24, filter: "blur(4px)" }}
-          transition={{ duration: 0.5, ease }}
+          className="flex flex-col gap-5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1, ease }}
         >
-          {current.before}
-          <span className="text-brand-gold-dark">{current.gold}</span>
-          {current.after}
-        </motion.h1>
+          <h1 className="max-w-xl text-3xl font-extrabold !leading-[1.12] tracking-tight text-brand-green sm:text-4xl lg:text-[3.25rem]">
+            {current.before}
+            <span className="text-brand-gold-dark">{current.gold}</span>
+            {current.after}
+          </h1>
+          <p className="max-w-lg text-base font-medium leading-relaxed text-slate-600 sm:text-lg">
+            {current.sub}
+          </p>
+        </motion.div>
       </AnimatePresence>
     </div>
   );
@@ -371,20 +391,8 @@ export function Hero() {
 
             <Reveal>
               <div className="mt-8">
-                <RotatingHeadline />
+                <RotatingNarrative />
               </div>
-            </Reveal>
-
-            <Reveal>
-              <p className="mt-6 max-w-lg text-lg text-slate-600">
-                {t("hero.sub1")}{" "}
-                <span className="font-semibold text-brand-green">{t("common.greenFee")}</span>{" "}
-                {t("hero.sub2")}{" "}
-                <span className="font-semibold text-brand-green">{t("common.fee1Name")}</span>{" "}
-                {t("hero.sub3")}{" "}
-                <span className="font-semibold text-brand-gold-dark">{t("common.fee2Name")}</span>{" "}
-                {t("hero.sub4")}
-              </p>
             </Reveal>
 
             <Reveal>
