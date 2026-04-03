@@ -112,7 +112,7 @@ function DetailModal({
 
             <div className="flex flex-col">
               <div className="border-b border-white/50 bg-gradient-to-r from-white/90 via-white/70 to-white/50 px-8 pb-5 pt-8 sm:px-10 sm:pt-10">
-                <h3 className="pr-12 text-xl font-semibold tracking-tight text-slate-950 sm:text-2xl">
+                <h3 className="pr-12 text-xl font-semibold tracking-tight text-theme-green sm:text-2xl">
                   {header}
                 </h3>
               </div>
@@ -135,7 +135,7 @@ function DetailModal({
                                   {title}
                                 </h4>
                                 {rest && (
-                                  <p className="text-sm leading-relaxed text-slate-600">
+                                  <p className="text-sm leading-relaxed text-theme-green">
                                     {rest}
                                   </p>
                                 )}
@@ -143,7 +143,7 @@ function DetailModal({
                             );
                           }
                           return (
-                            <p className="text-sm leading-relaxed text-slate-600">
+                            <p className="text-sm leading-relaxed text-theme-green">
                               {bullet}
                             </p>
                           );
@@ -224,7 +224,7 @@ export function LandingPage() {
   ];
 
   return (
-    <div className="bg-white text-slate-900">
+    <div className="bg-white text-theme-green">
       <main>
         <Hero />
         <HowItWorks />
@@ -233,7 +233,7 @@ export function LandingPage() {
         <section id="solutions" className="border-t border-slate-100 bg-white">
           <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-3xl tracking-tight text-slate-950">{t("solutions.title")}</h2>
+              <h2 className="text-3xl tracking-tight text-theme-green">{t("solutions.title")}</h2>
               <p className="mt-4 text-base text-slate-600">{t("solutions.subtitle")}</p>
             </div>
 
@@ -242,7 +242,7 @@ export function LandingPage() {
               <Reveal>
                 <div>
                   <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">{t("solutions.sol1Badge")}</div>
-                  <h3 className="mt-4 text-2xl tracking-tight text-slate-950">{t("solutions.sol1Title")}</h3>
+                  <h3 className="mt-4 text-2xl tracking-tight text-theme-green">{t("solutions.sol1Title")}</h3>
                   <p className="mt-1 text-sm font-medium text-brand-green">{t("solutions.sol1Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol1Text")}</p>
                   <ul className="mt-5 grid gap-2.5 text-sm text-slate-600">
@@ -271,7 +271,7 @@ export function LandingPage() {
                     {t("techAdvantage.badge")}
                   </div>
                 </div>
-                <h4 className="mt-4 text-lg font-bold tracking-tight text-slate-950">{t("techAdvantage.title")}</h4>
+                <h4 className="mt-4 text-lg font-bold tracking-tight text-theme-green">{t("techAdvantage.title")}</h4>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{t("techAdvantage.text")}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {[t("techAdvantage.pill1"), t("techAdvantage.pill2"), t("techAdvantage.pill3"), t("techAdvantage.pill4")].map((p) => (
@@ -289,7 +289,7 @@ export function LandingPage() {
               <Reveal>
                 <div className="order-1 lg:order-2">
                   <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">{t("solutions.sol2Badge")}</div>
-                  <h3 className="mt-4 text-2xl tracking-tight text-slate-950">{t("solutions.sol2Title")}</h3>
+                  <h3 className="mt-4 text-2xl tracking-tight text-theme-green">{t("solutions.sol2Title")}</h3>
                   <p className="mt-1 text-sm font-medium text-slate-600">{t("solutions.sol2Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol2Text")}</p>
                   <ul className="mt-5 grid gap-2 text-sm text-slate-600">
@@ -309,7 +309,7 @@ export function LandingPage() {
               <Reveal>
                 <div>
                   <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">{t("solutions.sol3Badge")}</div>
-                  <h3 className="mt-4 text-2xl tracking-tight text-slate-950">{t("solutions.sol3Title")}</h3>
+                  <h3 className="mt-4 text-2xl tracking-tight text-theme-green">{t("solutions.sol3Title")}</h3>
                   <p className="mt-1 text-sm font-medium text-slate-600">{t("solutions.sol3Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol3Text")}</p>
                   <ul className="mt-5 grid gap-2 text-sm text-slate-600">
@@ -329,7 +329,7 @@ export function LandingPage() {
                       <ShieldIcon />
                     </div>
                     <div>
-                      <div className="text-lg font-bold tracking-tight text-slate-950">{t("solutions.sol3AuditReady")}</div>
+                      <div className="text-lg font-bold tracking-tight text-theme-green">{t("solutions.sol3AuditReady")}</div>
                       <div className="mt-1 text-sm text-slate-600">{t("solutions.sol3AuditSub")}</div>
                     </div>
                     <div className="flex flex-wrap justify-center gap-2">
@@ -348,14 +348,14 @@ export function LandingPage() {
         <section id="merchants" className="border-t border-slate-100 bg-slate-50/40">
           <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight text-slate-950">{t("profitability.title")}</h2>
+              <h2 className="text-3xl tracking-tight text-theme-green">{t("profitability.title")}</h2>
               <p className="mt-4 text-base text-slate-600">{t("profitability.subtitle")}</p>
             </div>
             <div className="mt-14 grid gap-5 lg:grid-cols-3">
               {profitCards.map((b, i) => (
                 <Reveal key={b.t}>
                   <HoverLift className="group relative h-full rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5">
-                    <div className="text-sm font-semibold text-slate-950">{b.t}</div>
+                    <div className="text-sm font-semibold text-theme-green">{b.t}</div>
                     <div className="mt-2 text-sm text-slate-600">{b.d}</div>
 
                     {/* "+" detail trigger */}
@@ -389,7 +389,7 @@ export function LandingPage() {
         <section id="roi" className="border-t border-slate-100 bg-white">
           <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight text-slate-950">{t("roi.title")}</h2>
+              <h2 className="text-3xl tracking-tight text-theme-green">{t("roi.title")}</h2>
               <p className="mt-4 text-base text-slate-600">{t("roi.subtitle")}</p>
             </div>
             <div className="mt-14"><RoiCalculator /></div>
@@ -400,7 +400,7 @@ export function LandingPage() {
         <section id="resources" className="border-t border-slate-100 bg-slate-50/40">
           <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight text-slate-950">{t("trust.title")}</h2>
+              <h2 className="text-3xl tracking-tight text-theme-green">{t("trust.title")}</h2>
               <p className="mt-4 text-base text-slate-600">{t("trust.subtitle")}</p>
             </div>
             <div className="mt-10 flex flex-wrap items-center gap-2">
@@ -425,7 +425,7 @@ export function LandingPage() {
         <section id="pricing" className="border-t border-slate-100 bg-white">
           <div className="mx-auto max-w-6xl px-6 py-28">
             <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight text-slate-950">{t("pricing.title")}</h2>
+              <h2 className="text-3xl tracking-tight text-theme-green">{t("pricing.title")}</h2>
               <p className="mt-4 text-base text-slate-600">{t("pricing.subtitle")}</p>
             </div>
             <div className="mt-14 grid gap-5 lg:grid-cols-3">
@@ -437,9 +437,9 @@ export function LandingPage() {
                     }`}
                   >
                     <div className="flex items-baseline justify-between gap-4">
-                      <div className="text-sm font-semibold text-slate-950">{p.name}</div>
+                      <div className="text-sm font-semibold text-theme-green">{p.name}</div>
                       <div className="text-right">
-                        <span className="text-2xl font-bold tracking-tight text-slate-950">{p.price}</span>
+                        <span className="text-2xl font-bold tracking-tight text-theme-green">{p.price}</span>
                         {p.period && <span className="text-sm text-slate-400">{p.period}</span>}
                       </div>
                     </div>

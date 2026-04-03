@@ -118,7 +118,7 @@ function Tasa1Column() {
             >
               <CheckIcon className="shrink-0 text-brand-green" />
               <div className="min-w-0 flex-1">
-                <div className="text-xs font-semibold text-slate-950">{p.name}</div>
+                <div className="text-xs font-semibold text-theme-green">{p.name}</div>
                 <div className="text-[10px] text-slate-400">{p.region}</div>
               </div>
             </motion.div>
@@ -181,7 +181,7 @@ function Tasa2Column() {
               <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-brand-gold/10">{d.icon}</span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-semibold text-slate-950">{d.name}</span>
+                  <span className="text-xs font-semibold text-theme-green">{d.name}</span>
                   <span className="text-xs font-bold text-brand-gold-dark">{d.pct}%</span>
                 </div>
                 <div className="mt-1.5 h-1 w-full rounded-full bg-brand-gold/10">
@@ -297,7 +297,7 @@ function FeeBreakdownCard({
                         </span>
                       )}
                     </span>
-                    <span className="text-[10px] font-semibold text-slate-950 tabular-nums">{line.value}</span>
+                    <span className="text-[10px] font-semibold text-theme-green tabular-nums">{line.value}</span>
                   </div>
                   {line.note && (
                     <div className={`ml-2.5 mt-0.5 text-[8px] italic ${isGreen ? "text-brand-green/60" : "text-brand-gold-dark/60"}`}>
@@ -343,7 +343,7 @@ function EcoLogicAlgorithm() {
           f(x)
         </div>
         <div>
-          <div className="text-sm font-bold text-slate-950">{t("howItWorks.ecoLogicName")}</div>
+          <div className="text-sm font-bold text-theme-green">{t("howItWorks.ecoLogicName")}</div>
           <div className="text-xs text-slate-400">{t("howItWorks.ecoLogicAudit")}</div>
         </div>
       </div>
@@ -383,7 +383,7 @@ function EcoLogicAlgorithm() {
             transition={{ duration: 0.4, delay: 0.3 + i * 0.08, ease }}
           >
             <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">{s.label}</div>
-            <div className="mt-1 text-sm font-bold tracking-tight text-slate-950">{s.value}</div>
+            <div className="mt-1 text-sm font-bold tracking-tight text-theme-green">{s.value}</div>
             <div className="mt-0.5 text-[10px] text-slate-400">{s.desc}</div>
           </motion.div>
         ))}
@@ -503,11 +503,10 @@ export function HowItWorks() {
               <span className="h-1.5 w-1.5 rounded-full bg-brand-green" aria-hidden="true" />
               {t("howItWorks.badge")}
             </div>
-            <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
+            <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-theme-green sm:text-4xl">
               <Trans
                 i18nKey="howItWorks.h2"
                 components={{
-                  gold1: <span className="text-[#D4AF77]" />,
                   gold2: <span className="text-[#D4AF77]" />,
                 }}
               />
@@ -558,7 +557,7 @@ export function HowItWorks() {
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-green" aria-hidden="true" />
                 {t("howItWorks.ecoLogicBadge")}
               </div>
-              <h3 className="mt-5 text-2xl tracking-tight text-slate-950 sm:text-3xl">{t("howItWorks.ecoLogicTitle")}</h3>
+              <h3 className="mt-5 text-2xl tracking-tight text-theme-green sm:text-3xl">{t("howItWorks.ecoLogicTitle")}</h3>
               <p className="mt-3 text-sm text-slate-600">{t("howItWorks.ecoLogicSubtitle")}</p>
             </div>
           </Reveal>

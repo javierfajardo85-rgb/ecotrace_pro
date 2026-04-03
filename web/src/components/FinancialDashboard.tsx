@@ -113,7 +113,7 @@ function DistributionCard({
         <div className="flex items-center gap-3">
           <span className="text-lg">{icon}</span>
           <div>
-            <div className="text-sm font-semibold text-slate-950">{name}</div>
+            <div className="text-sm font-semibold text-theme-green">{name}</div>
             <div className={`mt-0.5 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium ring-1 ring-inset ${statusColor}`}>
               {statusType === "settled" ? (
                 <CheckCircle className="h-3 w-3" />
@@ -125,7 +125,7 @@ function DistributionCard({
           </div>
         </div>
         <div className="text-right">
-          <div className="text-xl font-bold tracking-tight text-slate-950">{amount}</div>
+          <div className="text-xl font-bold tracking-tight text-theme-green">{amount}</div>
         </div>
       </div>
 
@@ -164,7 +164,7 @@ function FeeFlowChart() {
     <div ref={ref} className="rounded-2xl border border-slate-100 bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] sm:p-8">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <div className="text-sm font-semibold text-slate-950">{t("wallet.flowTitle")}</div>
+          <div className="text-sm font-semibold text-theme-green">{t("wallet.flowTitle")}</div>
           <div className="mt-0.5 text-xs text-slate-500">{t("wallet.flowSub")}</div>
         </div>
         <div className="rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">
@@ -176,7 +176,7 @@ function FeeFlowChart() {
       <div className="mt-6">
         <div className="flex items-center justify-between text-xs">
           <span className="font-medium text-slate-600">{t("wallet.flowTotal")}</span>
-          <span className="font-bold text-slate-950">{fmt(totalFee)}</span>
+          <span className="font-bold text-theme-green">{fmt(totalFee)}</span>
         </div>
         <div className="mt-2 flex h-8 w-full overflow-hidden rounded-xl">
           <motion.div
@@ -209,7 +209,7 @@ function FeeFlowChart() {
           <span className="h-3 w-3 shrink-0 rounded-full bg-brand-green" />
           <div className="min-w-0 flex-1">
             <div className="text-[10px] font-semibold uppercase tracking-wider text-brand-green/60">{t("common.fee1Short")}</div>
-            <div className="text-xs font-semibold text-slate-950">{t("wallet.flowFee1Label")}</div>
+            <div className="text-xs font-semibold text-theme-green">{t("wallet.flowFee1Label")}</div>
           </div>
           <div className="text-sm font-bold text-brand-green">{fmt(fee1)}</div>
         </motion.div>
@@ -223,7 +223,7 @@ function FeeFlowChart() {
           <span className="h-3 w-3 shrink-0 rounded-full bg-brand-gold" />
           <div className="min-w-0 flex-1">
             <div className="text-[10px] font-semibold uppercase tracking-wider text-brand-gold-dark/60">{t("common.fee2Short")}</div>
-            <div className="text-xs font-semibold text-slate-950">{t("wallet.flowFee2Label")}</div>
+            <div className="text-xs font-semibold text-theme-green">{t("wallet.flowFee2Label")}</div>
           </div>
           <div className="text-sm font-bold text-brand-gold-dark">{fmt(fee2)}</div>
         </motion.div>
@@ -259,7 +259,7 @@ function ComplianceCard() {
           <ShieldIcon className="text-brand-green" />
         </div>
         <div className="flex-1">
-          <div className="text-sm font-semibold text-slate-950">{t("wallet.complianceTitle")}</div>
+          <div className="text-sm font-semibold text-theme-green">{t("wallet.complianceTitle")}</div>
           <div className="mt-0.5 text-xs text-slate-500">{t("wallet.compliancePeriod")}</div>
         </div>
         <div className="rounded-full bg-brand-green/5 px-3 py-1 text-xs font-semibold text-brand-green ring-1 ring-inset ring-brand-green/15">
@@ -285,7 +285,7 @@ function ComplianceCard() {
 
       <button
         type="button"
-        className="mt-5 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-950 transition hover:bg-slate-50"
+        className="mt-5 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-theme-green transition hover:bg-slate-50"
       >
         <DownloadIcon className="text-slate-500" />
         {t("wallet.complianceDownload")}
@@ -319,7 +319,7 @@ export function FinancialDashboard() {
               <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
               EcoTrace Yield
             </div>
-            <h1 className="mt-4 text-3xl tracking-tight text-slate-950 sm:text-4xl">
+            <h1 className="mt-4 text-3xl tracking-tight text-theme-green sm:text-4xl">
               {t("wallet.title")}
             </h1>
           </div>
@@ -344,7 +344,7 @@ export function FinancialDashboard() {
                 {t("common.fee2Name")}
               </div>
               <motion.div
-                className="mt-3 text-5xl font-extrabold tracking-tight text-slate-950 sm:text-6xl"
+                className="mt-3 text-5xl font-extrabold tracking-tight text-theme-green sm:text-6xl"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={heroInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.2, ease }}
@@ -362,7 +362,7 @@ export function FinancialDashboard() {
             {/* Quick stats */}
             <div className="flex flex-wrap gap-4 lg:gap-6">
               <div className="text-center">
-                <div className="text-2xl font-bold tracking-tight text-slate-950">1,247</div>
+                <div className="text-2xl font-bold tracking-tight text-theme-green">1,247</div>
                 <div className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-400">{t("wallet.statOrders")}</div>
               </div>
               <div className="h-10 w-px bg-slate-100 hidden lg:block" />
@@ -393,7 +393,7 @@ export function FinancialDashboard() {
         <div className="mt-10">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <div className="text-sm font-semibold text-slate-950">{t("wallet.yieldTitle")}</div>
+              <div className="text-sm font-semibold text-theme-green">{t("wallet.yieldTitle")}</div>
               <div className="mt-0.5 text-xs text-slate-500">{t("wallet.yieldSub")}</div>
             </div>
           </div>

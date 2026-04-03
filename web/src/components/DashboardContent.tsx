@@ -25,7 +25,7 @@ export function DashboardContent() {
   const totalTasa2 = rows.reduce((s, r) => s + parseFloat(r.t2), 0);
 
   return (
-    <div className="bg-white text-slate-900">
+    <div className="bg-white text-theme-green">
       {/* Financial Wallet */}
       <FinancialDashboard />
 
@@ -35,7 +35,7 @@ export function DashboardContent() {
           <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
             {/* Transaction log */}
             <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
-              <div className="text-sm font-semibold text-slate-950">
+              <div className="text-sm font-semibold text-theme-green">
                 {t("dashboardPage.transactionLog")}
               </div>
               <p className="mt-2 text-sm leading-6 text-slate-600">
@@ -57,9 +57,9 @@ export function DashboardContent() {
                   <tbody className="divide-y divide-slate-200 bg-white">
                     {rows.map((r) => (
                       <tr key={r.id}>
-                        <td className="px-4 py-3 font-mono text-xs text-slate-950">{r.id}</td>
+                        <td className="px-4 py-3 font-mono text-xs text-theme-green">{r.id}</td>
                         <td className="px-4 py-3 text-slate-700">{r.dest}</td>
-                        <td className="px-4 py-3 font-semibold text-slate-950">{r.kg}</td>
+                        <td className="px-4 py-3 font-semibold text-theme-green">{r.kg}</td>
                         <td className="px-4 py-3 text-slate-700">€{r.t1}</td>
                         <td className="px-4 py-3 font-semibold text-brand-gold-dark">€{r.t2}</td>
                         <td className="px-4 py-3">

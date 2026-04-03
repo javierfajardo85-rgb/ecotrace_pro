@@ -19,7 +19,7 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
 
   return (
     <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-sm">
-      <div className="text-sm font-semibold text-slate-950">
+      <div className="text-sm font-semibold text-theme-green">
         {t("invoice.title")}
       </div>
       <p className="mt-2 text-sm leading-6 text-slate-600">
@@ -30,7 +30,7 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
         <span className="text-sm font-semibold text-brand-gold-dark">
           {t("invoice.availableCredit")}
         </span>
-        <span className="text-xl font-bold tracking-tight text-slate-950">
+        <span className="text-xl font-bold tracking-tight text-theme-green">
           €{balance.toFixed(2)}
         </span>
       </div>
@@ -47,7 +47,7 @@ export function InvoiceSimulator({ balance }: { balance: number }) {
                   : "border-slate-100 bg-white hover:bg-slate-50"
               }`}
             >
-              <span className="text-sm font-semibold text-slate-950">
+              <span className="text-sm font-semibold text-theme-green">
                 {inv.label}
               </span>
               <span className="text-sm font-semibold text-slate-700">

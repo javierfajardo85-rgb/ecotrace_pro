@@ -19,7 +19,7 @@ function CurrencySwitcher() {
           className={`rounded-md px-2 py-1 transition ${
             code === c
               ? "bg-brand-gold text-white"
-              : "text-slate-500 hover:text-slate-900"
+              : "text-slate-500 hover:text-theme-green"
           }`}
         >
           {c === "EUR" ? "€" : c === "GBP" ? "£" : "$"}
@@ -69,16 +69,16 @@ export function Nav() {
           </Link>
 
           <nav className="hidden flex-1 items-center justify-center gap-1 md:flex" aria-label="Primary">
-            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-slate-950" href="#product">
+            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-theme-green" href="#product">
               {t("nav.product")}
             </a>
-            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-slate-950" href="#how-it-works">
+            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-theme-green" href="#how-it-works">
               {t("nav.howItWorks")}
             </a>
-            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-slate-950" href="#merchants">
+            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-theme-green" href="#merchants">
               {t("nav.forMerchants")}
             </a>
-            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-slate-950" href="#resources">
+            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-theme-green" href="#resources">
               {t("nav.resources")}
             </a>
           </nav>
@@ -92,7 +92,7 @@ export function Nav() {
                 className={`rounded-md px-2 py-1 transition ${
                   !isEs
                     ? "bg-brand-green text-white"
-                    : "text-slate-500 hover:text-slate-900"
+                    : "text-slate-500 hover:text-theme-green"
                 }`}
               >
                 EN
@@ -103,7 +103,7 @@ export function Nav() {
                 className={`rounded-md px-2 py-1 transition ${
                   isEs
                     ? "bg-brand-green text-white"
-                    : "text-slate-500 hover:text-slate-900"
+                    : "text-slate-500 hover:text-theme-green"
                 }`}
               >
                 ES
@@ -114,7 +114,7 @@ export function Nav() {
             <CurrencySwitcher />
 
             <Link
-              className="hidden h-10 items-center justify-center rounded-lg px-4 text-sm font-semibold text-slate-700 transition duration-300 ease-out hover:text-slate-950 sm:inline-flex"
+              className="hidden h-10 items-center justify-center rounded-lg px-4 text-sm font-semibold text-slate-700 transition duration-300 ease-out hover:text-theme-green sm:inline-flex"
               href="/dashboard"
             >
               {t("nav.login")}

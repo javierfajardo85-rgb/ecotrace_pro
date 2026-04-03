@@ -73,7 +73,7 @@ export function EcoTraceWidgetDemo({
         }
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="text-sm font-semibold text-slate-950">Live widget demo</div>
+          <div className="text-sm font-semibold text-theme-green">Live widget demo</div>
           <div className="text-xs font-semibold text-slate-500">{ready ? "Loaded" : "Loading"}</div>
         </div>
         <div className="mt-5" id={mountId} />

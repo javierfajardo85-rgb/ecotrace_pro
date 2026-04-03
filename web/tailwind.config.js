@@ -37,6 +37,8 @@ module.exports = {
           "gold-light": "#E8D5B5",
           "gold-dark": "#B8924E",
         },
+        "theme-green": "#0A3D2A",
+        "subtle-gold": "#D4AF77",
       },
       boxShadow: {
         soft: "0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04)",

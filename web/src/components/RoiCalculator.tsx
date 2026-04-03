@@ -126,7 +126,7 @@ export function RoiCalculator() {
       {/* ── Inputs ── */}
       <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-sm">
         <div className="flex items-center justify-between gap-4">
-          <div className="text-sm font-semibold text-slate-950">{t("roi.inputs")}</div>
+          <div className="text-sm font-semibold text-theme-green">{t("roi.inputs")}</div>
           <div className="text-xs font-semibold text-slate-500">{t("roi.assumptions")}</div>
         </div>
         <div className="mt-4 grid gap-5">
@@ -171,7 +171,7 @@ export function RoiCalculator() {
             <select
               value={vehicleType}
               onChange={(e) => setVehicleType(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950"
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-theme-green"
             >
               <option value="truck">{t("roi.modeTruck")}</option>
               <option value="plane">{t("roi.modePlane")}</option>
@@ -194,7 +194,7 @@ export function RoiCalculator() {
               <div className="grid h-7 w-7 place-items-center rounded-lg bg-brand-green/10 text-[10px] font-bold text-brand-green">
                 f(x)
               </div>
-              <span className="font-mono text-sm font-semibold text-slate-950">
+              <span className="font-mono text-sm font-semibold text-theme-green">
                 E = <span className="text-brand-green">∑</span> (W × d × EF<sub>mode</sub> × CF<sub>load</sub>)
               </span>
             </div>
@@ -216,14 +216,14 @@ export function RoiCalculator() {
             <div className="mt-2.5 grid grid-cols-2 gap-2.5">
               <div className="rounded-xl border border-slate-100 bg-white px-3.5 py-2.5">
                 <div className="text-[10px] font-semibold text-slate-500">{t("roi.segLongHaul")}</div>
-                <div className="mt-0.5 text-sm font-bold text-slate-950">{fmtKg(result.co2LongHaul)} kg</div>
+                <div className="mt-0.5 text-sm font-bold text-theme-green">{fmtKg(result.co2LongHaul)} kg</div>
                 <div className="mt-0.5 text-[10px] text-slate-400">
                   {fmtInt(result.dLongHaul)} km · EF {result.ef} · CF {result.cf.toFixed(2)}
                 </div>
               </div>
               <div className="rounded-xl border border-slate-100 bg-white px-3.5 py-2.5">
                 <div className="text-[10px] font-semibold text-slate-500">{t("roi.segLastMile")}</div>
-                <div className="mt-0.5 text-sm font-bold text-slate-950">{fmtKg(result.co2LastMile)} kg</div>
+                <div className="mt-0.5 text-sm font-bold text-theme-green">{fmtKg(result.co2LastMile)} kg</div>
                 <div className="mt-0.5 text-[10px] text-slate-400">
                   {fmtInt(result.dLastMile)} km · EF {EF_TRUCK} · CF {result.cf.toFixed(2)}
                 </div>
@@ -234,7 +234,7 @@ export function RoiCalculator() {
 
         {/* Metric cards */}
         <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-sm">
-          <div className="text-sm font-semibold text-slate-950">{t("roi.results")}</div>
+          <div className="text-sm font-semibold text-theme-green">{t("roi.results")}</div>
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <ResultCard
@@ -251,7 +251,7 @@ export function RoiCalculator() {
             {/* Certified Impact Offset — green accent with breakdown */}
             <div className="rounded-xl border border-brand-green/15 bg-brand-green/[0.04] p-4">
               <div className="text-[10px] font-bold text-brand-green">{t("roi.fee1Monthly")}</div>
-              <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
+              <div className="mt-2 text-2xl font-bold tracking-tight text-theme-green">
                 {fmt(result.fee1Monthly)}
               </div>
               <div className="mt-2 text-sm text-slate-600">
@@ -279,7 +279,7 @@ export function RoiCalculator() {
             {/* Green Operational Credit™ — gold accent with breakdown */}
             <div className="rounded-xl border border-brand-gold/20 bg-brand-gold/[0.04] p-4">
               <div className="text-[10px] font-bold text-brand-gold-dark">{t("roi.fee2Monthly")}</div>
-              <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
+              <div className="mt-2 text-2xl font-bold tracking-tight text-theme-green">
                 {fmt(result.fee2Monthly)}
               </div>
               <div className="mt-2 text-sm text-slate-600">
@@ -366,7 +366,7 @@ function Slider(props: {
     <label className="grid gap-2">
       <div className="flex items-center justify-between gap-4">
         <span className="text-xs font-semibold text-slate-700">{props.label}</span>
-        <span className="text-xs font-semibold text-slate-950">{props.display}</span>
+        <span className="text-xs font-semibold text-theme-green">{props.display}</span>
       </div>
       <input
         value={props.value}
@@ -389,7 +389,7 @@ function ResultCard(props: {
   return (
     <div className="rounded-xl border border-slate-100 bg-white p-4">
       <div className="text-xs font-semibold text-slate-600">{props.label}</div>
-      <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">{props.value}</div>
+      <div className="mt-2 text-2xl font-bold tracking-tight text-theme-green">{props.value}</div>
       <div className="mt-2 text-sm text-slate-600">{props.sub}</div>
     </div>
   );

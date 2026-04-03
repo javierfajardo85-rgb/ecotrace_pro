@@ -49,7 +49,7 @@ export function DashboardPreview() {
           <div className="text-xs font-medium uppercase tracking-wide text-brand-gold-dark">
             {t("dashboardPreview.balanceLabel")}
           </div>
-          <div className="mt-2 text-3xl font-extrabold tracking-tight text-slate-950">
+          <div className="mt-2 text-3xl font-extrabold tracking-tight text-theme-green">
             {balanceFmt}
           </div>
           <div className="mt-1 text-sm text-slate-600">
@@ -61,7 +61,7 @@ export function DashboardPreview() {
           <div className="text-xs font-medium uppercase tracking-wide text-slate-400">
             {t("dashboardPreview.thisMonth")}
           </div>
-          <div className="mt-2 text-2xl font-bold tracking-tight text-slate-950">
+          <div className="mt-2 text-2xl font-bold tracking-tight text-theme-green">
             312
           </div>
           <div className="mt-1 text-sm text-slate-400">
@@ -77,7 +77,7 @@ export function DashboardPreview() {
               ✓
             </span>
             <div>
-              <div className="text-sm font-semibold text-slate-950">
+              <div className="text-sm font-semibold text-theme-green">
                 {t("dashboardPreview.verifiedAdSpend")}
               </div>
               <div className="text-xs text-slate-400">
@@ -85,7 +85,7 @@ export function DashboardPreview() {
               </div>
             </div>
           </div>
-          <span className="text-sm font-bold text-slate-950 tabular-nums">{adsFmt}</span>
+          <span className="text-sm font-bold text-theme-green tabular-nums">{adsFmt}</span>
         </div>
       </div>
 

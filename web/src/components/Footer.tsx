@@ -14,7 +14,7 @@ export function Footer() {
             <div className="flex items-center gap-3">
               <img src="/brand/ecotrace-leaf.svg" alt="" className="h-8 w-8" />
               <div>
-                <div className="text-sm font-semibold text-slate-950">EcoTrace</div>
+                <div className="text-sm font-semibold text-theme-green">EcoTrace</div>
                 <div className="text-xs text-slate-600">{t("footer.tagline")}</div>
               </div>
             </div>
@@ -25,17 +25,17 @@ export function Footer() {
             <div>
               <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("footer.company")}</div>
               <div className="mt-4 grid gap-2 text-sm">
-                <Link className="text-slate-600 hover:text-slate-950" href="/dashboard">{t("footer.productLink")}</Link>
-                <Link className="text-slate-600 hover:text-slate-950" href="/docs">{t("footer.resourcesLink")}</Link>
-                <Link className="text-slate-600 hover:text-slate-950" href="/transparency">{t("footer.transparencyLink")}</Link>
+                <Link className="text-slate-600 hover:text-theme-green" href="/dashboard">{t("footer.productLink")}</Link>
+                <Link className="text-slate-600 hover:text-theme-green" href="/docs">{t("footer.resourcesLink")}</Link>
+                <Link className="text-slate-600 hover:text-theme-green" href="/transparency">{t("footer.transparencyLink")}</Link>
               </div>
             </div>
             <div>
               <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("footer.productSection")}</div>
               <div className="mt-4 grid gap-2 text-sm">
-                <Link className="text-slate-600 hover:text-slate-950" href="/methodology">{t("footer.methodologyLink")}</Link>
-                <a className="text-slate-600 hover:text-slate-950" href="https://ecotrace-gx1q.onrender.com" target="_blank" rel="noreferrer">{t("footer.apiStatus")}</a>
-                <Link className="text-slate-600 hover:text-slate-950" href="/docs">{t("footer.apiDocs")}</Link>
+                <Link className="text-slate-600 hover:text-theme-green" href="/methodology">{t("footer.methodologyLink")}</Link>
+                <a className="text-slate-600 hover:text-theme-green" href="https://ecotrace-gx1q.onrender.com" target="_blank" rel="noreferrer">{t("footer.apiStatus")}</a>
+                <Link className="text-slate-600 hover:text-theme-green" href="/docs">{t("footer.apiDocs")}</Link>
               </div>
             </div>
           </div>
@@ -44,17 +44,17 @@ export function Footer() {
             <div>
               <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("footer.legal")}</div>
               <div className="mt-4 grid gap-2 text-sm">
-                <Link className="text-slate-600 hover:text-slate-950" href="/legal/privacy">{t("footer.privacy")}</Link>
-                <Link className="text-slate-600 hover:text-slate-950" href="/legal/terms">{t("footer.terms")}</Link>
-                <Link className="text-slate-600 hover:text-slate-950" href="/legal/carbon-claims">{t("footer.carbonClaims")}</Link>
+                <Link className="text-slate-600 hover:text-theme-green" href="/legal/privacy">{t("footer.privacy")}</Link>
+                <Link className="text-slate-600 hover:text-theme-green" href="/legal/terms">{t("footer.terms")}</Link>
+                <Link className="text-slate-600 hover:text-theme-green" href="/legal/carbon-claims">{t("footer.carbonClaims")}</Link>
               </div>
             </div>
             <div>
               <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("footer.support")}</div>
               <div className="mt-4 grid gap-2 text-sm">
-                <a className="text-slate-600 hover:text-slate-950" href="#add-widget">{t("footer.bookDemo")}</a>
-                <a className="text-slate-600 hover:text-slate-950" href="#pricing">{t("footer.roiCalculator")}</a>
-                <a className="text-slate-600 hover:text-slate-950" href="#">{t("footer.contact")}</a>
+                <a className="text-slate-600 hover:text-theme-green" href="#add-widget">{t("footer.bookDemo")}</a>
+                <a className="text-slate-600 hover:text-theme-green" href="#pricing">{t("footer.roiCalculator")}</a>
+                <a className="text-slate-600 hover:text-theme-green" href="#">{t("footer.contact")}</a>
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@ export function Footer() {
         <div className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <div className="text-sm font-semibold text-slate-950">{t("footer.joinTitle")}</div>
+              <div className="text-sm font-semibold text-theme-green">{t("footer.joinTitle")}</div>
               <div className="mt-1 text-sm text-slate-600">{t("footer.joinSubtitle")}</div>
             </div>
             <form className="flex w-full max-w-md items-center gap-2">

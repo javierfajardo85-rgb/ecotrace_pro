@@ -43,7 +43,7 @@ export function ShippingMockup() {
             <div className="text-sm font-semibold text-slate-700">{t("hero.shippingStandard")}</div>
             <div className="text-[10px] text-slate-400">2–4 business days</div>
           </div>
-          <span className="text-lg font-bold tabular-nums tracking-tight text-slate-950">{fmt(2.20)}</span>
+          <span className="text-lg font-bold tabular-nums tracking-tight text-theme-green">{fmt(2.20)}</span>
         </div>
       </div>
 

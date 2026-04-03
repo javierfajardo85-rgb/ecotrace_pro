@@ -188,7 +188,7 @@ function TransparencyTooltip() {
             transition={{ duration: 0.18, ease }}
             className="absolute bottom-full right-0 z-20 mb-2 w-64 rounded-xl border border-slate-200 bg-white p-4 shadow-lg"
           >
-            <div className="text-xs font-bold text-slate-950">{t("hero.tooltipHeader")}</div>
+            <div className="text-xs font-bold text-theme-green">{t("hero.tooltipHeader")}</div>
             <ul className="mt-2.5 space-y-2">
               {[t("hero.tooltipBullet1"), t("hero.tooltipBullet2"), t("hero.tooltipBullet3")].map((b) => (
                 <li key={b} className="flex items-start gap-2 text-[11px] text-slate-600">
@@ -251,7 +251,7 @@ function ShippingRateWidget() {
 
           <div className="flex items-center gap-2">
             <div className="text-right">
-              <span className={`text-lg font-bold tabular-nums tracking-tight transition-colors duration-300 ${active ? "text-brand-green" : "text-slate-950"}`}>
+              <span className={`text-lg font-bold tabular-nums tracking-tight transition-colors duration-300 ${active ? "text-brand-green" : "text-theme-green"}`}>
                 {fmt(price)}
               </span>
             </div>
@@ -343,7 +343,7 @@ function MoneyFlowDiagram() {
       <div className="flex justify-center">
         <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm">
           <EuroIcon className="text-brand-green" />
-          <span className="text-xs font-semibold text-slate-900">{t("common.greenFee")}</span>
+          <span className="text-xs font-semibold text-theme-green">{t("common.greenFee")}</span>
         </div>
       </div>
 
