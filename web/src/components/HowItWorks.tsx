@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useRef, useState, type ReactNode } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { Reveal } from "@/components/motion/Motion";
 import { useCurrency } from "@/providers/CurrencyProvider";
 
@@ -139,11 +139,11 @@ function Tasa2Column() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
 
-  const destinations = [
-    { name: t("howItWorks.tasa2Dest1", "Google Ads"), pct: 42, icon: "📢" },
-    { name: t("howItWorks.tasa2Dest2", "Shopify"), pct: 28, icon: "🛒" },
-    { name: t("howItWorks.tasa2Dest3", "Hosting Green"), pct: 18, icon: "🌱" },
-    { name: t("howItWorks.tasa2Dest4", "Tax Shield"), pct: 12, icon: "🛡" },
+  const destinations: { name: string; pct: number; icon: ReactNode }[] = [
+    { name: t("howItWorks.tasa2Dest1"), pct: 42, icon: <MegaphoneIcon className="shrink-0 text-brand-gold-dark" /> },
+    { name: t("howItWorks.tasa2Dest2"), pct: 28, icon: <StoreIcon className="shrink-0 text-brand-gold-dark" /> },
+    { name: t("howItWorks.tasa2Dest3"), pct: 18, icon: <LeafIcon className="h-4 w-4 shrink-0 text-brand-gold-dark" /> },
+    { name: t("howItWorks.tasa2Dest4"), pct: 12, icon: <ShieldIcon className="h-4 w-4 shrink-0 text-brand-gold-dark" /> },
   ];
 
   return (
@@ -178,7 +178,7 @@ function Tasa2Column() {
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.45, delay: 0.2 + i * 0.12, ease }}
             >
-              <span className="text-sm">{d.icon}</span>
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-brand-gold/10">{d.icon}</span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-slate-950">{d.name}</span>
@@ -209,6 +209,25 @@ function ShieldIcon({ className }: { className?: string }) {
   return (
     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+}
+
+function MegaphoneIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="m3 11 18-5v12L3 13v-2z" />
+      <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+    </svg>
+  );
+}
+
+function StoreIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="m2 7 4.41-4.41a2 2 0 0 1 1.42-.59H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H7" />
+      <path d="M2 21h20" />
+      <path d="M6 21v-8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8" />
     </svg>
   );
 }
@@ -424,7 +443,7 @@ function EcoLogicAlgorithm() {
           variant="green"
           title={t("common.fee1Short")}
           total={fmt(0.17)}
-          subtitle={t("howItWorks.ecoLogicFee1Sub")}
+          subtitle={t("howItWorks.ecoLogicFee1Sub", { audit: fmt(0.1) })}
           lines={[
             { label: t("howItWorks.breakdown.fee1CarbonOffset"), value: fmt(0.05) },
             { label: t("howItWorks.breakdown.fee1AuditFee"), value: fmt(0.10), badge: "ISO 14064" },
@@ -477,19 +496,32 @@ export function HowItWorks() {
         style={{ background: "radial-gradient(ellipse 60% 40% at 50% 100%, rgba(10,61,42,0.02), transparent 70%)" }}
       />
 
-      <div className="relative mx-auto max-w-6xl px-6 py-28 lg:py-36">
+      <div className="relative mx-auto max-w-6xl px-6 py-20 lg:py-28">
         <Reveal>
-          <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto max-w-4xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-500 shadow-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-green" aria-hidden="true" />
               {t("howItWorks.badge")}
             </div>
-            <h2 className="mt-6 text-3xl tracking-tight text-slate-950 sm:text-4xl">
-              {t("howItWorks.h1Part1")}
-              <br />
-              <span className="text-brand-green">{t("howItWorks.h1Part2")}</span>
+            <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
+              <Trans
+                i18nKey="howItWorks.h2"
+                components={{
+                  gold1: <span className="text-[#D4AF77]" />,
+                  gold2: <span className="text-[#D4AF77]" />,
+                }}
+              />
             </h2>
-            <p className="mt-4 text-base text-slate-600">{t("howItWorks.subtitle")}</p>
+            <p className="mt-4 text-base leading-relaxed text-slate-600">
+              <Trans
+                i18nKey="howItWorks.subtitle"
+                components={{
+                  gold3: <span className="text-[#D4AF77]" />,
+                  sw: <span className="font-bold text-slate-900" />,
+                  mkt: <span className="font-bold text-slate-900" />,
+                }}
+              />
+            </p>
           </div>
         </Reveal>
 
