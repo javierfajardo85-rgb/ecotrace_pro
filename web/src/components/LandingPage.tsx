@@ -82,7 +82,7 @@ function DetailModal({
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-slate-950/45 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-950/35 backdrop-blur-md"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -91,7 +91,7 @@ function DetailModal({
 
           {/* Panel */}
           <motion.div
-            className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-white/40 bg-white/80 shadow-[0_18px_60px_rgba(15,23,42,0.28)] ring-1 ring-slate-900/10 backdrop-blur-2xl sm:max-h-[80vh]"
+            className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-white/50 bg-white/85 shadow-[0_22px_80px_rgba(15,23,42,0.30)] ring-1 ring-slate-900/10 backdrop-blur-2xl sm:max-h-[88vh]"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -111,25 +111,50 @@ function DetailModal({
             </button>
 
             <div className="flex flex-col">
-              <div className="border-b border-white/40 bg-gradient-to-r from-white/80 via-white/60 to-white/40 px-7 pb-4 pt-7 sm:px-9 sm:pt-9">
-                <h3 className="pr-10 text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
+              <div className="border-b border-white/50 bg-gradient-to-r from-white/90 via-white/70 to-white/50 px-8 pb-5 pt-8 sm:px-10 sm:pt-10">
+                <h3 className="pr-12 text-xl font-semibold tracking-tight text-slate-950 sm:text-2xl">
                   {header}
                 </h3>
               </div>
 
-              <div className="max-h-[60vh] overflow-y-auto px-7 pb-7 pt-5 sm:px-9 sm:pb-9 sm:pt-6">
+              <div className="max-h-[70vh] overflow-y-auto px-8 pb-8 pt-6 sm:px-10 sm:pb-10 sm:pt-7">
                 {/* Body bullets */}
-                <ul className="space-y-5">
+                <ul className="space-y-7">
                   {bullets.map((bullet) => (
                     <li key={bullet} className="flex items-start gap-3">
                       <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-green" />
-                      <p className="text-sm leading-relaxed text-slate-600">{bullet}</p>
+                      <div className="space-y-2">
+                        {(() => {
+                          const parts = bullet.split("?");
+                          if (parts.length > 1) {
+                            const title = (parts[0] + "?").trim();
+                            const rest = parts.slice(1).join("?").trim();
+                            return (
+                              <>
+                                <h4 className="text-sm font-semibold leading-snug text-slate-900 sm:text-base">
+                                  {title}
+                                </h4>
+                                {rest && (
+                                  <p className="text-sm leading-relaxed text-slate-600">
+                                    {rest}
+                                  </p>
+                                )}
+                              </>
+                            );
+                          }
+                          return (
+                            <p className="text-sm leading-relaxed text-slate-600">
+                              {bullet}
+                            </p>
+                          );
+                        })()}
+                      </div>
                     </li>
                   ))}
                 </ul>
 
                 {/* ISO footer */}
-                <div className="mt-7 flex items-center gap-2 rounded-xl bg-brand-green/[0.04] px-4 py-3 ring-1 ring-brand-green/10">
+                <div className="mt-9 flex items-center gap-2 rounded-xl bg-brand-green/[0.04] px-4 py-3 ring-1 ring-brand-green/10">
                   <svg
                     width="14"
                     height="14"
