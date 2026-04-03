@@ -46,13 +46,11 @@ function DetailModal({
   onClose,
   header,
   bullets,
-  icon,
 }: {
   open: boolean;
   onClose: () => void;
   header: string;
   bullets: string[];
-  icon: string;
 }) {
   useEffect(() => {
     if (!open) return;
@@ -84,7 +82,7 @@ function DetailModal({
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-950/45 backdrop-blur-sm"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -93,7 +91,7 @@ function DetailModal({
 
           {/* Panel */}
           <motion.div
-            className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:max-h-[85vh]"
+            className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-white/40 bg-white/80 shadow-[0_18px_60px_rgba(15,23,42,0.28)] ring-1 ring-slate-900/10 backdrop-blur-2xl sm:max-h-[80vh]"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -112,35 +110,44 @@ function DetailModal({
               <CloseIcon />
             </button>
 
-            <div className="p-7 sm:p-9">
-              {/* Icon + Header */}
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{icon}</span>
-                <h3 className="pr-8 text-lg font-bold tracking-tight text-slate-950">
+            <div className="flex flex-col">
+              <div className="border-b border-white/40 bg-gradient-to-r from-white/80 via-white/60 to-white/40 px-7 pb-4 pt-7 sm:px-9 sm:pt-9">
+                <h3 className="pr-10 text-lg font-semibold tracking-tight text-slate-950 sm:text-xl">
                   {header}
                 </h3>
               </div>
 
-              {/* Divider */}
-              <div className="mt-5 h-px bg-slate-100" />
+              <div className="max-h-[60vh] overflow-y-auto px-7 pb-7 pt-5 sm:px-9 sm:pb-9 sm:pt-6">
+                {/* Body bullets */}
+                <ul className="space-y-5">
+                  {bullets.map((bullet) => (
+                    <li key={bullet} className="flex items-start gap-3">
+                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-green" />
+                      <p className="text-sm leading-relaxed text-slate-600">{bullet}</p>
+                    </li>
+                  ))}
+                </ul>
 
-              {/* Body bullets */}
-              <ul className="mt-5 space-y-4">
-                {bullets.map((bullet) => (
-                  <li key={bullet} className="flex items-start gap-3">
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-green" />
-                    <p className="text-sm leading-relaxed text-slate-600">{bullet}</p>
-                  </li>
-                ))}
-              </ul>
-
-              {/* ISO footer */}
-              <div className="mt-6 flex items-center gap-2 rounded-xl bg-brand-green/[0.04] px-4 py-3">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-brand-green">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
-                <span className="text-[11px] font-semibold text-brand-green">ISO 14064 · ISO 14067 · EU 2026</span>
+                {/* ISO footer */}
+                <div className="mt-7 flex items-center gap-2 rounded-xl bg-brand-green/[0.04] px-4 py-3 ring-1 ring-brand-green/10">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="shrink-0 text-brand-green"
+                  >
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
+                  <span className="text-[11px] font-semibold text-brand-green">
+                    ISO 14064 · ISO 14067 · EU 2026
+                  </span>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -159,21 +166,18 @@ export function LandingPage() {
     {
       t: t("profitability.card1Title"),
       d: t("profitability.card1Text"),
-      icon: "💰",
       modalHeader: t("profitability.modal1Header"),
       modalBullets: [t("profitability.modal1Body1"), t("profitability.modal1Body2"), t("profitability.modal1Body3")],
     },
     {
       t: t("profitability.card2Title"),
       d: t("profitability.card2Text"),
-      icon: "🔗",
       modalHeader: t("profitability.modal2Header"),
       modalBullets: [t("profitability.modal2Body1"), t("profitability.modal2Body2"), t("profitability.modal2Body3")],
     },
     {
       t: t("profitability.card3Title"),
       d: t("profitability.card3Text"),
-      icon: "🧠",
       modalHeader: t("profitability.modal3Header"),
       modalBullets: [t("profitability.modal3Body1"), t("profitability.modal3Body2"), t("profitability.modal3Body3")],
     },
@@ -351,7 +355,6 @@ export function LandingPage() {
                 onClose={closeModal}
                 header={b.modalHeader}
                 bullets={b.modalBullets}
-                icon={b.icon}
               />
             ))}
           </div>
