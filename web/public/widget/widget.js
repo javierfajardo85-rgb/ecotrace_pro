@@ -7,7 +7,7 @@
   const weightKg = parseFloat(script.getAttribute("data-weight") || "0");
   const originZip = script.getAttribute("data-origin-zip") || script.getAttribute("data-zip") || "";
   const destinationZip = script.getAttribute("data-destination-zip") || "";
-  const offsetFeeEur = 0.5;
+  const productCategory = (script.getAttribute("data-product-category") || "general").trim().toLowerCase();
 
   const mount = document.getElementById("ecotrace-widget") || document.getElementById("ecotrace-widget-demo");
   if (!mount) return;
@@ -182,7 +182,7 @@
                 Neutralize this shipment
               </div>
               <div class="mt-1 text-sm text-white/70 dark:text-white/70 text-slate-600 dark:[&.et-light]:text-slate-600">
-                Add <span class="font-semibold">€${offsetFeeEur.toFixed(2)}</span> to support certified projects and retire credits.
+                Add <span class="font-semibold" data-et-offset-fee>—</span> (compensation + EcoTrace service, itemised in API).
               </div>
               <div class="mt-3" data-et-neutral-badge hidden>
                 <span class="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200 dark:border-emerald-400/25 dark:bg-emerald-500/10 dark:text-emerald-200
@@ -261,6 +261,7 @@
       destination_zip: destinationZip,
       weight_kg: weightKg,
       vehicle_type: "truck",
+      primary_category: productCategory,
       is_offset_purchased: false,
     }),
   })
@@ -271,11 +272,16 @@
     })
     .then((data) => {
       const co2 = Number(data.co2_kg || 0);
+      const co2Ida = Number(data.co2_ida_kg != null ? data.co2_ida_kg : co2);
+      const co2Ret = Number(data.co2_returns_estimated_kg || 0);
       const distanceKm = Number(data.distance_km || 0);
       const source = String(data.source || "fallback");
+      const totalFee = Number(data.total_tasa_cliente || 0);
+      const feeEl = mount.querySelector("[data-et-offset-fee]");
+      if (feeEl) feeEl.textContent = `€${totalFee.toFixed(2)}`;
 
       valueEl.textContent = `${co2.toFixed(2)} kg CO₂e`;
-      subEl.textContent = "Estimated at checkout. Evidence stored for auditing.";
+      subEl.textContent = `Outbound ${co2Ida.toFixed(2)} kg + expected returns ${co2Ret.toFixed(2)} kg. Audited.`;
       valueEl.classList.add("et-anim-pop");
       subEl.classList.add("et-anim-in");
 
@@ -292,8 +298,12 @@
             detail: {
               store_public_id: storePublicId,
               is_offset_purchased: Boolean(checked),
-              offset_fee_eur: offsetFeeEur,
+              offset_fee_eur: totalFee,
+              tasa_compensation_eur: Number(data.tasa_1_eur || 0),
+              tasa_service_eur: Number(data.tasa_2_eur || 0),
               co2_kg: Number(data.co2_kg || 0),
+              co2_ida_kg: Number(data.co2_ida_kg != null ? data.co2_ida_kg : data.co2_kg || 0),
+              co2_returns_estimated_kg: Number(data.co2_returns_estimated_kg || 0),
               distance_km: Number(data.distance_km || 0),
             },
           })

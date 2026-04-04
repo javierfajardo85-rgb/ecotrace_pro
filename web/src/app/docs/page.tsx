@@ -34,12 +34,44 @@ export default function DocsPage() {
       <h2 style={{ marginTop: 18 }}>Endpoints principales</h2>
       <ul>
         <li>
-          <span className="et-kbd">POST /calculate</span> — calcula CO₂e y persiste audit log
+          <span className="et-kbd">POST /api/calculate</span> — motor stateless producción (peso, distancia,{" "}
+          <span className="et-kbd">transport_mode</span>, <span className="et-kbd">products[]</span>, opcional{" "}
+          <span className="et-kbd">carbon_interface_response</span>)
+        </li>
+        <li>
+          <span className="et-kbd">POST /calculate</span> — checkout/widget: CO₂e, tasas, persistencia y audit log por tienda
+        </li>
+        <li>
+          <span className="et-kbd">GET /return-rates</span> — tabla efectiva de tasas de devolución y constantes del motor
+        </li>
+        <li>
+          <span className="et-kbd">POST /analytics/{`{store_public_id}`}/reconciliation</span> — simulación con datos que
+          envíes (Bearer)
+        </li>
+        <li>
+          <span className="et-kbd">POST /analytics/{`{store_public_id}`}/monthly-returns</span> — importar devoluciones
+          reales por categoría (Bearer)
+        </li>
+        <li>
+          <span className="et-kbd">POST /analytics/{`{store_public_id}`}/reconciliation/run</span> — ejecutar job para
+          una tienda (Bearer)
+        </li>
+        <li>
+          <span className="et-kbd">POST /internal/cron/monthly-reconciliation</span> — todas las tiendas (header{" "}
+          <span className="et-kbd">X-Cron-Secret</span>)
+        </li>
+        <li>
+          <span className="et-kbd">GET /analytics/{`{store_public_id}`}/wallet</span> — saldo wallet climático (Bearer)
         </li>
         <li>
           <span className="et-kbd">GET /analytics/{`{store_public_id}`}</span> — métricas mensuales (dashboard)
         </li>
       </ul>
+      <p style={{ marginTop: 12, color: "rgba(255,255,255,0.72)" }}>
+        Widget: atributo opcional <span className="et-kbd">data-product-category</span> (p. ej.{" "}
+        <span className="et-kbd">shoes</span>, <span className="et-kbd">electronics</span>) alineado con{" "}
+        <span className="et-kbd">primary_category</span> en la API.
+      </p>
 
       <h2 style={{ marginTop: 18 }}>Legal y transparencia</h2>
       <p>
