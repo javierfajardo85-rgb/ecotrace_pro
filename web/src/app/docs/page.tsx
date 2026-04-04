@@ -61,6 +61,10 @@ export default function DocsPage() {
           <span className="et-kbd">X-Cron-Secret</span>)
         </li>
         <li>
+          <span className="et-kbd">GET /analytics/{`{store_public_id}`}/reconciliation-logs</span> — historial de
+          reconciliaciones (Bearer; alias <span className="et-kbd">/reconciliation-runs</span>)
+        </li>
+        <li>
           <span className="et-kbd">GET /analytics/{`{store_public_id}`}/wallet</span> — saldo wallet climático (Bearer)
         </li>
         <li>

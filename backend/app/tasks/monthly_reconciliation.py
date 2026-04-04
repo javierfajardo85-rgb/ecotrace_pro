@@ -14,22 +14,23 @@ from sqlalchemy.orm import Session
 from ..config import settings
 from ..crud.reconciliation import (
     commit_completed_reconciliation,
-    get_reconciliation_run,
+    get_reconciliation_log,
     immutable_audit_hash,
     persist_failed_reconciliation,
 )
-from ..models import Store
-from ..services.calculation_engine import merged_return_rates
+from ..models import Merchant
+from ..services.calculation_core import merged_return_rates
 from ..services.integrations.shopify_reconciliation import (
     fetch_orders_by_category_shopify,
     fetch_returns_by_category_shopify,
 )
+from ..services.merchant_notifications import send_reconciliation_notification
 from ..services.reconciliation import reconcile_monthly
 from ..services.reconciliation_data import (
     aggregate_orders_and_avg_ida_kg,
     get_previous_year_month,
     load_returns_by_category_from_db,
-    store_ids_with_logs_in_month,
+    merchant_ids_with_logs_in_month,
 )
 
 logger = logging.getLogger(__name__)
@@ -63,14 +64,14 @@ def _notification_hint(month: str, total_adj: float) -> str:
 def reconcile_store_month(
     db: Session,
     *,
-    store: Store,
+    merchant: Merchant,
     year_month: str,
     merge_shopify: bool = False,
 ) -> ReconcileOneResult:
-    existing = get_reconciliation_run(db, store.id, year_month)
+    existing = get_reconciliation_log(db, merchant.id, year_month)
     if existing and existing.status == "completed":
         return ReconcileOneResult(
-            store_public_id=store.public_id,
+            store_public_id=merchant.public_id,
             month=year_month,
             status="skipped_idempotent",
             total_adjustment_eur=0.0,
@@ -79,14 +80,16 @@ def reconcile_store_month(
             detail="Already reconciled for this month.",
         )
 
-    orders_local, avg_ida_local = aggregate_orders_and_avg_ida_kg(db, store_id=store.id, year_month=year_month)
-    returns_db = load_returns_by_category_from_db(db, store_id=store.id, year_month=year_month)
+    orders_local, avg_ida_local = aggregate_orders_and_avg_ida_kg(
+        db, merchant_id=merchant.id, year_month=year_month
+    )
+    returns_db = load_returns_by_category_from_db(db, merchant_id=merchant.id, year_month=year_month)
 
     orders_shopify: dict[str, int] = {}
     returns_shopify: dict[str, int] = {}
     if merge_shopify:
-        orders_shopify = fetch_orders_by_category_shopify(store.public_id, year_month)
-        returns_shopify = fetch_returns_by_category_shopify(store.public_id, year_month)
+        orders_shopify = fetch_orders_by_category_shopify(merchant.public_id, year_month)
+        returns_shopify = fetch_returns_by_category_shopify(merchant.public_id, year_month)
 
     orders_by_category = dict(orders_local)
     for k, v in orders_shopify.items():
@@ -100,9 +103,9 @@ def reconcile_store_month(
 
     if not orders_by_category:
         msg = "No hay pedidos registrados en logs para este mes."
-        logger.info("reconciliation skip store=%s month=%s: %s", store.public_id, year_month, msg)
+        logger.info("reconciliation skip merchant=%s month=%s: %s", merchant.public_id, year_month, msg)
         return ReconcileOneResult(
-            store_public_id=store.public_id,
+            store_public_id=merchant.public_id,
             month=year_month,
             status="skipped_no_orders",
             total_adjustment_eur=0.0,
@@ -113,8 +116,8 @@ def reconcile_store_month(
 
     if not returns_by_category:
         logger.warning(
-            "reconciliation store=%s month=%s: no return counts in DB; assuming zero returns per category",
-            store.public_id,
+            "reconciliation merchant=%s month=%s: no return counts in DB; assuming zero returns per category",
+            merchant.public_id,
             year_month,
         )
 
@@ -134,7 +137,8 @@ def reconcile_store_month(
             "r_real": round(r.return_rate_observed, 4),
             "avg_co2_ida_kg": round(r.avg_co2_ida_kg, 6),
             "delta_emisiones_kg": round(r.delta_co2_kg, 4),
-            "ajuste_credito_eur": round(r.delta_credit_eur, 2),
+            "merchant_climate_charge_eur": round(r.merchant_climate_charge_eur, 2),
+            "ajuste_credito_eur": round(r.merchant_climate_charge_eur, 2),
         }
         for r in result.rows
     ]
@@ -144,7 +148,7 @@ def reconcile_store_month(
     returns_snap = dict(sorted(returns_by_category.items()))
     hash_payload = {
         "month": year_month,
-        "store_public_id": store.public_id,
+        "store_public_id": merchant.public_id,
         "orders": orders_snap,
         "returns": returns_snap,
         "rates": dict(sorted(rates_snap.items())),
@@ -168,7 +172,7 @@ def reconcile_store_month(
 
     commit_completed_reconciliation(
         db,
-        store=store,
+        merchant=merchant,
         year_month=year_month,
         existing=existing,
         total_adjustment_eur=total_adj,
@@ -181,8 +185,21 @@ def reconcile_store_month(
         notification_hint=hint,
     )
 
+    try:
+        # Notificación: signo desde la vista del comercio (positivo = crédito al wallet).
+        wallet_impact_eur = -total_adj
+        send_reconciliation_notification(
+            merchant.public_id,
+            year_month,
+            wallet_impact_eur,
+            action,
+            db=db,
+        )
+    except Exception:
+        logger.exception("send_reconciliation_notification failed merchant_public_id=%s", merchant.public_id)
+
     return ReconcileOneResult(
-        store_public_id=store.public_id,
+        store_public_id=merchant.public_id,
         month=year_month,
         status="completed",
         total_adjustment_eur=round(total_adj, 4),
@@ -199,24 +216,24 @@ def run_monthly_reconciliation_for_all_stores(
     merge_shopify: bool = False,
 ) -> list[ReconcileOneResult]:
     ym = year_month or get_previous_year_month()
-    store_ids = store_ids_with_logs_in_month(db, ym)
+    mids = merchant_ids_with_logs_in_month(db, ym)
     out: list[ReconcileOneResult] = []
-    for sid in store_ids:
-        store = db.get(Store, sid)
-        if not store:
+    for mid in mids:
+        merchant = db.get(Merchant, mid)
+        if not merchant:
             continue
         try:
-            out.append(reconcile_store_month(db, store=store, year_month=ym, merge_shopify=merge_shopify))
+            out.append(reconcile_store_month(db, merchant=merchant, year_month=ym, merge_shopify=merge_shopify))
         except Exception as e:
-            logger.exception("reconciliation failed store_id=%s month=%s", sid, ym)
+            logger.exception("reconciliation failed merchant_id=%s month=%s", mid, ym)
             try:
                 db.rollback()
-                persist_failed_reconciliation(db, store=store, year_month=ym, message=str(e))
+                persist_failed_reconciliation(db, merchant=merchant, year_month=ym, message=str(e))
             except Exception:
                 db.rollback()
             out.append(
                 ReconcileOneResult(
-                    store_public_id=store.public_id,
+                    store_public_id=merchant.public_id,
                     month=ym,
                     status="failed",
                     total_adjustment_eur=0.0,

@@ -6,7 +6,8 @@ FastAPI + SQLite backend that calculates shipping CO₂e and a drop-in checkout 
 
 | Ruta | Rol |
 |------|-----|
-| `models/` | ORM por dominio: `merchant.py` (User, Store, wallet), `calculation.py` (Log, Transaction), `reconciliation.py` (runs, ledger, returns mensuales) |
+| `models/` | ORM por dominio: `merchant.py` (User, Merchant, MerchantWallet), `calculation.py` (CalculationLog, Transaction), `reconciliation.py` (ReconciliationLog, ledger, returns mensuales) |
+| `core/config.py` | `CARBON_PRICE_EUR_PER_TONNE` (110.0); fuente única; `Settings` y `constants.py` reexportan |
 | `schemas/` | Pydantic; `schemas/reconciliation.py` para reconciliación / cron / wallet |
 | `crud/reconciliation.py` | Persistencia reconciliación + movimientos de wallet |
 | `tasks/` | Cron job mensual + APScheduler (`tasks/scheduler.py`) |
@@ -29,7 +30,7 @@ Create your env file:
 cp .env.example .env
 ```
 
-Edit `.env` and set `CARBON_INTERFACE_API_KEY` (optional). If unset or Carbon Interface is down, the API uses modal emission factors from `backend/app/services/carbon.py`. Optional engine tuning: `CARBON_PRICE_EUR_PER_TONNE`, `ECOTRACE_RETURN_RATES_JSON`, etc. (see `.env.example`).
+Edit `.env` and set `CARBON_INTERFACE_API_KEY` (optional). If unset or Carbon Interface is down, the API uses modal emission factors from `backend/app/services/carbon.py`. El precio de compensación por defecto está centralizado en `backend/app/constants.py` (`CARBON_PRICE_EUR_PER_TONNE=110.0`) y puede sobreescribirse con `CARBON_PRICE_EUR_PER_TONNE` en `.env`. Ver también `ECOTRACE_RETURN_RATES_JSON`, SMTP para notificaciones de reconciliación, etc. (`.env.example`).
 
 ## Run the backend
 

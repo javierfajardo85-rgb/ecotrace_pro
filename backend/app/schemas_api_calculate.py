@@ -13,7 +13,10 @@ class ApiCalculateRequest(BaseModel):
     products: list[ApiProductItem] = Field(..., min_length=1)
     carbon_interface_response: float | None = Field(
         default=None,
-        description="kg CO₂e desde API externa (p. ej. Carbon Interface). Si se informa, se usa como E_ida directo.",
+        description=(
+            "kg CO₂e del trayecto de ida antes de F_load / M_RF / M_unc (p. ej. Carbon Interface). "
+            "Misma tubería que el widget: se aplican factores de carga, forzamiento radiativo e incertidumbre."
+        ),
     )
 
 

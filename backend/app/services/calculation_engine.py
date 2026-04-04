@@ -13,6 +13,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from ..config import Settings
+from .calculation_core import (
+    DEFAULT_RETURN_RATES,
+    compute_footprint_core,
+    merged_return_rates,
+    resolve_return_rate,
+)
 
 
 @dataclass(frozen=True)
@@ -38,36 +44,6 @@ class CalculationEngineResult:
     tasa_compensacion_eur: float
     tasa_servicio_ecotrace_eur: float
     total_client_eur: float
-
-
-DEFAULT_RETURN_RATES: dict[str, float] = {
-    # Abril 2026 — prioridad tabla operativa; "default" usado por API /api/calculate
-    "shoes": 0.28,
-    "footwear": 0.28,
-    "fashion": 0.25,
-    "fashion_women": 0.27,
-    "fashion_men": 0.19,
-    "apparel": 0.25,
-    "clothing": 0.25,
-    "electronics": 0.10,
-    "beauty": 0.09,
-    "cosmetics": 0.09,
-    "home": 0.12,
-    "accessories": 0.13,
-    "default": 0.15,
-    "general": 0.15,
-    "sports": 0.22,
-    "toys": 0.18,
-    "books": 0.12,
-    "food": 0.08,
-}
-
-
-def merged_return_rates(settings: Settings) -> dict[str, float]:
-    out = dict(DEFAULT_RETURN_RATES)
-    extra = settings.return_rates_extra or {}
-    out.update({str(k).lower().strip(): float(v) for k, v in extra.items()})
-    return out
 
 
 def normalize_product_lines(
@@ -99,13 +75,6 @@ def normalize_product_lines(
     return out
 
 
-def resolve_return_rate(category: str, table: dict[str, float]) -> float:
-    c = category.lower().strip()
-    if c in table:
-        return float(table[c])
-    return float(table.get("default", table.get("general", 0.15)))
-
-
 def compute_engine(
     *,
     settings: Settings,
@@ -119,67 +88,45 @@ def compute_engine(
 ) -> CalculationEngineResult:
     """base_co2_kg_raw: kg CO2e from Carbon Interface or activity_tkm×EF (before load / RF / unc)."""
     activity_tkm = (weight_kg / 1000.0) * distance_km
-    v = (vehicle_type or "truck").lower().strip()
-    inferred_air = float(distance_km) > float(settings.longhaul_km_threshold) or v in {"plane", "air"}
-    m_rf = float(settings.radiative_forcing_air_multiplier) if inferred_air else 1.0
-    m_unc = float(settings.uncertainty_longhaul_multiplier) if float(distance_km) > float(
-        settings.longhaul_km_threshold
-    ) else 1.0
-    f_load = float(settings.load_factor)
+    raw_trip = float(base_co2_kg_raw)
+    if activity_tkm > 0:
+        ef_kg_per_tkm = raw_trip / float(activity_tkm)
+    else:
+        ef_kg_per_tkm = float(ef_fallback or 0.0)
 
-    # E_ida: apply load factor on physical-intensity; RF and uncertainty on reported climate impact.
-    co2_ida_kg = float(base_co2_kg_raw) * f_load * m_rf * m_unc
-
-    r_table = merged_return_rates(settings)
-    f_ret = float(settings.returns_logistics_multiplier)
-    f_dil = float(settings.returns_dilution_factor)
-
-    category_breakdown: dict[str, dict[str, float]] = {}
-    co2_returns = 0.0
-    for line in products_normalized:
-        r_cat = resolve_return_rate(line.category, r_table)
-        e_alloc = co2_ida_kg * line.weight_share
-        e_ret_line = e_alloc * r_cat * f_ret * f_dil
-        co2_returns += e_ret_line
-        category_breakdown[line.category] = {
-            "weight_share": line.weight_share,
-            "return_rate_assumed": r_cat,
-            "co2_returns_estimated_kg": e_ret_line,
-        }
-
-    co2_total = co2_ida_kg + co2_returns
-    p_carbon = float(settings.carbon_price_eur_per_tonne)
-    tasa_1 = co2_total * (p_carbon / 1000.0)
-    fee_fixed = float(settings.ecotrace_fee_fixed_eur)
-    fee_pct = float(settings.ecotrace_fee_pct_on_compensation)
-    fee_min = float(settings.ecotrace_fee_min_eur)
-    raw_comm = tasa_1 * fee_pct
-    tasa_2 = fee_fixed + max(fee_min, raw_comm)
-    total = round(tasa_1 + tasa_2, 2)
+    core = compute_footprint_core(
+        settings=settings,
+        activity_tkm=float(activity_tkm),
+        emission_factor_kg_per_tkm=ef_kg_per_tkm,
+        raw_trip_co2_kg=raw_trip,
+        distance_km=float(distance_km),
+        vehicle_type=vehicle_type or "truck",
+        normalized_products=[(ln.category, ln.weight_share) for ln in products_normalized],
+    )
 
     ef_used: float | None
     if source == "fallback" and ef_fallback is not None:
         ef_used = float(ef_fallback)
     else:
         try:
-            ef_used = float(base_co2_kg_raw) / float(activity_tkm) if activity_tkm > 0 else None
+            ef_used = raw_trip / float(activity_tkm) if activity_tkm > 0 else None
         except Exception:
             ef_used = None
 
     return CalculationEngineResult(
-        co2_ida_kg=float(co2_ida_kg),
-        co2_returns_estimated_kg=float(co2_returns),
-        co2_total_kg=float(co2_total),
-        activity_tkm=float(activity_tkm),
+        co2_ida_kg=core.co2_ida_kg,
+        co2_returns_estimated_kg=core.co2_returns_estimated_kg,
+        co2_total_kg=core.co2_total_kg,
+        activity_tkm=core.activity_tkm,
         emission_factor_used=ef_used,
-        base_co2_before_load_kg=float(base_co2_kg_raw),
-        load_factor=f_load,
-        radiative_forcing_multiplier=m_rf,
-        uncertainty_multiplier=m_unc,
-        returns_multiplier=f_ret,
-        dilution_factor=f_dil,
-        category_breakdown=category_breakdown,
-        tasa_compensacion_eur=float(tasa_1),
-        tasa_servicio_ecotrace_eur=float(tasa_2),
-        total_client_eur=float(total),
+        base_co2_before_load_kg=raw_trip,
+        load_factor=core.load_factor,
+        radiative_forcing_multiplier=core.radiative_forcing_multiplier,
+        uncertainty_multiplier=core.uncertainty_multiplier,
+        returns_multiplier=core.returns_multiplier,
+        dilution_factor=core.dilution_factor,
+        category_breakdown=core.category_breakdown,
+        tasa_compensacion_eur=core.tasa_compensacion_eur,
+        tasa_servicio_ecotrace_eur=core.tasa_servicio_ecotrace_eur,
+        total_client_eur=core.total_client_eur,
     )

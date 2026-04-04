@@ -11,11 +11,11 @@ from sqlalchemy.orm import Session
 from .config import settings
 from .database import Base, DATABASE_URL, engine, get_db
 from .models import (
-    Log,
+    CalculationLog,
+    Merchant,
+    MerchantWallet,
     MonthlyCategoryReturn,
-    ReconciliationRun,
-    Store,
-    StoreWallet,
+    ReconciliationLog,
     Transaction,
     User,
 )
@@ -43,7 +43,7 @@ from .schemas import (
     MonthlyReconciliationRowResponse,
     MonthlyReturnsImportRequest,
     ReconciliationJobItemResponse,
-    ReconciliationRunSummary,
+    ReconciliationLogSummary,
     WalletBalanceResponse,
     OrganizationCreateRequest,
     OrganizationResponse,
@@ -699,12 +699,12 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
     db.add(user)
     db.flush()
 
-    store = Store(user_id=user.id, store_url=payload.store_url, industry=payload.industry)
-    db.add(store)
+    merchant = Merchant(user_id=user.id, store_url=payload.store_url, industry=payload.industry)
+    db.add(merchant)
     db.commit()
 
     token = create_access_token(user_id=user.id)
-    return RegisterResponse(user_id=user.id, store_public_id=store.public_id, api_key=api_key, token=token)
+    return RegisterResponse(user_id=user.id, store_public_id=merchant.public_id, api_key=api_key, token=token)
 
 
 @app.post("/auth/login", response_model=LoginResponse)
@@ -743,7 +743,7 @@ def monthly_reconciliation_endpoint(
     user_id: int = Depends(require_user_id),
     db: Session = Depends(get_db),
 ):
-    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    store = db.scalar(select(Merchant).where(Merchant.public_id == store_public_id))
     if not store or store.user_id != user_id:
         raise HTTPException(status_code=404, detail="Store not found")
 
@@ -782,7 +782,7 @@ def import_monthly_returns(
     user_id: int = Depends(require_user_id),
     db: Session = Depends(get_db),
 ):
-    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    store = db.scalar(select(Merchant).where(Merchant.public_id == store_public_id))
     if not store or store.user_id != user_id:
         raise HTTPException(status_code=404, detail="Store not found")
 
@@ -792,7 +792,7 @@ def import_monthly_returns(
             continue
         row = db.scalar(
             select(MonthlyCategoryReturn).where(
-                MonthlyCategoryReturn.store_id == store.id,
+                MonthlyCategoryReturn.merchant_id == store.id,
                 MonthlyCategoryReturn.year_month == payload.month,
                 MonthlyCategoryReturn.category == c,
             )
@@ -805,7 +805,7 @@ def import_monthly_returns(
         else:
             db.add(
                 MonthlyCategoryReturn(
-                    store_id=store.id,
+                    merchant_id=store.id,
                     year_month=payload.month,
                     category=c[:80],
                     return_count=n,
@@ -826,31 +826,32 @@ def get_merchant_wallet(
     user_id: int = Depends(require_user_id),
     db: Session = Depends(get_db),
 ):
-    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    store = db.scalar(select(Merchant).where(Merchant.public_id == store_public_id))
     if not store or store.user_id != user_id:
         raise HTTPException(status_code=404, detail="Store not found")
-    w = db.get(StoreWallet, store.id)
+    w = db.get(MerchantWallet, store.id)
     return WalletBalanceResponse(store_public_id=store.public_id, balance_eur=float(w.balance_eur) if w else 0.0)
 
 
-@app.get("/analytics/{store_public_id}/reconciliation-runs", response_model=list[ReconciliationRunSummary])
-def list_reconciliation_runs(
+@app.get("/analytics/{store_public_id}/reconciliation-logs", response_model=list[ReconciliationLogSummary])
+@app.get("/analytics/{store_public_id}/reconciliation-runs", response_model=list[ReconciliationLogSummary])
+def list_reconciliation_logs(
     store_public_id: str,
     user_id: int = Depends(require_user_id),
     db: Session = Depends(get_db),
     limit: int = Query(default=24, ge=1, le=100),
 ):
-    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    store = db.scalar(select(Merchant).where(Merchant.public_id == store_public_id))
     if not store or store.user_id != user_id:
         raise HTTPException(status_code=404, detail="Store not found")
     rows = db.scalars(
-        select(ReconciliationRun)
-        .where(ReconciliationRun.store_id == store.id)
-        .order_by(ReconciliationRun.created_at.desc())
+        select(ReconciliationLog)
+        .where(ReconciliationLog.merchant_id == store.id)
+        .order_by(ReconciliationLog.created_at.desc())
         .limit(limit)
     ).all()
     return [
-        ReconciliationRunSummary(
+        ReconciliationLogSummary(
             month=r.month,
             status=r.status,
             total_adjustment_eur=float(r.total_adjustment_eur),
@@ -870,13 +871,13 @@ def run_single_store_reconciliation(
     db: Session = Depends(get_db),
     month: str | None = Query(default=None, description="YYYY-MM; default previous month UTC"),
 ):
-    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    store = db.scalar(select(Merchant).where(Merchant.public_id == store_public_id))
     if not store or store.user_id != user_id:
         raise HTTPException(status_code=404, detail="Store not found")
     if month is not None and not re.match(r"^\d{4}-\d{2}$", month):
         raise HTTPException(status_code=422, detail="month must be YYYY-MM")
     ym = month or get_previous_year_month()
-    r = reconcile_store_month(db, store=store, year_month=ym, merge_shopify=False)
+    r = reconcile_store_month(db, merchant=store, year_month=ym, merge_shopify=False)
     return ReconciliationJobItemResponse(
         store_public_id=r.store_public_id,
         month=r.month,
@@ -930,7 +931,7 @@ def internal_cron_monthly_reconciliation(
 def calculate(payload: CalculateRequest, request: Request, db: Session = Depends(get_db)):
     rate_limit(request)
 
-    store = db.scalar(select(Store).where(Store.public_id == payload.store_public_id))
+    store = db.scalar(select(Merchant).where(Merchant.public_id == payload.store_public_id))
     if not store:
         raise HTTPException(status_code=404, detail="Unknown store_public_id")
 
@@ -1088,8 +1089,8 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
         "audit_status": audit_status,
     }
 
-    log = Log(
-        store_id=store.id,
+    log = CalculationLog(
+        merchant_id=store.id,
         transaction_id=transaction_id,
         origin_zip=payload.origin_zip,
         destination_zip=payload.destination_zip,
@@ -1118,7 +1119,7 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
     db.add(log)
 
     txn = Transaction(
-        store_id=store.id,
+        merchant_id=store.id,
         order_id=transaction_id,
         carbon_kg=float(co2_kg),
         tasa_1_compensacion=tasa_1_compensacion,
@@ -1148,7 +1149,7 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
 
 @app.get("/analytics/{store_public_id}", response_model=AnalyticsResponse)
 def analytics(store_public_id: str, user_id: int = Depends(require_user_id), db: Session = Depends(get_db)):
-    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    store = db.scalar(select(Merchant).where(Merchant.public_id == store_public_id))
     if not store or store.user_id != user_id:
         raise HTTPException(status_code=404, detail="Store not found")
 
@@ -1156,15 +1157,21 @@ def analytics(store_public_id: str, user_id: int = Depends(require_user_id), db:
     month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
     total_orders = db.scalar(
-        select(func.count(Log.id)).where(Log.store_id == store.id, Log.created_at >= month_start)
+        select(func.count(CalculationLog.id)).where(
+            CalculationLog.merchant_id == store.id, CalculationLog.created_at >= month_start
+        )
     ) or 0
     total_co2 = db.scalar(
-        select(func.coalesce(func.sum(Log.co2_kg), 0.0)).where(Log.store_id == store.id, Log.created_at >= month_start)
+        select(func.coalesce(func.sum(CalculationLog.co2_kg), 0.0)).where(
+            CalculationLog.merchant_id == store.id, CalculationLog.created_at >= month_start
+        )
     ) or 0.0
 
     offset_orders = db.scalar(
-        select(func.count(Log.id)).where(
-            Log.store_id == store.id, Log.created_at >= month_start, Log.is_offset_purchased == True  # noqa: E712
+        select(func.count(CalculationLog.id)).where(
+            CalculationLog.merchant_id == store.id,
+            CalculationLog.created_at >= month_start,
+            CalculationLog.is_offset_purchased == True,  # noqa: E712
         )
     ) or 0
     offset_revenue = float(offset_orders) * 0.50
@@ -1190,17 +1197,17 @@ def analytics_daily(
     user_id: int = Depends(require_user_id),
     db: Session = Depends(get_db),
 ):
-    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    store = db.scalar(select(Merchant).where(Merchant.public_id == store_public_id))
     if not store or store.user_id != user_id:
         raise HTTPException(status_code=404, detail="Store not found")
 
     now = dt.datetime.now(dt.UTC)
     start = (now - dt.timedelta(days=days - 1)).replace(hour=0, minute=0, second=0, microsecond=0)
 
-    day_col = func.date(Log.created_at)
+    day_col = func.date(CalculationLog.created_at)
     rows = db.execute(
-        select(day_col.label("day"), func.coalesce(func.sum(Log.co2_kg), 0.0).label("co2"))
-        .where(Log.store_id == store.id, Log.created_at >= start)
+        select(day_col.label("day"), func.coalesce(func.sum(CalculationLog.co2_kg), 0.0).label("co2"))
+        .where(CalculationLog.merchant_id == store.id, CalculationLog.created_at >= start)
         .group_by(day_col)
         .order_by(day_col.asc())
     ).all()

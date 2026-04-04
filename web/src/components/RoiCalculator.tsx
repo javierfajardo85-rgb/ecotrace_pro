@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useCurrency } from "@/providers/CurrencyProvider";
+import { CARBON_PRICE_EUR_PER_TONNE } from "@/lib/ecotraceConstants";
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
@@ -27,7 +28,6 @@ const EMISSION_FACTORS: Record<string, number> = {
 const TRANSCONTINENTAL_KM = 4000;
 const LONGHAUL_KM_THRESHOLD = 1000;
 
-const CARBON_PRICE_EUR_PER_TONNE = 110;
 const RETURNS_LOGISTICS_MULTIPLIER = 2.0;
 const RETURNS_DILUTION_FACTOR = 0.9;
 const ECOTRACE_FEE_FIXED_EUR = 0.12;

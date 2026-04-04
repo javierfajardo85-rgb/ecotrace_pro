@@ -1,4 +1,4 @@
-"""Merchant-facing entities: user accounts and stores (tienda = merchant en B2B)."""
+"""Cuentas de usuario y comercio (merchant / tienda B2B)."""
 
 from __future__ import annotations
 
@@ -22,10 +22,14 @@ class User(Base):
     api_key_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, nullable=False)
 
-    stores: Mapped[list["Store"]] = relationship("Store", back_populates="user", cascade="all, delete-orphan")
+    merchants: Mapped[list["Merchant"]] = relationship(
+        "Merchant", back_populates="user", cascade="all, delete-orphan"
+    )
 
 
-class Store(Base):
+class Merchant(Base):
+    """Tienda / comercio integrado (tabla física `stores` por compatibilidad)."""
+
     __tablename__ = "stores"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
@@ -37,25 +41,27 @@ class Store(Base):
 
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, nullable=False)
 
-    user: Mapped[User] = relationship(back_populates="stores")
-    logs: Mapped[list["Log"]] = relationship("Log", back_populates="store", cascade="all, delete-orphan")
-    wallet: Mapped["StoreWallet | None"] = relationship(
-        "StoreWallet", back_populates="store", uselist=False, cascade="all, delete-orphan"
+    user: Mapped[User] = relationship(back_populates="merchants")
+    calculation_logs: Mapped[list["CalculationLog"]] = relationship(
+        "CalculationLog", back_populates="merchant", cascade="all, delete-orphan"
     )
-    reconciliation_runs: Mapped[list["ReconciliationRun"]] = relationship(
-        "ReconciliationRun", back_populates="store"
+    wallet: Mapped["MerchantWallet | None"] = relationship(
+        "MerchantWallet", back_populates="merchant", uselist=False, cascade="all, delete-orphan"
+    )
+    reconciliation_logs: Mapped[list["ReconciliationLog"]] = relationship(
+        "ReconciliationLog", back_populates="merchant"
     )
 
 
-class StoreWallet(Base):
-    """Crédito operativo / wallet climático (EUR) por tienda."""
+class MerchantWallet(Base):
+    """Crédito operativo / wallet climático (EUR) por comercio."""
 
     __tablename__ = "store_wallets"
 
-    store_id: Mapped[int] = mapped_column(ForeignKey("stores.id"), primary_key=True)
+    merchant_id: Mapped[int] = mapped_column("store_id", ForeignKey("stores.id"), primary_key=True)
     balance_eur: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     updated_at: Mapped[dt.datetime] = mapped_column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False
     )
 
-    store: Mapped[Store] = relationship("Store", back_populates="wallet")
+    merchant: Mapped[Merchant] = relationship("Merchant", back_populates="wallet")

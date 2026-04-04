@@ -9,7 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..database import Base
 from .common import _utcnow
-from .merchant import Store
+from .merchant import Merchant
 
 
 class MonthlyCategoryReturn(Base):
@@ -17,7 +17,7 @@ class MonthlyCategoryReturn(Base):
     __table_args__ = (UniqueConstraint("store_id", "year_month", "category", name="uq_monthly_returns_store_month_cat"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    store_id: Mapped[int] = mapped_column(ForeignKey("stores.id"), nullable=False, index=True)
+    merchant_id: Mapped[int] = mapped_column("store_id", ForeignKey("stores.id"), nullable=False, index=True)
     year_month: Mapped[str] = mapped_column(String(7), nullable=False, index=True)
     category: Mapped[str] = mapped_column(String(80), nullable=False)
     return_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
@@ -26,14 +26,14 @@ class MonthlyCategoryReturn(Base):
     updated_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False)
 
 
-class ReconciliationRun(Base):
-    """Equiv. a ReconciliationLog del diseño genérico: un registro auditable por tienda y mes."""
+class ReconciliationLog(Base):
+    """Registro auditable de reconciliación por comercio y mes (tabla `reconciliation_runs`)."""
 
     __tablename__ = "reconciliation_runs"
     __table_args__ = (UniqueConstraint("store_id", "month", name="uq_reconciliation_store_month"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    store_id: Mapped[int] = mapped_column(ForeignKey("stores.id"), nullable=False, index=True)
+    merchant_id: Mapped[int] = mapped_column("store_id", ForeignKey("stores.id"), nullable=False, index=True)
     month: Mapped[str] = mapped_column(String(7), nullable=False)
     status: Mapped[str] = mapped_column(String(32), nullable=False)
     total_adjustment_eur: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
@@ -48,17 +48,22 @@ class ReconciliationRun(Base):
     notification_hint: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, nullable=False, index=True)
 
-    store: Mapped[Store] = relationship("Store", back_populates="reconciliation_runs")
+    merchant: Mapped[Merchant] = relationship("Merchant", back_populates="reconciliation_logs")
 
 
 class WalletLedgerEntry(Base):
     __tablename__ = "wallet_ledger_entries"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    store_id: Mapped[int] = mapped_column(ForeignKey("stores.id"), nullable=False, index=True)
+    merchant_id: Mapped[int] = mapped_column("store_id", ForeignKey("stores.id"), nullable=False, index=True)
     adjustment_eur: Mapped[float] = mapped_column(Float, nullable=False)
     balance_after_eur: Mapped[float] = mapped_column(Float, nullable=False)
     reason: Mapped[str] = mapped_column(String(80), nullable=False)
-    reconciliation_run_id: Mapped[int | None] = mapped_column(ForeignKey("reconciliation_runs.id"), nullable=True, index=True)
+    reconciliation_log_id: Mapped[int | None] = mapped_column(
+        "reconciliation_run_id",
+        ForeignKey("reconciliation_runs.id"),
+        nullable=True,
+        index=True,
+    )
     extra_metadata: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, nullable=False, index=True)

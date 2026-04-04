@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import func, select
 
-from ..models import Log, MonthlyCategoryReturn
+from ..models import CalculationLog, MonthlyCategoryReturn
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -33,7 +33,7 @@ def get_previous_year_month(reference: dt.datetime | None = None) -> str:
 def aggregate_orders_and_avg_ida_kg(
     db: "Session",
     *,
-    store_id: int,
+    merchant_id: int,
     year_month: str,
     default_ida_fallback_ratio: float = 0.55,
 ) -> tuple[dict[str, int], dict[str, float]]:
@@ -42,16 +42,20 @@ def aggregate_orders_and_avg_ida_kg(
     Uses co2_ida_kg when present; else co2_kg * default_ida_fallback_ratio as proxy.
     """
     start, end = month_utc_bounds(year_month)
-    ida_expr = func.coalesce(Log.co2_ida_kg, Log.co2_kg * default_ida_fallback_ratio)
+    ida_expr = func.coalesce(CalculationLog.co2_ida_kg, CalculationLog.co2_kg * default_ida_fallback_ratio)
 
     rows = db.execute(
         select(
-            Log.primary_category,
-            func.count(Log.id).label("cnt"),
+            CalculationLog.primary_category,
+            func.count(CalculationLog.id).label("cnt"),
             func.avg(ida_expr).label("avg_ida"),
         )
-        .where(Log.store_id == store_id, Log.created_at >= start, Log.created_at < end)
-        .group_by(Log.primary_category)
+        .where(
+            CalculationLog.merchant_id == merchant_id,
+            CalculationLog.created_at >= start,
+            CalculationLog.created_at < end,
+        )
+        .group_by(CalculationLog.primary_category)
     ).all()
 
     orders: dict[str, int] = {}
@@ -64,17 +68,21 @@ def aggregate_orders_and_avg_ida_kg(
     return orders, avg_ida
 
 
-def load_returns_by_category_from_db(db: "Session", *, store_id: int, year_month: str) -> dict[str, int]:
+def load_returns_by_category_from_db(db: "Session", *, merchant_id: int, year_month: str) -> dict[str, int]:
     rows = db.scalars(
         select(MonthlyCategoryReturn).where(
-            MonthlyCategoryReturn.store_id == store_id,
+            MonthlyCategoryReturn.merchant_id == merchant_id,
             MonthlyCategoryReturn.year_month == year_month,
         )
     ).all()
     return {r.category.lower().strip(): int(r.return_count) for r in rows}
 
 
-def store_ids_with_logs_in_month(db: "Session", year_month: str) -> list[int]:
+def merchant_ids_with_logs_in_month(db: "Session", year_month: str) -> list[int]:
     start, end = month_utc_bounds(year_month)
-    subq = select(Log.store_id).where(Log.created_at >= start, Log.created_at < end).distinct()
+    subq = (
+        select(CalculationLog.merchant_id)
+        .where(CalculationLog.created_at >= start, CalculationLog.created_at < end)
+        .distinct()
+    )
     return list(db.scalars(subq).all())

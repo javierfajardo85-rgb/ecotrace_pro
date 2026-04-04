@@ -11,14 +11,16 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..database import Base
 from .common import _utcnow
-from .merchant import Store
+from .merchant import Merchant
 
 
-class Log(Base):
+class CalculationLog(Base):
+    """Registro de cálculo por pedido (tabla física `logs`)."""
+
     __tablename__ = "logs"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    store_id: Mapped[int] = mapped_column(ForeignKey("stores.id"), nullable=False, index=True)
+    merchant_id: Mapped[int] = mapped_column("store_id", ForeignKey("stores.id"), nullable=False, index=True)
 
     transaction_id: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
 
@@ -51,7 +53,7 @@ class Log(Base):
 
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, nullable=False, index=True)
 
-    store: Mapped[Store] = relationship(back_populates="logs")
+    merchant: Mapped[Merchant] = relationship(back_populates="calculation_logs")
 
 
 class TransactionStatus(str, enum.Enum):
@@ -63,7 +65,7 @@ class Transaction(Base):
     __tablename__ = "transactions"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    store_id: Mapped[int] = mapped_column(ForeignKey("stores.id"), nullable=False, index=True)
+    merchant_id: Mapped[int] = mapped_column("store_id", ForeignKey("stores.id"), nullable=False, index=True)
     order_id: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
     carbon_kg: Mapped[float] = mapped_column(Float, nullable=False)
     tasa_1_compensacion: Mapped[float] = mapped_column(Float, nullable=False)
@@ -74,7 +76,10 @@ class Transaction(Base):
         default=TransactionStatus.pending,
     )
     created_at: Mapped[dt.datetime] = mapped_column(
-        DateTime(timezone=True), default=_utcnow, nullable=False, index=True,
+        DateTime(timezone=True),
+        default=_utcnow,
+        nullable=False,
+        index=True,
     )
 
-    store: Mapped[Store] = relationship()
+    merchant: Mapped[Merchant] = relationship()

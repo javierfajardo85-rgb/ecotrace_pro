@@ -1,7 +1,10 @@
 import json
 from typing import Any
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from .core.config import CARBON_PRICE_EUR_PER_TONNE
 
 
 class Settings(BaseSettings):
@@ -19,7 +22,7 @@ class Settings(BaseSettings):
     rate_limit_max_requests: int = 120
 
     # --- Carbon engine (tunable; document changes in audit) ---
-    carbon_price_eur_per_tonne: float = 110.0
+    carbon_price_eur_per_tonne: float = Field(default=CARBON_PRICE_EUR_PER_TONNE)
     load_factor: float = 0.75
     longhaul_km_threshold: float = 1000.0
     radiative_forcing_air_multiplier: float = 1.9
@@ -42,6 +45,13 @@ class Settings(BaseSettings):
     reconciliation_cron_minute: int = 0
     # Shared secret for POST /internal/cron/monthly-reconciliation (GitHub Actions, etc.)
     cron_secret: str = ""
+
+    # --- Notificaciones post-reconciliación (email opcional; siempre se registra en log) ---
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_user: str | None = None
+    smtp_password: str | None = None
+    notification_email_from: str | None = None
 
     @property
     def return_rates_extra(self) -> dict[str, float]:

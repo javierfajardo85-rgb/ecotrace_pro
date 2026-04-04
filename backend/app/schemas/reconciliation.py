@@ -19,7 +19,13 @@ class MonthlyReconciliationRowResponse(BaseModel):
     return_rate_observed: float
     avg_co2_ida_kg: float
     delta_co2_kg: float
-    delta_credit_eur: float
+    delta_credit_eur: float = Field(
+        ...,
+        description=(
+            "Cargo climático con signo (€): positivo si r_real > r_est (adeudo); "
+            "negativo si r_real < r_est (bonus). El wallet aplica balance -= este valor."
+        ),
+    )
 
 
 class MonthlyReconciliationResponse(BaseModel):
@@ -27,10 +33,17 @@ class MonthlyReconciliationResponse(BaseModel):
     month: str
     rows: list[MonthlyReconciliationRowResponse]
     total_delta_co2_kg: float
-    total_adjustment_eur: float
+    total_adjustment_eur: float = Field(
+        ...,
+        description=(
+            "Suma del cargo climático por categoría: positivo = más devoluciones que el modelo "
+            "(el comerciante adeuda más; el saldo del wallet baja con balance -= total). "
+            "Negativo = bonus (r_real < r_est); el saldo sube."
+        ),
+    )
     note: str = (
-        "Positive total_adjustment_eur means observed returns exceeded assumptions — "
-        "apply as debit to merchant climate wallet or next invoice."
+        "Convención: total_adjustment_eur es el cargo climático (positivo = debit wallet). "
+        "balance_delta_applied_eur en runs persistidos = cambio real del saldo (típicamente −total)."
     )
 
 
@@ -66,7 +79,7 @@ class WalletBalanceResponse(BaseModel):
     balance_eur: float
 
 
-class ReconciliationRunSummary(BaseModel):
+class ReconciliationLogSummary(BaseModel):
     month: str
     status: str
     total_adjustment_eur: float
@@ -74,6 +87,10 @@ class ReconciliationRunSummary(BaseModel):
     audit_hash: str
     notification_hint: str | None
     created_at: str
+
+
+# Alias retrocompatible (OpenAPI / clientes que importen el nombre antiguo)
+ReconciliationRunSummary = ReconciliationLogSummary
 
 
 class ReconciliationDetailSchema(BaseModel):
