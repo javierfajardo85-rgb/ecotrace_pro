@@ -2,6 +2,16 @@
 
 FastAPI + SQLite backend that calculates shipping CO₂e and a drop-in checkout widget script.
 
+### Layout del backend (paquete `backend/app/`)
+
+| Ruta | Rol |
+|------|-----|
+| `models/` | ORM por dominio: `merchant.py` (User, Store, wallet), `calculation.py` (Log, Transaction), `reconciliation.py` (runs, ledger, returns mensuales) |
+| `schemas/` | Pydantic; `schemas/reconciliation.py` para reconciliación / cron / wallet |
+| `crud/reconciliation.py` | Persistencia reconciliación + movimientos de wallet |
+| `tasks/` | Cron job mensual + APScheduler (`tasks/scheduler.py`) |
+| `services/` | Motor CO₂, datos de reconciliación, integraciones (p. ej. Shopify stubs) |
+
 ## Setup
 
 Create a virtualenv and install deps:
@@ -19,7 +29,7 @@ Create your env file:
 cp .env.example .env
 ```
 
-Edit `.env` and set `CARBON_INTERFACE_API_KEY` (optional). If unset or Carbon Interface is down, the API uses the fallback factor \(0.12 kg/(t·km)\).
+Edit `.env` and set `CARBON_INTERFACE_API_KEY` (optional). If unset or Carbon Interface is down, the API uses modal emission factors from `backend/app/services/carbon.py`. Optional engine tuning: `CARBON_PRICE_EUR_PER_TONNE`, `ECOTRACE_RETURN_RATES_JSON`, etc. (see `.env.example`).
 
 ## Run the backend
 
@@ -46,14 +56,22 @@ This returns:
 - `store_public_id`: use in the widget / calculate calls
 - `api_key`: returned once (stored hashed). (Not yet enforced for `/calculate` in this MVP.)
 
-## Test calculate
+## Test calculate (production API, stateless)
+
+```bash
+curl -sS -X POST http://127.0.0.1:8000/api/calculate \
+  -H "content-type: application/json" \
+  -d '{"weight_kg":1.2,"distance_km":450,"transport_mode":"truck","products":[{"category":"shoes","weight_proportion":1.0}]}'
+```
+
+## Test calculate (widget / checkout — con tienda y ZIP)
 
 The demo ZIP lookup is intentionally small; use one of these ZIPs for now: `10001`, `90001`, `60601`, `94105`, `33101`.
 
 ```bash
 curl -sS -X POST http://127.0.0.1:8000/calculate \
   -H "content-type: application/json" \
-  -d '{"store_public_id":"<STORE_PUBLIC_ID>","origin_zip":"10001","destination_zip":"90001","weight_kg":2.5,"vehicle_type":"truck"}'
+  -d '{"store_public_id":"<STORE_PUBLIC_ID>","origin_zip":"10001","destination_zip":"90001","weight_kg":2.5,"vehicle_type":"truck","primary_category":"shoes"}'
 ```
 
 If you want to use any ZIP codes, pass `distance_km` directly:
@@ -71,6 +89,31 @@ curl -sS http://127.0.0.1:8000/analytics/<STORE_PUBLIC_ID> \
   -H "authorization: Bearer <TOKEN>"
 ```
 
+## Reconciliación mensual (wallet + cron)
+
+1. Importar devoluciones reales por categoría (Bearer del merchant):
+
+```bash
+curl -sS -X POST http://127.0.0.1:8000/analytics/<STORE_PUBLIC_ID>/monthly-returns \
+  -H "authorization: Bearer <TOKEN>" -H "content-type: application/json" \
+  -d '{"month":"2026-03","returns_by_category":{"shoes":112,"fashion":68},"source":"manual_import"}'
+```
+
+2. Cron global (configura `CRON_SECRET` en `.env`; GitHub Actions / Render cron):
+
+```bash
+curl -sS -X POST http://127.0.0.1:8000/internal/cron/monthly-reconciliation \
+  -H "content-type: application/json" \
+  -H "X-Cron-Secret: YOUR_CRON_SECRET" \
+  -d '{}'
+```
+
+Opcional: `{"month":"2026-03"}` para un mes concreto (por defecto = mes civil anterior en UTC).
+
+3. Alternativa CLI (sin HTTP): `PYTHONPATH=. python backend/scripts/run_monthly_reconciliation.py`
+
+4. APScheduler: `RECONCILIATION_SCHEDULER_ENABLED=true` arranca el job en el proceso del API (`backend/app/tasks/scheduler.py`, ver `.env.example`).
+
 ## Add the widget to a site
 
 Create a simple HTML file and include:
@@ -84,6 +127,7 @@ Create a simple HTML file and include:
   data-weight="2.5"
   data-origin-zip="10001"
   data-destination-zip="90001"
+  data-product-category="fashion"
 ></script>
 ```
 
