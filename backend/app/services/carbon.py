@@ -10,7 +10,7 @@ CARBON_INTERFACE_ESTIMATES_URL = "https://www.carboninterface.com/api/v1/estimat
 
 def _transport_method(vehicle_type: str) -> str:
     v = (vehicle_type or "").lower().strip()
-    if v in {"truck", "road"}:
+    if v in {"truck", "road", "van"}:
         return "truck"
     if v in {"train", "rail"}:
         return "train"
@@ -18,6 +18,8 @@ def _transport_method(vehicle_type: str) -> str:
         return "plane"
     if v in {"ship", "sea", "ocean"}:
         return "ship"
+    if v in {"cargo_bike", "bike"}:
+        return "truck"
     return "truck"
 
 
@@ -55,12 +57,21 @@ def estimate_shipping_co2_kg(*, weight_kg: float, distance_km: float, vehicle_ty
         return None
 
 
+# kg CO₂e / t·km — GHG-aligned factors; "air" y "plane" equivalentes
 EMISSION_FACTORS: dict[str, float] = {
-    "plane": 0.500,
     "truck": 0.105,
+    "road": 0.105,
+    "van": 0.25,
+    "air": 0.50,
+    "plane": 0.50,
+    "cargo_bike": 0.02,
+    "bike": 0.02,
     "train": 0.025,
-    "ship":  0.012,
-    "default": 0.120,
+    "rail": 0.025,
+    "ship": 0.012,
+    "sea": 0.012,
+    "ocean": 0.012,
+    "default": 0.15,
 }
 
 
@@ -75,7 +86,10 @@ def fallback_co2_kg(
     Returns (co2_kg, emission_factor_used).
     """
     v = (vehicle_type or "").lower().strip()
-    ef = EMISSION_FACTORS.get(v, EMISSION_FACTORS["default"])
+    if v in {"plane", "air"}:
+        ef = float(EMISSION_FACTORS.get("air", EMISSION_FACTORS["default"]))
+    else:
+        ef = float(EMISSION_FACTORS.get(v, EMISSION_FACTORS["default"]))
     tonnes = weight_kg / 1000.0
     return distance_km * tonnes * ef, ef
 

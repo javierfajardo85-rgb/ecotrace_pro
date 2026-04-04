@@ -1,8 +1,8 @@
 import datetime as dt
-
 import json
+import re
 import uuid
-from fastapi import Depends, FastAPI, HTTPException, Query, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import func, select
@@ -10,7 +10,15 @@ from sqlalchemy.orm import Session
 
 from .config import settings
 from .database import Base, DATABASE_URL, engine, get_db
-from .models import Log, Store, Transaction, User
+from .models import (
+    Log,
+    MonthlyCategoryReturn,
+    ReconciliationRun,
+    Store,
+    StoreWallet,
+    Transaction,
+    User,
+)
 from .green_models import Activity, AuditTrail, Calculation, EmissionFactor, Facility, Membership, Organization, SpendCategory  # noqa: F401
 from .rate_limit import rate_limit
 from .compliance import CSRD_MVP_REQUIREMENTS
@@ -21,6 +29,8 @@ from .schemas import (
     ActivityResponse,
     CalculateRequest,
     CalculateResponse,
+    CronReconciliationRequest,
+    CronReconciliationResponse,
     EmissionFactorImportItem,
     EmissionFactorResolveRequest,
     EmissionFactorResolved,
@@ -28,6 +38,13 @@ from .schemas import (
     ComplianceStatusResponse,
     LoginRequest,
     LoginResponse,
+    MonthlyReconciliationRequest,
+    MonthlyReconciliationResponse,
+    MonthlyReconciliationRowResponse,
+    MonthlyReturnsImportRequest,
+    ReconciliationJobItemResponse,
+    ReconciliationRunSummary,
+    WalletBalanceResponse,
     OrganizationCreateRequest,
     OrganizationResponse,
     RegisterRequest,
@@ -41,12 +58,28 @@ from .security import (
     hash_password,
     verify_password,
 )
+from .services.calculation_engine import (
+    DEFAULT_RETURN_RATES,
+    compute_engine,
+    merged_return_rates,
+    normalize_product_lines,
+)
 from .services.carbon import EMISSION_FACTORS, estimate_shipping_co2_kg, fallback_co2_kg
 from .services.equivalents import kgco2_to_smartphone_charges, kgco2_to_tree_days
+from .services.reconciliation import reconcile_monthly
 from .services.geo import coords_for_zip, haversine_km
+from .services.reconciliation_data import get_previous_year_month
+from .routers.calculate_api import router as calculate_api_router
+from .tasks import (
+    reconcile_store_month,
+    run_monthly_reconciliation_for_all_stores,
+    shutdown_reconciliation_scheduler,
+    start_reconciliation_scheduler,
+)
 
 
 app = FastAPI(title="EcoTrace Widget API", version="0.1.0")
+app.include_router(calculate_api_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -68,6 +101,12 @@ def root():
 def _startup() -> None:
     Base.metadata.create_all(bind=engine)
     _maybe_migrate_sqlite()
+    start_reconciliation_scheduler()
+
+
+@app.on_event("shutdown")
+def _shutdown() -> None:
+    shutdown_reconciliation_scheduler()
 
 
 def _maybe_migrate_sqlite() -> None:
@@ -125,6 +164,15 @@ def _maybe_migrate_sqlite() -> None:
                 conn.commit()
             if "audit_log" not in col_names:
                 conn.exec_driver_sql("ALTER TABLE logs ADD COLUMN audit_log TEXT;")
+                conn.commit()
+            if "co2_ida_kg" not in col_names:
+                conn.exec_driver_sql("ALTER TABLE logs ADD COLUMN co2_ida_kg FLOAT;")
+                conn.commit()
+            if "co2_returns_estimated_kg" not in col_names:
+                conn.exec_driver_sql("ALTER TABLE logs ADD COLUMN co2_returns_estimated_kg FLOAT;")
+                conn.commit()
+            if "primary_category" not in col_names:
+                conn.exec_driver_sql("ALTER TABLE logs ADD COLUMN primary_category VARCHAR(60);")
                 conn.commit()
     except Exception:
         # If the table doesn't exist yet, create_all already handled it.
@@ -667,6 +715,217 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
     return LoginResponse(token=create_access_token(user_id=user.id))
 
 
+@app.get("/return-rates")
+def get_return_rates():
+    """Public reference table (defaults + optional ECOTRACE_RETURN_RATES_JSON overrides)."""
+    return {
+        "defaults": DEFAULT_RETURN_RATES,
+        "effective": merged_return_rates(settings),
+        "engine_constants": {
+            "carbon_price_eur_per_tonne": settings.carbon_price_eur_per_tonne,
+            "load_factor": settings.load_factor,
+            "longhaul_km_threshold": settings.longhaul_km_threshold,
+            "radiative_forcing_air_multiplier": settings.radiative_forcing_air_multiplier,
+            "uncertainty_longhaul_multiplier": settings.uncertainty_longhaul_multiplier,
+            "returns_logistics_multiplier": settings.returns_logistics_multiplier,
+            "returns_dilution_factor": settings.returns_dilution_factor,
+            "ecotrace_fee_fixed_eur": settings.ecotrace_fee_fixed_eur,
+            "ecotrace_fee_pct_on_compensation": settings.ecotrace_fee_pct_on_compensation,
+            "ecotrace_fee_min_eur": settings.ecotrace_fee_min_eur,
+        },
+    }
+
+
+@app.post("/analytics/{store_public_id}/reconciliation", response_model=MonthlyReconciliationResponse)
+def monthly_reconciliation_endpoint(
+    store_public_id: str,
+    payload: MonthlyReconciliationRequest,
+    user_id: int = Depends(require_user_id),
+    db: Session = Depends(get_db),
+):
+    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    if not store or store.user_id != user_id:
+        raise HTTPException(status_code=404, detail="Store not found")
+
+    result = reconcile_monthly(
+        orders_by_category=payload.orders_by_category,
+        returns_by_category=payload.returns_by_category,
+        avg_co2_ida_kg_by_category=payload.avg_co2_ida_kg_by_category,
+        default_avg_co2_ida_kg=payload.default_avg_co2_ida_kg,
+    )
+    rows = [
+        MonthlyReconciliationRowResponse(
+            category=r.category,
+            orders=r.orders,
+            returns_observed=r.returns_observed,
+            return_rate_assumed=r.return_rate_assumed,
+            return_rate_observed=r.return_rate_observed,
+            avg_co2_ida_kg=r.avg_co2_ida_kg,
+            delta_co2_kg=round(r.delta_co2_kg, 6),
+            delta_credit_eur=round(r.delta_credit_eur, 4),
+        )
+        for r in result.rows
+    ]
+    return MonthlyReconciliationResponse(
+        store_public_id=store.public_id,
+        month=payload.month,
+        rows=rows,
+        total_delta_co2_kg=round(result.total_delta_co2_kg, 6),
+        total_adjustment_eur=round(result.total_adjustment_eur, 4),
+    )
+
+
+@app.post("/analytics/{store_public_id}/monthly-returns")
+def import_monthly_returns(
+    store_public_id: str,
+    payload: MonthlyReturnsImportRequest,
+    user_id: int = Depends(require_user_id),
+    db: Session = Depends(get_db),
+):
+    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    if not store or store.user_id != user_id:
+        raise HTTPException(status_code=404, detail="Store not found")
+
+    for cat, cnt in payload.returns_by_category.items():
+        c = str(cat).lower().strip()
+        if not c:
+            continue
+        row = db.scalar(
+            select(MonthlyCategoryReturn).where(
+                MonthlyCategoryReturn.store_id == store.id,
+                MonthlyCategoryReturn.year_month == payload.month,
+                MonthlyCategoryReturn.category == c,
+            )
+        )
+        n = max(0, int(cnt))
+        src = (payload.source or "manual_import")[:40]
+        if row:
+            row.return_count = n
+            row.source = src
+        else:
+            db.add(
+                MonthlyCategoryReturn(
+                    store_id=store.id,
+                    year_month=payload.month,
+                    category=c[:80],
+                    return_count=n,
+                    source=src,
+                )
+            )
+    db.commit()
+    return {
+        "ok": True,
+        "month": payload.month,
+        "categories_updated": len(payload.returns_by_category),
+    }
+
+
+@app.get("/analytics/{store_public_id}/wallet", response_model=WalletBalanceResponse)
+def get_merchant_wallet(
+    store_public_id: str,
+    user_id: int = Depends(require_user_id),
+    db: Session = Depends(get_db),
+):
+    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    if not store or store.user_id != user_id:
+        raise HTTPException(status_code=404, detail="Store not found")
+    w = db.get(StoreWallet, store.id)
+    return WalletBalanceResponse(store_public_id=store.public_id, balance_eur=float(w.balance_eur) if w else 0.0)
+
+
+@app.get("/analytics/{store_public_id}/reconciliation-runs", response_model=list[ReconciliationRunSummary])
+def list_reconciliation_runs(
+    store_public_id: str,
+    user_id: int = Depends(require_user_id),
+    db: Session = Depends(get_db),
+    limit: int = Query(default=24, ge=1, le=100),
+):
+    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    if not store or store.user_id != user_id:
+        raise HTTPException(status_code=404, detail="Store not found")
+    rows = db.scalars(
+        select(ReconciliationRun)
+        .where(ReconciliationRun.store_id == store.id)
+        .order_by(ReconciliationRun.created_at.desc())
+        .limit(limit)
+    ).all()
+    return [
+        ReconciliationRunSummary(
+            month=r.month,
+            status=r.status,
+            total_adjustment_eur=float(r.total_adjustment_eur),
+            action=r.action,
+            audit_hash=r.audit_hash,
+            notification_hint=r.notification_hint,
+            created_at=r.created_at.isoformat().replace("+00:00", "Z"),
+        )
+        for r in rows
+    ]
+
+
+@app.post("/analytics/{store_public_id}/reconciliation/run", response_model=ReconciliationJobItemResponse)
+def run_single_store_reconciliation(
+    store_public_id: str,
+    user_id: int = Depends(require_user_id),
+    db: Session = Depends(get_db),
+    month: str | None = Query(default=None, description="YYYY-MM; default previous month UTC"),
+):
+    store = db.scalar(select(Store).where(Store.public_id == store_public_id))
+    if not store or store.user_id != user_id:
+        raise HTTPException(status_code=404, detail="Store not found")
+    if month is not None and not re.match(r"^\d{4}-\d{2}$", month):
+        raise HTTPException(status_code=422, detail="month must be YYYY-MM")
+    ym = month or get_previous_year_month()
+    r = reconcile_store_month(db, store=store, year_month=ym, merge_shopify=False)
+    return ReconciliationJobItemResponse(
+        store_public_id=r.store_public_id,
+        month=r.month,
+        status=r.status,
+        total_adjustment_eur=r.total_adjustment_eur,
+        action=r.action,
+        audit_hash=r.audit_hash,
+        detail=r.detail,
+    )
+
+
+@app.post("/internal/cron/monthly-reconciliation", response_model=CronReconciliationResponse)
+def internal_cron_monthly_reconciliation(
+    request: Request,
+    db: Session = Depends(get_db),
+    payload: CronReconciliationRequest | None = None,
+    x_cron_secret: str | None = Header(default=None, alias="X-Cron-Secret"),
+):
+    rate_limit(request)
+    secret = (settings.cron_secret or "").strip()
+    if not secret:
+        raise HTTPException(status_code=503, detail="CRON_SECRET is not configured")
+    if (x_cron_secret or "").strip() != secret:
+        raise HTTPException(status_code=401, detail="Invalid X-Cron-Secret")
+
+    body = payload or CronReconciliationRequest()
+    ym = body.month
+    if ym is not None and not re.match(r"^\d{4}-\d{2}$", ym):
+        raise HTTPException(status_code=422, detail="month must be YYYY-MM")
+    effective = ym or get_previous_year_month()
+    results = run_monthly_reconciliation_for_all_stores(db, year_month=effective, merge_shopify=body.merge_shopify)
+    return CronReconciliationResponse(
+        month_effective=effective,
+        processed=len(results),
+        results=[
+            ReconciliationJobItemResponse(
+                store_public_id=r.store_public_id,
+                month=r.month,
+                status=r.status,
+                total_adjustment_eur=r.total_adjustment_eur,
+                action=r.action,
+                audit_hash=r.audit_hash,
+                detail=r.detail,
+            )
+            for r in results
+        ],
+    )
+
+
 @app.post("/calculate", response_model=CalculateResponse)
 def calculate(payload: CalculateRequest, request: Request, db: Session = Depends(get_db)):
     rate_limit(request)
@@ -732,33 +991,30 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
         fallback_ef = None
         source = "carbon_interface"
 
-    inferred_air = bool(float(distance_km) > 1000.0) or v in {"plane", "air"}
-    radiative_forcing_multiplier = 1.9 if inferred_air else 1.0
-    uncertainty_multiplier = 1.1 if float(distance_km) > 1000.0 else 1.0
-    co2_kg = float(base_co2_kg) * float(radiative_forcing_multiplier) * float(uncertainty_multiplier)
-
-    emission_factor_source = "DEFRA_2024_v1.2" if source == "fallback" else "CARBON_INTERFACE_live"
-    emission_factor_used: float | None = None
-    if source == "fallback":
-        emission_factor_used = fallback_ef
+    lines = normalize_product_lines(payload.products, payload.primary_category)
+    if len(lines) == 1:
+        primary_category = lines[0].category
+    elif payload.primary_category:
+        primary_category = (payload.primary_category or "").lower().strip() or "mixed"
     else:
-        try:
-            emission_factor_used = float(base_co2_kg) / float(activity_tkm) if float(activity_tkm) > 0 else None
-        except Exception:
-            emission_factor_used = None
+        primary_category = "mixed"
 
-    # --- Fee logic (Tasa 1 + Tasa 2) ---
-    CARBON_PRICE_EUR_PER_TONNE = 25.0
-    tasa_1_compensacion = round(co2_kg * (CARBON_PRICE_EUR_PER_TONNE / 1000.0), 4)
+    eng = compute_engine(
+        settings=settings,
+        weight_kg=weight_kg,
+        distance_km=distance_km,
+        vehicle_type=payload.vehicle_type or "truck",
+        base_co2_kg_raw=float(base_co2_kg),
+        ef_fallback=fallback_ef,
+        source=source,
+        products_normalized=lines,
+    )
 
-    # Tasa 2: scaled fixed fee for the merchant [0.50€ – 1.50€]
-    # based on normalized weight/distance contribution.
-    weight_factor = min(float(weight_kg) / 10.0, 1.0)
-    distance_factor = min(float(distance_km) / 2000.0, 1.0)
-    tasa_2_devolucion = round(0.50 + 1.00 * (0.5 * weight_factor + 0.5 * distance_factor), 2)
+    co2_kg = eng.co2_total_kg
+    emission_factor_source = "DEFRA_2024_v1.2" if source == "fallback" else "CARBON_INTERFACE_live"
+    emission_factor_used = eng.emission_factor_used
 
-    total_tasa_cliente = round(tasa_1_compensacion + tasa_2_devolucion, 2)
-
+    inferred_air = bool(float(distance_km) > float(settings.longhaul_km_threshold)) or v in {"plane", "air"}
     transport_mode = "truck_heavy"
     if v in {"train", "rail"}:
         transport_mode = "rail"
@@ -767,6 +1023,10 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
     elif inferred_air:
         transport_mode = "air"
 
+    tasa_1_compensacion = round(eng.tasa_compensacion_eur, 4)
+    tasa_2_servicio = round(eng.tasa_servicio_ecotrace_eur, 4)
+    total_tasa_cliente = eng.total_client_eur
+
     source_metadata = json.dumps(
         {
             "provider": "Carbon Interface" if source == "carbon_interface" else "DEFRA",
@@ -774,9 +1034,16 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
             "emission_factor_source": emission_factor_source,
             "weight_defaulted": weight_defaulted,
             "weight_default_kg": default_weight_kg if weight_defaulted else None,
-            "radiative_forcing_multiplier": radiative_forcing_multiplier,
-            "uncertainty_multiplier": uncertainty_multiplier,
-            "uncertainty_reason": "logistics_uncertainty_international" if uncertainty_multiplier > 1.0 else None,
+            "base_co2_kg_before_load_rf_unc": eng.base_co2_before_load_kg,
+            "load_factor": eng.load_factor,
+            "radiative_forcing_multiplier": eng.radiative_forcing_multiplier,
+            "uncertainty_multiplier": eng.uncertainty_multiplier,
+            "returns_logistics_multiplier": eng.returns_multiplier,
+            "returns_dilution_factor": eng.dilution_factor,
+            "carbon_price_eur_per_tonne": settings.carbon_price_eur_per_tonne,
+            "uncertainty_reason": "logistics_uncertainty_international"
+            if eng.uncertainty_multiplier > 1.0
+            else None,
         },
         separators=(",", ":"),
         ensure_ascii=False,
@@ -792,6 +1059,8 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
             "origin": payload.origin_zip,
             "destination": payload.destination_zip,
             "weight_kg": float(weight_kg),
+            "primary_category": primary_category,
+            "products": [{"category": ln.category, "weight_share": ln.weight_share} for ln in lines],
         },
         "calculation_logic": {
             "distance_km": float(distance_km),
@@ -799,10 +1068,21 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
             "emission_factor_source": emission_factor_source,
             "emission_factor_value": float(emission_factor_used) if emission_factor_used is not None else None,
             "activity_tkm": float(activity_tkm),
-            "radiative_forcing_multiplier": float(radiative_forcing_multiplier),
-            "uncertainty_multiplier": float(uncertainty_multiplier),
-            "formula": "E=A×EF",
+            "co2_ida_kg": eng.co2_ida_kg,
+            "co2_returns_estimated_kg": eng.co2_returns_estimated_kg,
+            "co2_total_kg": eng.co2_total_kg,
+            "load_factor": eng.load_factor,
+            "radiative_forcing_multiplier": float(eng.radiative_forcing_multiplier),
+            "uncertainty_multiplier": float(eng.uncertainty_multiplier),
+            "returns_logistics_multiplier": eng.returns_multiplier,
+            "returns_dilution_factor": eng.dilution_factor,
+            "formula": "E_total=E_ida+E_ret; E_ida=base×F_load×M_RF×M_unc; E_ret=sum_i E_ida×w_i×r_i×f_ret×f_dil",
             "weight_defaulted": bool(weight_defaulted),
+        },
+        "pricing": {
+            "tasa_1_compensacion_eur": tasa_1_compensacion,
+            "tasa_2_ecotrace_service_eur": tasa_2_servicio,
+            "total_tasa_cliente_eur": total_tasa_cliente,
         },
         "result_co2_kg": float(co2_kg),
         "audit_status": audit_status,
@@ -822,12 +1102,15 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
         activity_tkm=activity_tkm,
         vehicle_type=(payload.vehicle_type or "truck"),
         co2_kg=float(co2_kg),
+        co2_ida_kg=float(eng.co2_ida_kg),
+        co2_returns_estimated_kg=float(eng.co2_returns_estimated_kg),
+        primary_category=primary_category,
         co2_source=source,
         emission_factor_used=emission_factor_used,
         emission_factor_source=emission_factor_source,
         source_metadata=source_metadata,
-        radiative_forcing_multiplier=radiative_forcing_multiplier,
-        uncertainty_multiplier=uncertainty_multiplier,
+        radiative_forcing_multiplier=eng.radiative_forcing_multiplier,
+        uncertainty_multiplier=eng.uncertainty_multiplier,
         audit_status=audit_status,
         audit_log=json.dumps(audit_log, separators=(",", ":"), ensure_ascii=False),
         is_offset_purchased=bool(payload.is_offset_purchased),
@@ -839,19 +1122,25 @@ def calculate(payload: CalculateRequest, request: Request, db: Session = Depends
         order_id=transaction_id,
         carbon_kg=float(co2_kg),
         tasa_1_compensacion=tasa_1_compensacion,
-        tasa_2_devolucion=tasa_2_devolucion,
+        tasa_2_devolucion=tasa_2_servicio,
         status="confirmed" if bool(payload.is_offset_purchased) else "pending",
     )
     db.add(txn)
     db.commit()
 
+    breakdown = {k: {sk: float(sv) for sk, sv in v.items()} for k, v in eng.category_breakdown.items()}
+
     return CalculateResponse(
         co2_kg=float(co2_kg),
+        co2_ida_kg=float(eng.co2_ida_kg),
+        co2_returns_estimated_kg=float(eng.co2_returns_estimated_kg),
         distance_km=float(distance_km),
         source=source,
         tasa_1_eur=tasa_1_compensacion,
-        tasa_2_eur=tasa_2_devolucion,
+        tasa_2_eur=tasa_2_servicio,
         total_tasa_cliente=total_tasa_cliente,
+        carbon_price_eur_per_tonne_applied=float(settings.carbon_price_eur_per_tonne),
+        breakdown_by_category=breakdown,
         smartphone_charges=kgco2_to_smartphone_charges(float(co2_kg)),
         tree_days=kgco2_to_tree_days(float(co2_kg)),
     )
