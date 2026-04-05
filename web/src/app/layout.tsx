@@ -46,7 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${plusJakarta.variable} ${geistMono.variable}`}>
-      <body className="bg-white font-sans text-slate-900 antialiased">
+      <body className="bg-white font-sans text-stripe-body antialiased">
         <I18nProvider>
           <CurrencyProvider>
             <Nav />

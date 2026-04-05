@@ -60,20 +60,40 @@ module.exports = {
         mist: "#f4f7f6",
         "theme-green": "#0A3D2A",
         "subtle-gold": "#D4AF77",
+        /** From design-system/stripe-design.md — neutrals & surfaces */
+        "stripe-border": "#e5edf5",
+        "stripe-body": "#64748b",
+        "stripe-label": "#273951",
+        "stripe-whisper": "rgba(83, 58, 253, 0.06)",
+        /** Linear light surfaces (design-system/linear-design.md) */
+        "linear-canvas": "#f7f8f8",
+        "linear-border": "#d0d6e0",
+      },
+      borderRadius: {
+        stripe: "4px",
+        "stripe-md": "6px",
+        "stripe-lg": "8px",
       },
       boxShadow: {
         soft: "0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04)",
-        /** Green-tinted elevation (Stripe-inspired, brand-aligned) */
+        /** Stripe card elevation: blue-tinted layers (signature) */
+        "stripe-deep":
+          "0 30px 45px -30px rgba(50, 50, 93, 0.22), 0 18px 36px -18px rgba(0, 0, 0, 0.09)",
+        /** Green-tinted elevation (brand-aligned marketing) */
         stripe: "0 18px 48px -12px rgba(10, 61, 42, 0.14), 0 8px 24px -8px rgba(10, 61, 42, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)",
-        "stripe-sm": "0 4px 16px rgba(10, 61, 42, 0.07), 0 2px 6px rgba(0, 0, 0, 0.04)",
+        "stripe-sm": "0 4px 16px rgba(50, 50, 93, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)",
         "stripe-inner": "inset 0 1px 0 rgba(255,255,255,0.85)",
         glow: "0 0 100px rgba(16, 185, 129, 0.12)",
       },
       backgroundImage: {
         "mesh-hero":
-          "radial-gradient(ellipse 120% 80% at 50% -20%, rgba(10,61,42,0.07) 0%, transparent 55%), radial-gradient(ellipse 80% 50% at 100% 0%, rgba(212,175,119,0.06) 0%, transparent 45%), radial-gradient(ellipse 60% 40% at 0% 100%, rgba(16,185,129,0.05) 0%, transparent 50%)",
-        "section-fade": "linear-gradient(180deg, #ffffff 0%, #f8faf9 100%)",
-        "card-shine": "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.65) 50%, rgba(244,247,246,0.9) 100%)",
+          "radial-gradient(ellipse 120% 80% at 50% -20%, rgba(10,61,42,0.075) 0%, transparent 55%), radial-gradient(ellipse 90% 55% at 92% 0%, rgba(83,58,253,0.05) 0%, transparent 48%), radial-gradient(ellipse 70% 45% at 0% 100%, rgba(212,175,119,0.055) 0%, transparent 50%)",
+        "section-fade": "linear-gradient(180deg, #ffffff 0%, #f7f8f8 100%)",
+        "card-shine":
+          "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.72) 45%, rgba(247,248,248,0.95) 100%)",
+        /** Linear-style technical grid (very subtle, light mode) */
+        "grid-linear":
+          "linear-gradient(rgba(10,61,42,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(10,61,42,0.04) 1px, transparent 1px)",
       },
       transitionTimingFunction: {
         out: "cubic-bezier(0.22, 1, 0.36, 1)",

@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  /**
+   * Stripe: top-level display (h1) at weight 300. h2/h3 default to medium for doc pages;
+   * marketing sections override with font-light where needed.
+   */
   h1,
   h2,
   h3 {
@@ -12,19 +16,21 @@
   }
 
   h1 {
-    font-weight: 600;
+    font-weight: 300;
   }
 
-  h2 {
-    font-weight: 600;
-  }
-
+  h2,
   h3 {
-    font-weight: 600;
+    font-weight: 500;
   }
 
+  /**
+   * Linear DESIGN.md: Inter with cv01 + ss03 for cleaner geometric body text.
+   */
   body {
     line-height: 1.6;
+    font-feature-settings: "cv01" 1, "ss03" 1;
+    color: #64748b;
   }
 }
 

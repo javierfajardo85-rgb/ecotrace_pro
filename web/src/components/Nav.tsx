@@ -10,7 +10,7 @@ const CURRENCIES = ["EUR", "USD", "GBP"] as const;
 function CurrencySwitcher() {
   const { code, setCode } = useCurrency();
   return (
-    <div className="flex items-center gap-0.5 rounded-md border border-slate-200/90 bg-slate-50/50 p-0.5 text-[11px] font-semibold shadow-stripe-inner">
+    <div className="flex items-center gap-0.5 rounded-stripe border border-stripe-border bg-linear-canvas p-0.5 text-[11px] font-medium shadow-stripe-inner">
       {CURRENCIES.map((c) => (
         <button
           key={c}
@@ -54,8 +54,8 @@ export function Nav() {
     <header
       className={`sticky top-0 z-50 border-b transition-[border-color,background-color] duration-500 ${
         scrolled
-          ? "border-slate-200/80 bg-white/92 shadow-stripe-sm backdrop-blur-xl backdrop-saturate-150"
-          : "border-transparent bg-white/70 backdrop-blur-md"
+          ? "border-stripe-border bg-white/95 shadow-stripe-sm backdrop-blur-xl backdrop-saturate-150"
+          : "border-transparent bg-white/80 backdrop-blur-md"
       }`}
     >
       <div className="relative z-50 mx-auto max-w-7xl px-4 sm:px-6">
@@ -81,7 +81,7 @@ export function Nav() {
             ).map(([href, label]) => (
               <a
                 key={href}
-                className="rounded-md px-3 py-2 text-[13px] font-medium text-slate-600 transition-colors duration-200 hover:bg-slate-100/80 hover:text-ink"
+                className="rounded-stripe px-3 py-2 text-[13px] font-medium text-stripe-label transition-colors duration-200 hover:bg-stripe-whisper hover:text-ink"
                 href={href}
               >
                 {label}
@@ -90,7 +90,7 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="flex items-center gap-0.5 rounded-md border border-slate-200/90 bg-slate-50/50 p-0.5 text-[11px] font-semibold shadow-stripe-inner">
+            <div className="flex items-center gap-0.5 rounded-stripe border border-stripe-border bg-linear-canvas p-0.5 text-[11px] font-medium shadow-stripe-inner">
               <button
                 type="button"
                 onClick={() => switchLang("en")}
@@ -114,13 +114,13 @@ export function Nav() {
             <CurrencySwitcher />
 
             <Link
-              className="hidden h-9 items-center justify-center rounded-md px-3 text-[13px] font-semibold text-slate-600 transition-colors hover:text-ink lg:inline-flex"
+              className="hidden h-9 items-center justify-center rounded-stripe px-3 text-[13px] font-medium text-stripe-label transition-colors hover:text-ink lg:inline-flex"
               href="/dashboard"
             >
               {t("nav.login")}
             </Link>
             <a
-              className="relative z-[60] inline-flex h-9 items-center justify-center rounded-md bg-brand-green px-3.5 text-[13px] font-semibold text-white shadow-stripe-sm ring-1 ring-white/25 transition-all duration-300 ease-out hover:-translate-y-px hover:bg-brand-green-light hover:shadow-stripe sm:h-10 sm:px-4 sm:text-sm"
+              className="relative z-[60] inline-flex h-9 items-center justify-center rounded-stripe bg-brand-green px-3.5 text-[13px] font-medium text-white shadow-stripe-sm ring-1 ring-white/25 transition-all duration-300 ease-out hover:-translate-y-px hover:bg-brand-green-light hover:shadow-stripe-deep sm:h-10 sm:px-4 sm:text-sm"
               href="#add-widget"
             >
               {t("nav.addToStore")}

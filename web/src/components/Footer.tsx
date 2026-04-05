@@ -7,7 +7,7 @@ export function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="border-t border-slate-200/80 bg-mist/50">
+    <footer className="border-t border-stripe-border bg-linear-canvas/70">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
@@ -60,7 +60,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 rounded-2xl border border-slate-200/90 bg-white/80 p-6 shadow-stripe-sm ring-1 ring-white/70 backdrop-blur-sm sm:p-8">
+        <div className="mt-12 rounded-stripe-lg border border-stripe-border bg-white p-6 shadow-stripe-deep ring-1 ring-stripe-border/40 backdrop-blur-sm sm:p-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="text-sm font-semibold text-brand-green">{t("footer.joinTitle")}</div>
@@ -83,7 +83,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200/80 pt-8 text-sm text-slate-500">
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-stripe-border pt-8 text-sm text-stripe-body">
           <span>© {new Date().getFullYear()} EcoTrace</span>
           <div className="flex items-center gap-5">
             <a className="transition-colors hover:text-ink" href="#" aria-label="LinkedIn">LinkedIn</a>

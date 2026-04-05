@@ -91,7 +91,7 @@ function DetailModal({
 
           {/* Panel */}
           <motion.div
-            className="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-slate-200/60 bg-white/92 shadow-stripe ring-1 ring-white/80 backdrop-blur-2xl sm:max-h-[88vh]"
+            className="relative w-full max-w-4xl overflow-hidden rounded-stripe-lg border border-stripe-border bg-white/95 shadow-stripe-deep ring-1 ring-stripe-border/50 backdrop-blur-2xl sm:max-h-[88vh]"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -112,7 +112,7 @@ function DetailModal({
 
             <div className="flex flex-col">
               <div className="border-b border-slate-100/90 bg-gradient-to-r from-mist/40 via-white to-white px-8 pb-5 pt-8 sm:px-10 sm:pt-10">
-                <h3 className="pr-12 font-display text-xl font-medium tracking-[-0.02em] text-ink sm:text-2xl">
+                <h3 className="pr-12 font-display text-xl font-light tracking-[-0.03em] text-ink sm:text-2xl">
                   {header}
                 </h3>
               </div>
@@ -224,16 +224,16 @@ export function LandingPage() {
   ];
 
   return (
-    <div className="bg-white text-theme-green antialiased">
+    <div className="bg-white text-stripe-body antialiased">
       <main>
         <Hero />
         <HowItWorks />
 
         {/* ━━━ Three Solutions ━━━ */}
-        <section id="product" className="scroll-mt-24 border-t border-slate-200/80 bg-section-fade">
+        <section id="product" className="scroll-mt-24 border-t border-stripe-border bg-section-fade">
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("solutions.title")}</h2>
+              <h2 className="font-display text-3xl font-light tracking-[-0.04em] text-ink sm:text-[2rem] sm:tracking-[-0.045em]">{t("solutions.title")}</h2>
               <p className="mt-4 text-base leading-relaxed text-slate-600">{t("solutions.subtitle")}</p>
             </div>
 
@@ -241,8 +241,8 @@ export function LandingPage() {
             <div className="mt-16 grid items-center gap-10 sm:mt-20 sm:gap-12 lg:grid-cols-2">
               <Reveal>
                 <div>
-                  <div className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 shadow-stripe-inner">{t("solutions.sol1Badge")}</div>
-                  <h3 className="mt-4 font-display text-2xl font-medium tracking-[-0.02em] text-ink">{t("solutions.sol1Title")}</h3>
+                  <div className="inline-flex items-center rounded-stripe border border-stripe-border bg-white px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.1em] text-stripe-label shadow-stripe-inner">{t("solutions.sol1Badge")}</div>
+                  <h3 className="mt-4 font-display text-2xl font-light tracking-[-0.03em] text-ink">{t("solutions.sol1Title")}</h3>
                   <p className="mt-1 text-sm font-medium text-brand-green">{t("solutions.sol1Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol1Text")}</p>
                   <ul className="mt-5 grid gap-2.5 text-sm text-slate-600">
@@ -256,7 +256,7 @@ export function LandingPage() {
                 </div>
               </Reveal>
               <Reveal>
-                <div className="flex justify-center rounded-2xl border border-slate-200/80 bg-white/70 p-6 shadow-stripe-sm ring-1 ring-white/80 backdrop-blur-sm sm:p-10">
+                <div className="flex justify-center rounded-stripe-lg border border-stripe-border bg-white p-6 shadow-stripe-deep ring-1 ring-stripe-border/40 backdrop-blur-[2px] sm:p-10">
                   <ShippingMockup />
                 </div>
               </Reveal>
@@ -264,18 +264,18 @@ export function LandingPage() {
 
             {/* ── Technical Advantage pill ── */}
             <Reveal>
-              <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-slate-200/90 bg-card-shine p-6 shadow-stripe-sm sm:mt-14 sm:p-8">
+              <div className="mx-auto mt-12 max-w-3xl rounded-stripe-lg border border-stripe-border bg-card-shine p-6 shadow-stripe-deep sm:mt-14 sm:p-8">
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="inline-flex items-center gap-2 rounded-full border border-brand-green/15 bg-brand-green/[0.05] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-green">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-brand-green"><path d="m13 2-2 2.5h3L12 7" /><circle cx="12" cy="14" r="7" strokeWidth="1.8" /><path d="M12 10v4l2 2" /></svg>
                     {t("techAdvantage.badge")}
                   </div>
                 </div>
-                <h4 className="mt-4 font-display text-lg font-medium tracking-[-0.02em] text-ink">{t("techAdvantage.title")}</h4>
+                <h4 className="mt-4 font-display text-lg font-light tracking-[-0.02em] text-ink">{t("techAdvantage.title")}</h4>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{t("techAdvantage.text")}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {[t("techAdvantage.pill1"), t("techAdvantage.pill2"), t("techAdvantage.pill3"), t("techAdvantage.pill4")].map((p) => (
-                    <span key={p} className="rounded-full border border-slate-200/70 bg-white/90 px-3 py-1 text-[11px] font-semibold text-slate-600 shadow-stripe-inner">{p}</span>
+                    <span key={p} className="rounded-stripe border border-stripe-border bg-white px-2.5 py-0.5 text-[11px] font-medium text-stripe-label shadow-stripe-inner">{p}</span>
                   ))}
                 </div>
               </div>
@@ -288,8 +288,8 @@ export function LandingPage() {
               </Reveal>
               <Reveal>
                 <div className="order-1 lg:order-2">
-                  <div className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 shadow-stripe-inner">{t("solutions.sol2Badge")}</div>
-                  <h3 className="mt-4 font-display text-2xl font-medium tracking-[-0.02em] text-ink">{t("solutions.sol2Title")}</h3>
+                  <div className="inline-flex items-center rounded-stripe border border-stripe-border bg-white px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.1em] text-stripe-label shadow-stripe-inner">{t("solutions.sol2Badge")}</div>
+                  <h3 className="mt-4 font-display text-2xl font-light tracking-[-0.03em] text-ink">{t("solutions.sol2Title")}</h3>
                   <p className="mt-1 text-sm font-medium text-slate-600">{t("solutions.sol2Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol2Text")}</p>
                   <ul className="mt-5 grid gap-2 text-sm text-slate-600">
@@ -308,8 +308,8 @@ export function LandingPage() {
             <div className="mt-20 grid items-center gap-10 sm:mt-28 sm:gap-12 lg:grid-cols-2">
               <Reveal>
                 <div>
-                  <div className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 shadow-stripe-inner">{t("solutions.sol3Badge")}</div>
-                  <h3 className="mt-4 font-display text-2xl font-medium tracking-[-0.02em] text-ink">{t("solutions.sol3Title")}</h3>
+                  <div className="inline-flex items-center rounded-stripe border border-stripe-border bg-white px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.1em] text-stripe-label shadow-stripe-inner">{t("solutions.sol3Badge")}</div>
+                  <h3 className="mt-4 font-display text-2xl font-light tracking-[-0.03em] text-ink">{t("solutions.sol3Title")}</h3>
                   <p className="mt-1 text-sm font-medium text-slate-600">{t("solutions.sol3Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol3Text")}</p>
                   <ul className="mt-5 grid gap-2 text-sm text-slate-600">
@@ -323,18 +323,18 @@ export function LandingPage() {
                 </div>
               </Reveal>
               <Reveal>
-                <div className="flex items-center justify-center rounded-2xl border border-slate-200/80 bg-white/70 p-8 shadow-stripe-sm ring-1 ring-white/80 backdrop-blur-sm sm:p-10">
+                <div className="flex items-center justify-center rounded-stripe-lg border border-stripe-border bg-white p-8 shadow-stripe-deep ring-1 ring-stripe-border/40 sm:p-10">
                   <div className="flex flex-col items-center gap-5 text-center">
                     <div className="grid h-16 w-16 place-items-center rounded-2xl bg-brand-green/[0.08] shadow-stripe-inner ring-1 ring-inset ring-brand-green/20">
                       <ShieldIcon />
                     </div>
                     <div>
-                      <div className="font-display text-lg font-medium tracking-[-0.02em] text-ink">{t("solutions.sol3AuditReady")}</div>
+                      <div className="font-display text-lg font-light tracking-[-0.02em] text-ink">{t("solutions.sol3AuditReady")}</div>
                       <div className="mt-1 text-sm text-slate-600">{t("solutions.sol3AuditSub")}</div>
                     </div>
                     <div className="flex flex-wrap justify-center gap-2">
                       {(["GHG Protocol", "CSRD / EU 2026", "DEFRA 2024"] as const).map((tag) => (
-                        <span key={tag} className="rounded-full border border-slate-200/70 bg-white/95 px-3 py-1 text-xs font-medium text-slate-600 shadow-stripe-inner">{tag}</span>
+                        <span key={tag} className="rounded-stripe border border-stripe-border bg-white px-2.5 py-1 text-xs font-medium text-stripe-label shadow-stripe-inner">{tag}</span>
                       ))}
                     </div>
                   </div>
@@ -345,17 +345,17 @@ export function LandingPage() {
         </section>
 
         {/* ━━━ The Profitability Engine ━━━ */}
-        <section id="merchants" className="scroll-mt-24 border-t border-slate-200/80 bg-mist/80">
+        <section id="merchants" className="scroll-mt-24 border-t border-stripe-border bg-linear-canvas/90">
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div className="max-w-2xl">
-              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("profitability.title")}</h2>
+              <h2 className="font-display text-3xl font-light tracking-[-0.04em] text-ink sm:text-[2rem]">{t("profitability.title")}</h2>
               <p className="mt-4 text-base leading-relaxed text-slate-600">{t("profitability.subtitle")}</p>
             </div>
             <div className="mt-12 grid gap-5 sm:mt-14 lg:grid-cols-3">
               {profitCards.map((b, i) => (
                 <Reveal key={b.t}>
-                  <HoverLift className="group relative h-full rounded-2xl border border-slate-200/80 bg-card-shine p-6 shadow-stripe-sm ring-1 ring-white/60 transition duration-300 ease-out hover:border-slate-200 hover:shadow-stripe">
-                    <div className="text-sm font-semibold text-brand-green">{b.t}</div>
+                  <HoverLift className="group relative h-full rounded-stripe-lg border border-stripe-border bg-white p-6 shadow-stripe-sm ring-1 ring-stripe-border/30 transition duration-300 ease-out hover:border-linear-border hover:shadow-stripe-deep">
+                    <div className="text-sm font-medium text-brand-green">{b.t}</div>
                     <div className="mt-2 text-sm leading-relaxed text-slate-600">{b.d}</div>
 
                     {/* "+" detail trigger */}
@@ -386,10 +386,10 @@ export function LandingPage() {
         </section>
 
         {/* ━━━ ROI Calculator ━━━ */}
-        <section id="roi" className="scroll-mt-24 border-t border-slate-200/80 bg-white">
+        <section id="roi" className="scroll-mt-24 border-t border-stripe-border bg-white">
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div className="max-w-2xl">
-              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("roi.title")}</h2>
+              <h2 className="font-display text-3xl font-light tracking-[-0.04em] text-ink sm:text-[2rem]">{t("roi.title")}</h2>
               <p className="mt-4 text-base leading-relaxed text-slate-600">{t("roi.subtitle")}</p>
             </div>
             <div className="mt-10 sm:mt-14"><RoiCalculator /></div>
@@ -397,21 +397,21 @@ export function LandingPage() {
         </section>
 
         {/* ━━━ Trust & Compliance ━━━ */}
-        <section id="resources" className="scroll-mt-24 border-t border-slate-200/80 bg-section-fade">
+        <section id="resources" className="scroll-mt-24 border-t border-stripe-border bg-section-fade">
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div className="max-w-2xl">
-              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("trust.title")}</h2>
+              <h2 className="font-display text-3xl font-light tracking-[-0.04em] text-ink sm:text-[2rem]">{t("trust.title")}</h2>
               <p className="mt-4 text-base leading-relaxed text-slate-600">{t("trust.subtitle")}</p>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-2 sm:mt-10">
               {(["ISO 14064", "ISO 14067", "GHG Protocol", "CSRD / EU 2026", "DEFRA 2024", "Shopify Partner"] as const).map((label) => (
-                <span key={label} className="rounded-full border border-slate-200/80 bg-white/90 px-3 py-1 text-xs font-medium text-slate-600 shadow-stripe-inner">{label}</span>
+                <span key={label} className="rounded-stripe border border-stripe-border bg-white px-2.5 py-1 text-xs font-medium text-stripe-label shadow-stripe-inner">{label}</span>
               ))}
             </div>
             <div className="mt-12 grid gap-5 sm:mt-14 lg:grid-cols-3">
               {quotes.map((qt) => (
                 <Reveal key={qt.a}>
-                  <HoverLift className="h-full rounded-2xl border border-slate-200/80 bg-white/90 p-7 shadow-stripe-sm ring-1 ring-white/70 backdrop-blur-sm transition duration-300 ease-out hover:border-slate-200 hover:shadow-stripe">
+                  <HoverLift className="h-full rounded-stripe-lg border border-stripe-border bg-white p-7 shadow-stripe-sm ring-1 ring-stripe-border/25 transition duration-300 ease-out hover:shadow-stripe-deep">
                     <blockquote className="text-sm leading-relaxed text-slate-600">{qt.q}</blockquote>
                     <div className="mt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">{qt.a}</div>
                   </HoverLift>
@@ -422,26 +422,26 @@ export function LandingPage() {
         </section>
 
         {/* ━━━ Pricing ━━━ */}
-        <section id="pricing" className="scroll-mt-24 border-t border-slate-200/80 bg-white">
+        <section id="pricing" className="scroll-mt-24 border-t border-stripe-border bg-white">
           <div id="add-widget" className="mx-auto max-w-6xl scroll-mt-28 px-4 py-20 sm:px-6 sm:py-28">
             <div className="max-w-2xl">
-              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("pricing.title")}</h2>
+              <h2 className="font-display text-3xl font-light tracking-[-0.04em] text-ink sm:text-[2rem]">{t("pricing.title")}</h2>
               <p className="mt-4 text-base leading-relaxed text-slate-600">{t("pricing.subtitle")}</p>
             </div>
             <div className="mt-10 grid gap-5 sm:mt-14 lg:grid-cols-3">
               {plans.map((p) => (
                 <Reveal key={p.name}>
                   <HoverLift
-                    className={`h-full rounded-2xl border p-7 shadow-stripe-sm ring-1 transition duration-300 ease-out hover:shadow-stripe ${
+                    className={`h-full rounded-stripe-lg border p-7 shadow-stripe-sm ring-1 transition duration-300 ease-out hover:shadow-stripe-deep ${
                       p.featured
                         ? "border-brand-gold/35 bg-gradient-to-b from-brand-gold/[0.08] to-white ring-brand-gold/20"
-                        : "border-slate-200/80 bg-card-shine ring-white/80"
+                        : "border-stripe-border bg-card-shine ring-stripe-border/40"
                     }`}
                   >
                     <div className="flex items-baseline justify-between gap-4">
-                      <div className="text-sm font-semibold text-brand-green">{p.name}</div>
+                      <div className="text-sm font-medium text-brand-green">{p.name}</div>
                       <div className="text-right">
-                        <span className="font-display text-2xl font-medium tracking-[-0.03em] text-ink">{p.price}</span>
+                        <span className="font-display text-2xl font-light tracking-[-0.04em] text-ink">{p.price}</span>
                         {p.period && <span className="text-sm text-slate-400">{p.period}</span>}
                       </div>
                     </div>
@@ -449,10 +449,10 @@ export function LandingPage() {
                     <div className="mt-7">
                       <a
                         href="#add-widget"
-                        className={`inline-flex h-11 w-full items-center justify-center rounded-lg px-5 text-sm font-semibold shadow-stripe-sm ring-1 transition duration-300 ease-out hover:-translate-y-px ${
+                        className={`inline-flex h-11 w-full items-center justify-center rounded-stripe px-5 text-sm font-medium shadow-stripe-sm ring-1 transition duration-300 ease-out hover:-translate-y-px ${
                           p.featured
-                            ? "bg-brand-green text-white ring-white/25 hover:bg-brand-green-light hover:shadow-stripe"
-                            : "bg-ink text-white ring-slate-900/20 hover:bg-slate-800 hover:shadow-stripe"
+                            ? "bg-brand-green text-white ring-white/25 hover:bg-brand-green-light hover:shadow-stripe-deep"
+                            : "bg-ink text-white ring-slate-900/20 hover:bg-slate-800 hover:shadow-stripe-deep"
                         }`}
                       >
                         {p.cta}

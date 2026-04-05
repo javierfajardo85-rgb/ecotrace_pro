@@ -319,7 +319,7 @@ export function FinancialDashboard() {
               <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
               EcoTrace Yield
             </div>
-            <h1 className="mt-4 text-3xl tracking-tight text-theme-green sm:text-4xl">
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight text-theme-green sm:text-4xl">
               {t("wallet.title")}
             </h1>
           </div>

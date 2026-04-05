@@ -59,12 +59,12 @@ function RotatingNarrative() {
           exit={{ opacity: 0 }}
           transition={{ duration: 1, ease }}
         >
-          <h1 className="font-display max-w-[22rem] text-4xl font-medium !leading-[1.06] tracking-[-0.03em] text-ink sm:max-w-xl sm:text-5xl lg:max-w-2xl lg:text-[3.35rem]">
+          <h1 className="font-display max-w-[22rem] text-4xl font-light !leading-[1.04] tracking-[-0.035em] text-ink sm:max-w-xl sm:text-5xl sm:tracking-[-0.04em] lg:max-w-2xl lg:text-[3.5rem]">
             {current.before}
             <span className="text-brand-gold-dark">{current.gold}</span>
             {current.after}
           </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg sm:leading-[1.65]">
+          <p className="max-w-2xl text-base font-normal leading-[1.55] text-stripe-body sm:text-lg sm:leading-[1.5]">
             {current.sub}
           </p>
         </motion.div>
@@ -215,7 +215,7 @@ function ShippingRateWidget() {
   const price = useCountUp(PRICE_ECO, 0.6, active);
 
   return (
-    <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white via-white to-slate-50/50 shadow-stripe ring-1 ring-white/70">
+    <div className="w-full max-w-sm overflow-hidden rounded-stripe-lg border border-stripe-border bg-gradient-to-b from-white via-white to-linear-canvas shadow-stripe-deep ring-1 ring-white/80">
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-slate-100/90 bg-white/60 px-5 py-3 backdrop-blur-sm">
         <div className="grid h-7 w-7 place-items-center rounded-lg bg-brand-green text-[10px] font-bold text-white shadow-stripe-sm ring-1 ring-white/20">E</div>
@@ -341,7 +341,7 @@ function MoneyFlowDiagram() {
   return (
     <div className="relative mx-auto w-full max-w-xs py-4">
       <div className="flex justify-center">
-        <div className="flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/95 px-4 py-2 shadow-stripe-sm ring-1 ring-slate-100/80 backdrop-blur-sm">
+        <div className="flex items-center gap-2 rounded-full border border-stripe-border bg-white px-4 py-2 shadow-stripe-sm ring-1 ring-stripe-border/60 backdrop-blur-sm">
           <EuroIcon className="text-brand-green" />
           <span className="text-xs font-semibold text-theme-green">{t("common.greenFee")}</span>
         </div>
@@ -385,14 +385,18 @@ export function Hero() {
     <section className="relative overflow-hidden bg-white bg-mesh-hero">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/80"
+        className="pointer-events-none absolute inset-0 bg-grid-linear bg-[length:56px_56px] opacity-[0.35]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white"
       />
 
       <div className="relative mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pb-28 sm:pt-20 lg:pb-32">
         <div className="grid items-center gap-12 sm:gap-16 lg:grid-cols-2 lg:gap-20">
           <Stagger>
             <Reveal>
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/90 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 shadow-stripe-sm backdrop-blur-md">
+              <div className="inline-flex items-center gap-2 rounded-stripe-md border border-stripe-border bg-white/95 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-stripe-label shadow-stripe-sm backdrop-blur-md">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-green shadow-[0_0_8px_rgba(10,61,42,0.45)]" aria-hidden="true" />
                 {t("hero.badge")}
               </div>
@@ -408,7 +412,7 @@ export function Hero() {
               <div className="mt-8 flex flex-wrap items-center gap-4 sm:mt-10">
                 <a
                   href="#product"
-                  className="inline-flex h-[52px] items-center justify-center rounded-lg bg-brand-green px-8 text-[15px] font-semibold text-white shadow-stripe-sm ring-1 ring-white/25 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light hover:shadow-stripe"
+                  className="inline-flex h-[52px] items-center justify-center rounded-stripe bg-brand-green px-7 text-[15px] font-medium text-white shadow-stripe-sm ring-1 ring-white/25 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light hover:shadow-stripe-deep"
                 >
                   {t("hero.cta")}
                 </a>

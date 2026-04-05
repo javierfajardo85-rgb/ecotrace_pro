@@ -489,7 +489,7 @@ export function HowItWorks() {
   const { t } = useTranslation();
 
   return (
-    <section id="how-it-works" className="relative scroll-mt-24 border-t border-slate-200/80 bg-white">
+    <section id="how-it-works" className="relative scroll-mt-24 border-t border-stripe-border bg-white">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_0%,rgba(10,61,42,0.04),transparent_55%)]"
@@ -498,11 +498,11 @@ export function HowItWorks() {
       <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:py-28">
         <Reveal>
           <div className="mx-auto max-w-4xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/90 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 shadow-stripe-sm backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 rounded-stripe-md border border-stripe-border bg-white px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-stripe-label shadow-stripe-sm backdrop-blur-md">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-green shadow-[0_0_8px_rgba(10,61,42,0.4)]" aria-hidden="true" />
               {t("howItWorks.badge")}
             </div>
-            <h2 className="mt-6 font-display text-3xl font-medium tracking-[-0.03em] text-ink sm:text-4xl sm:tracking-[-0.035em]">
+            <h2 className="mt-6 font-display text-3xl font-light tracking-[-0.04em] text-ink sm:text-4xl sm:tracking-[-0.045em]">
               <Trans
                 i18nKey="howItWorks.h2"
                 components={{
@@ -530,7 +530,7 @@ export function HowItWorks() {
 
         <div className="mt-14 grid gap-5 sm:mt-16 md:grid-cols-2">
           <Reveal>
-            <div className="rounded-2xl border border-slate-200/80 bg-card-shine p-6 shadow-stripe-sm ring-1 ring-white/70">
+            <div className="rounded-stripe-lg border border-stripe-border bg-card-shine p-6 shadow-stripe-sm ring-1 ring-stripe-border/30">
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-brand-green" />
                 <span className="text-xs font-bold uppercase tracking-wider text-brand-green">{t("howItWorks.exp1Label")}</span>
@@ -539,7 +539,7 @@ export function HowItWorks() {
             </div>
           </Reveal>
           <Reveal delay={0.08}>
-            <div className="rounded-2xl border border-slate-200/80 bg-card-shine p-6 shadow-stripe-sm ring-1 ring-white/70">
+            <div className="rounded-stripe-lg border border-stripe-border bg-card-shine p-6 shadow-stripe-sm ring-1 ring-stripe-border/30">
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-brand-gold" />
                 <span className="text-xs font-bold uppercase tracking-wider text-brand-gold-dark">{t("howItWorks.exp2Label")}</span>
@@ -552,11 +552,11 @@ export function HowItWorks() {
         <div className="mt-20">
           <Reveal>
             <div className="mx-auto max-w-2xl text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/90 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 shadow-stripe-sm backdrop-blur-md">
+              <div className="inline-flex items-center gap-2 rounded-stripe-md border border-stripe-border bg-white px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-stripe-label shadow-stripe-sm backdrop-blur-md">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-green shadow-[0_0_8px_rgba(10,61,42,0.4)]" aria-hidden="true" />
                 {t("howItWorks.ecoLogicBadge")}
               </div>
-              <h3 className="mt-5 font-display text-2xl font-medium tracking-[-0.025em] text-ink sm:text-3xl">{t("howItWorks.ecoLogicTitle")}</h3>
+              <h3 className="mt-5 font-display text-2xl font-light tracking-[-0.035em] text-ink sm:text-3xl">{t("howItWorks.ecoLogicTitle")}</h3>
               <p className="mt-3 text-sm text-slate-600">{t("howItWorks.ecoLogicSubtitle")}</p>
             </div>
           </Reveal>
