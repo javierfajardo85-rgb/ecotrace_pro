@@ -18,6 +18,10 @@ Espacio **apartado** del código (`web/`, widget, backend). Sirve para generar y
 3. Guardar respuestas útiles en `outcomes/` con nombres claros (ej. `outcomes/2026-04-identity-v1.md`).
 4. Cuando un entregable esté aprobado, entonces sí trasladarlo a `design-system/`, tokens en Tailwind, o Figma interno.
 
+## Pack v1 generado (borrador)
+
+Tras brief completado, ver `outcomes/v1-brand-book-core.md`, `v1-design-tokens.{json,md}`, `v1-marketing-kit.md` y `brief/ECOTRACE-BRIEF-FILLED.md`.
+
 ## Relación con el repo actual
 
 - `design-system/stripe-design.md` y `linear-design.md` son **referencias de producto**, no sustituyen el libro de marca EcoTrace.
