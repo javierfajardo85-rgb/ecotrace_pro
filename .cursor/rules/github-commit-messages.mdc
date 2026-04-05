@@ -1,0 +1,15 @@
+---
+description: After changes that should be committed to GitHub, provide ready-to-paste commit title and body.
+alwaysApply: true
+---
+
+# GitHub commit messaging (EcoTrace)
+
+When finishing work that the user will **commit and push to GitHub**, always end the response with a **ready-to-paste** block for the commit:
+
+1. **Summary** — Short commit title (imperative mood, ~50–72 chars). One line.
+2. **Description** — Body explaining *what* changed and *why*, grouped by theme. Do **not** need to list folder-by-folder; group related areas (e.g. “web UI”, “Tailwind tokens”, “API”) in a few clear bullets or short paragraphs.
+
+Use the user’s language if they wrote in Spanish; otherwise English is fine for commit text unless they prefer Spanish.
+
+If there is nothing to commit (read-only / questions only), omit this block.
