@@ -4,12 +4,12 @@ import type { PropsWithChildren } from "react";
 import { motion, type Variants } from "framer-motion";
 
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 18, filter: "blur(6px)" },
+  hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
   show: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
@@ -66,8 +66,8 @@ export function HoverLift({
   return (
     <motion.div
       className={className}
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -3, scale: 1.008 }}
+      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>

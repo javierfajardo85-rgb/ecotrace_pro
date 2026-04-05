@@ -91,7 +91,7 @@ function DetailModal({
 
           {/* Panel */}
           <motion.div
-            className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-white/50 bg-white/85 shadow-[0_22px_80px_rgba(15,23,42,0.30)] ring-1 ring-slate-900/10 backdrop-blur-2xl sm:max-h-[88vh]"
+            className="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-slate-200/60 bg-white/92 shadow-stripe ring-1 ring-white/80 backdrop-blur-2xl sm:max-h-[88vh]"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -104,15 +104,15 @@ function DetailModal({
             <button
               type="button"
               onClick={onClose}
-              className="absolute right-4 top-4 z-10 grid h-8 w-8 place-items-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
+              className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full border border-slate-200/80 bg-white text-slate-500 shadow-stripe-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-ink"
               aria-label="Close"
             >
               <CloseIcon />
             </button>
 
             <div className="flex flex-col">
-              <div className="border-b border-white/50 bg-gradient-to-r from-white/90 via-white/70 to-white/50 px-8 pb-5 pt-8 sm:px-10 sm:pt-10">
-                <h3 className="pr-12 text-xl font-semibold tracking-tight text-theme-green sm:text-2xl">
+              <div className="border-b border-slate-100/90 bg-gradient-to-r from-mist/40 via-white to-white px-8 pb-5 pt-8 sm:px-10 sm:pt-10">
+                <h3 className="pr-12 font-display text-xl font-medium tracking-[-0.02em] text-ink sm:text-2xl">
                   {header}
                 </h3>
               </div>
@@ -131,7 +131,7 @@ function DetailModal({
                             const rest = parts.slice(1).join("?").trim();
                             return (
                               <>
-                                <h4 className="text-sm font-semibold leading-snug text-slate-900 sm:text-base">
+                                <h4 className="text-sm font-semibold leading-snug text-ink sm:text-base">
                                   {title}
                                 </h4>
                                 {rest && (
@@ -224,25 +224,25 @@ export function LandingPage() {
   ];
 
   return (
-    <div className="bg-white text-theme-green">
+    <div className="bg-white text-theme-green antialiased">
       <main>
         <Hero />
         <HowItWorks />
 
         {/* ━━━ Three Solutions ━━━ */}
-        <section id="solutions" className="border-t border-slate-100 bg-white">
-          <div className="mx-auto max-w-6xl px-6 py-28">
+        <section id="product" className="scroll-mt-24 border-t border-slate-200/80 bg-section-fade">
+          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-3xl tracking-tight text-theme-green">{t("solutions.title")}</h2>
-              <p className="mt-4 text-base text-slate-600">{t("solutions.subtitle")}</p>
+              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("solutions.title")}</h2>
+              <p className="mt-4 text-base leading-relaxed text-slate-600">{t("solutions.subtitle")}</p>
             </div>
 
             {/* Solution 1: Checkout — Invisible Integration */}
-            <div className="mt-20 grid items-center gap-12 lg:grid-cols-2">
+            <div className="mt-16 grid items-center gap-10 sm:mt-20 sm:gap-12 lg:grid-cols-2">
               <Reveal>
                 <div>
-                  <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">{t("solutions.sol1Badge")}</div>
-                  <h3 className="mt-4 text-2xl tracking-tight text-theme-green">{t("solutions.sol1Title")}</h3>
+                  <div className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 shadow-stripe-inner">{t("solutions.sol1Badge")}</div>
+                  <h3 className="mt-4 font-display text-2xl font-medium tracking-[-0.02em] text-ink">{t("solutions.sol1Title")}</h3>
                   <p className="mt-1 text-sm font-medium text-brand-green">{t("solutions.sol1Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol1Text")}</p>
                   <ul className="mt-5 grid gap-2.5 text-sm text-slate-600">
@@ -256,7 +256,7 @@ export function LandingPage() {
                 </div>
               </Reveal>
               <Reveal>
-                <div className="flex justify-center rounded-2xl border border-slate-100 bg-slate-50/60 p-8 sm:p-10">
+                <div className="flex justify-center rounded-2xl border border-slate-200/80 bg-white/70 p-6 shadow-stripe-sm ring-1 ring-white/80 backdrop-blur-sm sm:p-10">
                   <ShippingMockup />
                 </div>
               </Reveal>
@@ -264,32 +264,32 @@ export function LandingPage() {
 
             {/* ── Technical Advantage pill ── */}
             <Reveal>
-              <div className="mx-auto mt-14 max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+              <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-slate-200/90 bg-card-shine p-6 shadow-stripe-sm sm:mt-14 sm:p-8">
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="inline-flex items-center gap-2 rounded-full border border-brand-green/15 bg-brand-green/[0.05] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-green">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-brand-green"><path d="m13 2-2 2.5h3L12 7" /><circle cx="12" cy="14" r="7" strokeWidth="1.8" /><path d="M12 10v4l2 2" /></svg>
                     {t("techAdvantage.badge")}
                   </div>
                 </div>
-                <h4 className="mt-4 text-lg font-bold tracking-tight text-theme-green">{t("techAdvantage.title")}</h4>
+                <h4 className="mt-4 font-display text-lg font-medium tracking-[-0.02em] text-ink">{t("techAdvantage.title")}</h4>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{t("techAdvantage.text")}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {[t("techAdvantage.pill1"), t("techAdvantage.pill2"), t("techAdvantage.pill3"), t("techAdvantage.pill4")].map((p) => (
-                    <span key={p} className="rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-[11px] font-semibold text-slate-500">{p}</span>
+                    <span key={p} className="rounded-full border border-slate-200/70 bg-white/90 px-3 py-1 text-[11px] font-semibold text-slate-600 shadow-stripe-inner">{p}</span>
                   ))}
                 </div>
               </div>
             </Reveal>
 
             {/* Solution 2: Yield */}
-            <div className="mt-28 grid items-center gap-12 lg:grid-cols-2">
+            <div className="mt-20 grid items-center gap-10 sm:mt-28 sm:gap-12 lg:grid-cols-2">
               <Reveal>
                 <div className="order-2 lg:order-1"><DashboardPreview /></div>
               </Reveal>
               <Reveal>
                 <div className="order-1 lg:order-2">
-                  <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">{t("solutions.sol2Badge")}</div>
-                  <h3 className="mt-4 text-2xl tracking-tight text-theme-green">{t("solutions.sol2Title")}</h3>
+                  <div className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 shadow-stripe-inner">{t("solutions.sol2Badge")}</div>
+                  <h3 className="mt-4 font-display text-2xl font-medium tracking-[-0.02em] text-ink">{t("solutions.sol2Title")}</h3>
                   <p className="mt-1 text-sm font-medium text-slate-600">{t("solutions.sol2Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol2Text")}</p>
                   <ul className="mt-5 grid gap-2 text-sm text-slate-600">
@@ -305,11 +305,11 @@ export function LandingPage() {
             </div>
 
             {/* Solution 3: Audit */}
-            <div className="mt-28 grid items-center gap-12 lg:grid-cols-2">
+            <div className="mt-20 grid items-center gap-10 sm:mt-28 sm:gap-12 lg:grid-cols-2">
               <Reveal>
                 <div>
-                  <div className="inline-flex items-center rounded-full border border-slate-100 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">{t("solutions.sol3Badge")}</div>
-                  <h3 className="mt-4 text-2xl tracking-tight text-theme-green">{t("solutions.sol3Title")}</h3>
+                  <div className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 shadow-stripe-inner">{t("solutions.sol3Badge")}</div>
+                  <h3 className="mt-4 font-display text-2xl font-medium tracking-[-0.02em] text-ink">{t("solutions.sol3Title")}</h3>
                   <p className="mt-1 text-sm font-medium text-slate-600">{t("solutions.sol3Sub")}</p>
                   <p className="mt-4 text-base text-slate-600">{t("solutions.sol3Text")}</p>
                   <ul className="mt-5 grid gap-2 text-sm text-slate-600">
@@ -323,18 +323,18 @@ export function LandingPage() {
                 </div>
               </Reveal>
               <Reveal>
-                <div className="flex items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 p-10">
+                <div className="flex items-center justify-center rounded-2xl border border-slate-200/80 bg-white/70 p-8 shadow-stripe-sm ring-1 ring-white/80 backdrop-blur-sm sm:p-10">
                   <div className="flex flex-col items-center gap-5 text-center">
-                    <div className="grid h-16 w-16 place-items-center rounded-2xl bg-brand-green/10 ring-1 ring-inset ring-brand-green/20">
+                    <div className="grid h-16 w-16 place-items-center rounded-2xl bg-brand-green/[0.08] shadow-stripe-inner ring-1 ring-inset ring-brand-green/20">
                       <ShieldIcon />
                     </div>
                     <div>
-                      <div className="text-lg font-bold tracking-tight text-theme-green">{t("solutions.sol3AuditReady")}</div>
+                      <div className="font-display text-lg font-medium tracking-[-0.02em] text-ink">{t("solutions.sol3AuditReady")}</div>
                       <div className="mt-1 text-sm text-slate-600">{t("solutions.sol3AuditSub")}</div>
                     </div>
                     <div className="flex flex-wrap justify-center gap-2">
                       {(["GHG Protocol", "CSRD / EU 2026", "DEFRA 2024"] as const).map((tag) => (
-                        <span key={tag} className="rounded-full border border-slate-100 bg-white px-3 py-1 text-xs font-medium text-slate-500">{tag}</span>
+                        <span key={tag} className="rounded-full border border-slate-200/70 bg-white/95 px-3 py-1 text-xs font-medium text-slate-600 shadow-stripe-inner">{tag}</span>
                       ))}
                     </div>
                   </div>
@@ -345,24 +345,24 @@ export function LandingPage() {
         </section>
 
         {/* ━━━ The Profitability Engine ━━━ */}
-        <section id="merchants" className="border-t border-slate-100 bg-slate-50/40">
-          <div className="mx-auto max-w-6xl px-6 py-28">
+        <section id="merchants" className="scroll-mt-24 border-t border-slate-200/80 bg-mist/80">
+          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight text-theme-green">{t("profitability.title")}</h2>
-              <p className="mt-4 text-base text-slate-600">{t("profitability.subtitle")}</p>
+              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("profitability.title")}</h2>
+              <p className="mt-4 text-base leading-relaxed text-slate-600">{t("profitability.subtitle")}</p>
             </div>
-            <div className="mt-14 grid gap-5 lg:grid-cols-3">
+            <div className="mt-12 grid gap-5 sm:mt-14 lg:grid-cols-3">
               {profitCards.map((b, i) => (
                 <Reveal key={b.t}>
-                  <HoverLift className="group relative h-full rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5">
-                    <div className="text-sm font-semibold text-theme-green">{b.t}</div>
-                    <div className="mt-2 text-sm text-slate-600">{b.d}</div>
+                  <HoverLift className="group relative h-full rounded-2xl border border-slate-200/80 bg-card-shine p-6 shadow-stripe-sm ring-1 ring-white/60 transition duration-300 ease-out hover:border-slate-200 hover:shadow-stripe">
+                    <div className="text-sm font-semibold text-brand-green">{b.t}</div>
+                    <div className="mt-2 text-sm leading-relaxed text-slate-600">{b.d}</div>
 
                     {/* "+" detail trigger */}
                     <button
                       type="button"
                       onClick={() => setActiveModal(i)}
-                      className="absolute bottom-4 right-4 grid h-8 w-8 place-items-center rounded-full bg-brand-green text-white shadow-md transition-transform duration-200 hover:scale-110 group-hover:scale-110"
+                      className="absolute bottom-4 right-4 grid h-9 w-9 place-items-center rounded-full bg-brand-green text-white shadow-stripe-sm ring-1 ring-white/25 transition-transform duration-200 hover:scale-105 group-hover:scale-105"
                       aria-label="More details"
                     >
                       <PlusIcon className="text-white" />
@@ -386,34 +386,34 @@ export function LandingPage() {
         </section>
 
         {/* ━━━ ROI Calculator ━━━ */}
-        <section id="roi" className="border-t border-slate-100 bg-white">
-          <div className="mx-auto max-w-6xl px-6 py-28">
+        <section id="roi" className="scroll-mt-24 border-t border-slate-200/80 bg-white">
+          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight text-theme-green">{t("roi.title")}</h2>
-              <p className="mt-4 text-base text-slate-600">{t("roi.subtitle")}</p>
+              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("roi.title")}</h2>
+              <p className="mt-4 text-base leading-relaxed text-slate-600">{t("roi.subtitle")}</p>
             </div>
-            <div className="mt-14"><RoiCalculator /></div>
+            <div className="mt-10 sm:mt-14"><RoiCalculator /></div>
           </div>
         </section>
 
         {/* ━━━ Trust & Compliance ━━━ */}
-        <section id="resources" className="border-t border-slate-100 bg-slate-50/40">
-          <div className="mx-auto max-w-6xl px-6 py-28">
+        <section id="resources" className="scroll-mt-24 border-t border-slate-200/80 bg-section-fade">
+          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight text-theme-green">{t("trust.title")}</h2>
-              <p className="mt-4 text-base text-slate-600">{t("trust.subtitle")}</p>
+              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("trust.title")}</h2>
+              <p className="mt-4 text-base leading-relaxed text-slate-600">{t("trust.subtitle")}</p>
             </div>
-            <div className="mt-10 flex flex-wrap items-center gap-2">
+            <div className="mt-8 flex flex-wrap items-center gap-2 sm:mt-10">
               {(["ISO 14064", "ISO 14067", "GHG Protocol", "CSRD / EU 2026", "DEFRA 2024", "Shopify Partner"] as const).map((label) => (
-                <span key={label} className="rounded-full border border-slate-100 bg-white px-3 py-1 text-xs font-medium text-slate-500">{label}</span>
+                <span key={label} className="rounded-full border border-slate-200/80 bg-white/90 px-3 py-1 text-xs font-medium text-slate-600 shadow-stripe-inner">{label}</span>
               ))}
             </div>
-            <div className="mt-14 grid gap-5 lg:grid-cols-3">
+            <div className="mt-12 grid gap-5 sm:mt-14 lg:grid-cols-3">
               {quotes.map((qt) => (
                 <Reveal key={qt.a}>
-                  <HoverLift className="h-full rounded-2xl border border-slate-100 bg-white p-7 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5">
-                    <blockquote className="text-sm text-slate-600">{qt.q}</blockquote>
-                    <div className="mt-5 text-xs font-semibold uppercase tracking-wide text-slate-400">{qt.a}</div>
+                  <HoverLift className="h-full rounded-2xl border border-slate-200/80 bg-white/90 p-7 shadow-stripe-sm ring-1 ring-white/70 backdrop-blur-sm transition duration-300 ease-out hover:border-slate-200 hover:shadow-stripe">
+                    <blockquote className="text-sm leading-relaxed text-slate-600">{qt.q}</blockquote>
+                    <div className="mt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">{qt.a}</div>
                   </HoverLift>
                 </Reveal>
               ))}
@@ -422,35 +422,37 @@ export function LandingPage() {
         </section>
 
         {/* ━━━ Pricing ━━━ */}
-        <section id="pricing" className="border-t border-slate-100 bg-white">
-          <div className="mx-auto max-w-6xl px-6 py-28">
+        <section id="pricing" className="scroll-mt-24 border-t border-slate-200/80 bg-white">
+          <div id="add-widget" className="mx-auto max-w-6xl scroll-mt-28 px-4 py-20 sm:px-6 sm:py-28">
             <div className="max-w-2xl">
-              <h2 className="text-3xl tracking-tight text-theme-green">{t("pricing.title")}</h2>
-              <p className="mt-4 text-base text-slate-600">{t("pricing.subtitle")}</p>
+              <h2 className="font-display text-3xl font-medium tracking-[-0.025em] text-ink sm:text-[2rem]">{t("pricing.title")}</h2>
+              <p className="mt-4 text-base leading-relaxed text-slate-600">{t("pricing.subtitle")}</p>
             </div>
-            <div className="mt-14 grid gap-5 lg:grid-cols-3">
+            <div className="mt-10 grid gap-5 sm:mt-14 lg:grid-cols-3">
               {plans.map((p) => (
                 <Reveal key={p.name}>
                   <HoverLift
-                    className={`h-full rounded-2xl border p-7 shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 ${
-                      p.featured ? "border-brand-gold/30 bg-brand-gold/[0.04]" : "border-slate-100 bg-white"
+                    className={`h-full rounded-2xl border p-7 shadow-stripe-sm ring-1 transition duration-300 ease-out hover:shadow-stripe ${
+                      p.featured
+                        ? "border-brand-gold/35 bg-gradient-to-b from-brand-gold/[0.08] to-white ring-brand-gold/20"
+                        : "border-slate-200/80 bg-card-shine ring-white/80"
                     }`}
                   >
                     <div className="flex items-baseline justify-between gap-4">
-                      <div className="text-sm font-semibold text-theme-green">{p.name}</div>
+                      <div className="text-sm font-semibold text-brand-green">{p.name}</div>
                       <div className="text-right">
-                        <span className="text-2xl font-bold tracking-tight text-theme-green">{p.price}</span>
+                        <span className="font-display text-2xl font-medium tracking-[-0.03em] text-ink">{p.price}</span>
                         {p.period && <span className="text-sm text-slate-400">{p.period}</span>}
                       </div>
                     </div>
-                    <div className="mt-3 text-sm text-slate-600">{p.d}</div>
+                    <div className="mt-3 text-sm leading-relaxed text-slate-600">{p.d}</div>
                     <div className="mt-7">
                       <a
                         href="#add-widget"
-                        className={`inline-flex h-11 w-full items-center justify-center rounded-xl px-5 text-sm font-semibold transition duration-300 ease-out hover:-translate-y-0.5 ${
+                        className={`inline-flex h-11 w-full items-center justify-center rounded-lg px-5 text-sm font-semibold shadow-stripe-sm ring-1 transition duration-300 ease-out hover:-translate-y-px ${
                           p.featured
-                            ? "bg-brand-green text-white hover:bg-brand-green-light"
-                            : "bg-slate-900 text-white hover:bg-slate-800"
+                            ? "bg-brand-green text-white ring-white/25 hover:bg-brand-green-light hover:shadow-stripe"
+                            : "bg-ink text-white ring-slate-900/20 hover:bg-slate-800 hover:shadow-stripe"
                         }`}
                       >
                         {p.cta}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -9,6 +9,13 @@ import { CurrencyProvider } from "@/providers/CurrencyProvider";
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+});
+
+/** Display / marketing: Stripe-like geometric confidence + readable weights */
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -38,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${plusJakarta.variable} ${geistMono.variable}`}>
       <body className="bg-white font-sans text-slate-900 antialiased">
         <I18nProvider>
           <CurrencyProvider>

@@ -10,16 +10,16 @@ const CURRENCIES = ["EUR", "USD", "GBP"] as const;
 function CurrencySwitcher() {
   const { code, setCode } = useCurrency();
   return (
-    <div className="flex items-center gap-0.5 rounded-lg border border-slate-200 p-0.5 text-xs font-medium">
+    <div className="flex items-center gap-0.5 rounded-md border border-slate-200/90 bg-slate-50/50 p-0.5 text-[11px] font-semibold shadow-stripe-inner">
       {CURRENCIES.map((c) => (
         <button
           key={c}
           type="button"
           onClick={() => setCode(c)}
-          className={`rounded-md px-2 py-1 transition ${
+          className={`rounded px-2 py-1 transition-colors ${
             code === c
-              ? "bg-brand-gold text-white"
-              : "text-slate-500 hover:text-theme-green"
+              ? "bg-brand-gold text-white shadow-stripe-sm"
+              : "text-slate-500 hover:text-ink"
           }`}
         >
           {c === "EUR" ? "€" : c === "GBP" ? "£" : "$"}
@@ -52,47 +52,50 @@ export function Nav() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b bg-white/80 backdrop-blur-md transition-[border-color] duration-300 ${
-        scrolled ? "border-gray-100" : "border-transparent"
+      className={`sticky top-0 z-50 border-b transition-[border-color,background-color] duration-500 ${
+        scrolled
+          ? "border-slate-200/80 bg-white/92 shadow-stripe-sm backdrop-blur-xl backdrop-saturate-150"
+          : "border-transparent bg-white/70 backdrop-blur-md"
       }`}
     >
-      <div className="relative z-50 mx-auto max-w-7xl px-6">
-        <div className="flex h-16 items-center justify-between gap-6">
-          <Link className="flex items-center gap-4" href="/" aria-label="EcoTrace home">
+      <div className="relative z-50 mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="flex h-[4.25rem] items-center justify-between gap-4 sm:gap-6">
+          <Link className="flex shrink-0 items-center gap-4 transition-opacity hover:opacity-90" href="/" aria-label="EcoTrace home">
             <img
               src="/brand/ecotrace-logo.svg"
               width={180}
               height={40}
               alt="EcoTrace"
-              className="h-auto w-[180px]"
+              className="h-auto w-[156px] sm:w-[180px]"
             />
           </Link>
 
-          <nav className="hidden flex-1 items-center justify-center gap-1 md:flex" aria-label="Primary">
-            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-theme-green" href="#product">
-              {t("nav.product")}
-            </a>
-            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-theme-green" href="#how-it-works">
-              {t("nav.howItWorks")}
-            </a>
-            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-theme-green" href="#merchants">
-              {t("nav.forMerchants")}
-            </a>
-            <a className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition duration-300 ease-out hover:bg-slate-50 hover:text-theme-green" href="#resources">
-              {t("nav.resources")}
-            </a>
+          <nav className="hidden flex-1 items-center justify-center gap-0.5 lg:flex" aria-label="Primary">
+            {(
+              [
+                ["#product", t("nav.product")],
+                ["#how-it-works", t("nav.howItWorks")],
+                ["#merchants", t("nav.forMerchants")],
+                ["#resources", t("nav.resources")],
+              ] as const
+            ).map(([href, label]) => (
+              <a
+                key={href}
+                className="rounded-md px-3 py-2 text-[13px] font-medium text-slate-600 transition-colors duration-200 hover:bg-slate-100/80 hover:text-ink"
+                href={href}
+              >
+                {label}
+              </a>
+            ))}
           </nav>
 
-          <div className="flex items-center gap-3">
-            {/* Language switcher */}
-            <div className="flex items-center gap-0.5 rounded-lg border border-slate-200 p-0.5 text-xs font-medium">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-0.5 rounded-md border border-slate-200/90 bg-slate-50/50 p-0.5 text-[11px] font-semibold shadow-stripe-inner">
               <button
                 type="button"
                 onClick={() => switchLang("en")}
-                className={`rounded-md px-2 py-1 transition ${
-                  !isEs
-                    ? "bg-brand-green text-white"
-                    : "text-slate-500 hover:text-theme-green"
+                className={`rounded px-2 py-1 transition-colors ${
+                  !isEs ? "bg-white text-ink shadow-stripe-sm" : "text-slate-500 hover:text-ink"
                 }`}
               >
                 EN
@@ -100,27 +103,24 @@ export function Nav() {
               <button
                 type="button"
                 onClick={() => switchLang("es")}
-                className={`rounded-md px-2 py-1 transition ${
-                  isEs
-                    ? "bg-brand-green text-white"
-                    : "text-slate-500 hover:text-theme-green"
+                className={`rounded px-2 py-1 transition-colors ${
+                  isEs ? "bg-white text-ink shadow-stripe-sm" : "text-slate-500 hover:text-ink"
                 }`}
               >
                 ES
               </button>
             </div>
 
-            {/* Currency switcher */}
             <CurrencySwitcher />
 
             <Link
-              className="hidden h-10 items-center justify-center rounded-lg px-4 text-sm font-semibold text-slate-700 transition duration-300 ease-out hover:text-theme-green sm:inline-flex"
+              className="hidden h-9 items-center justify-center rounded-md px-3 text-[13px] font-semibold text-slate-600 transition-colors hover:text-ink lg:inline-flex"
               href="/dashboard"
             >
               {t("nav.login")}
             </Link>
             <a
-              className="relative z-[60] inline-flex h-10 items-center justify-center rounded-xl bg-brand-green px-4 text-sm font-semibold text-white shadow-md shadow-[0_4px_14px_rgba(10,61,42,0.35)] ring-1 ring-white/20 transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light hover:shadow-lg hover:shadow-[0_8px_24px_rgba(10,61,42,0.4)]"
+              className="relative z-[60] inline-flex h-9 items-center justify-center rounded-md bg-brand-green px-3.5 text-[13px] font-semibold text-white shadow-stripe-sm ring-1 ring-white/25 transition-all duration-300 ease-out hover:-translate-y-px hover:bg-brand-green-light hover:shadow-stripe sm:h-10 sm:px-4 sm:text-sm"
               href="#add-widget"
             >
               {t("nav.addToStore")}

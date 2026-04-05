@@ -59,12 +59,12 @@ function RotatingNarrative() {
           exit={{ opacity: 0 }}
           transition={{ duration: 1, ease }}
         >
-          <h1 className="max-w-xl text-3xl font-extrabold !leading-[1.12] tracking-tight text-brand-green sm:text-4xl lg:text-[3.25rem]">
+          <h1 className="font-display max-w-[22rem] text-4xl font-medium !leading-[1.06] tracking-[-0.03em] text-ink sm:max-w-xl sm:text-5xl lg:max-w-2xl lg:text-[3.35rem]">
             {current.before}
             <span className="text-brand-gold-dark">{current.gold}</span>
             {current.after}
           </h1>
-          <p className="max-w-2xl text-base leading-[1.7] text-slate-600 sm:text-lg sm:leading-[1.75]">
+          <p className="max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg sm:leading-[1.65]">
             {current.sub}
           </p>
         </motion.div>
@@ -173,7 +173,7 @@ function TransparencyTooltip() {
         onClick={() => setOpen(!open)}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
-        className="grid h-5 w-5 place-items-center rounded-full border border-slate-200 bg-white text-slate-400 transition hover:border-brand-green/30 hover:text-brand-green"
+        className="grid h-5 w-5 place-items-center rounded-full border border-slate-200/90 bg-white text-slate-400 shadow-stripe-inner transition hover:border-brand-green/35 hover:text-brand-green"
         aria-label="Info"
       >
         <InfoIcon />
@@ -186,7 +186,7 @@ function TransparencyTooltip() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.97 }}
             transition={{ duration: 0.18, ease }}
-            className="absolute bottom-full right-0 z-20 mb-2 w-64 rounded-xl border border-slate-200 bg-white p-4 shadow-lg"
+            className="absolute bottom-full right-0 z-20 mb-2 w-64 rounded-xl border border-slate-200/90 bg-white/95 p-4 shadow-stripe backdrop-blur-md"
           >
             <div className="text-xs font-bold text-theme-green">{t("hero.tooltipHeader")}</div>
             <ul className="mt-2.5 space-y-2">
@@ -215,10 +215,10 @@ function ShippingRateWidget() {
   const price = useCountUp(PRICE_ECO, 0.6, active);
 
   return (
-    <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white via-white to-slate-50/50 shadow-stripe ring-1 ring-white/70">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-3">
-        <div className="grid h-7 w-7 place-items-center rounded-lg bg-brand-green text-[10px] font-bold text-white">E</div>
+      <div className="flex items-center gap-3 border-b border-slate-100/90 bg-white/60 px-5 py-3 backdrop-blur-sm">
+        <div className="grid h-7 w-7 place-items-center rounded-lg bg-brand-green text-[10px] font-bold text-white shadow-stripe-sm ring-1 ring-white/20">E</div>
         <span className="text-xs font-medium text-slate-400">{t("hero.widgetLabel")}</span>
       </div>
 
@@ -228,7 +228,7 @@ function ShippingRateWidget() {
           {t("hero.shippingLabel")}
         </div>
 
-        <div className="mt-3 flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/60 px-4 py-3 transition-colors duration-300" style={active ? { borderColor: "rgba(10,61,42,0.2)", backgroundColor: "rgba(10,61,42,0.03)" } : {}}>
+        <div className="mt-3 flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/70 px-4 py-3 shadow-stripe-inner transition-colors duration-300" style={active ? { borderColor: "rgba(10,61,42,0.22)", backgroundColor: "rgba(10,61,42,0.04)" } : {}}>
           <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg transition-colors duration-300 ${active ? "bg-brand-green/10" : "bg-slate-100"}`}>
             <TruckIcon className={`transition-colors duration-300 ${active ? "text-brand-green" : "text-slate-400"}`} />
           </div>
@@ -314,8 +314,8 @@ function ShippingRateWidget() {
         )}
       </AnimatePresence>
 
-      <div className="border-t border-slate-100 px-5 py-2">
-        <span className="text-[9px] font-medium text-slate-300">{t("hero.widgetISO")}</span>
+      <div className="border-t border-slate-100/90 bg-slate-50/30 px-5 py-2">
+        <span className="text-[9px] font-medium text-slate-400">{t("hero.widgetISO")}</span>
       </div>
     </div>
   );
@@ -341,7 +341,7 @@ function MoneyFlowDiagram() {
   return (
     <div className="relative mx-auto w-full max-w-xs py-4">
       <div className="flex justify-center">
-        <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm">
+        <div className="flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/95 px-4 py-2 shadow-stripe-sm ring-1 ring-slate-100/80 backdrop-blur-sm">
           <EuroIcon className="text-brand-green" />
           <span className="text-xs font-semibold text-theme-green">{t("common.greenFee")}</span>
         </div>
@@ -359,14 +359,14 @@ function MoneyFlowDiagram() {
       </div>
 
       <div className="flex justify-between px-2">
-        <div className="flex items-center gap-2 rounded-full border border-brand-green/20 bg-brand-green/5 px-3 py-1.5">
+        <div className="flex items-center gap-2 rounded-full border border-brand-green/25 bg-brand-green/[0.06] px-3 py-1.5 shadow-stripe-inner">
           <LeafIcon className="text-brand-green" />
           <div className="text-left">
             <div className="text-[10px] font-bold text-brand-green">{t("hero.flowFee1")}</div>
             <div className="text-[9px] text-slate-500">{t("hero.flowFee1Sub")}</div>
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-full border border-brand-gold/30 bg-brand-gold/10 px-3 py-1.5">
+        <div className="flex items-center gap-2 rounded-full border border-brand-gold/35 bg-brand-gold/[0.12] px-3 py-1.5 shadow-stripe-inner">
           <WalletIcon className="text-brand-gold-dark" />
           <div className="text-left">
             <div className="text-[10px] font-bold text-brand-gold-dark">{t("hero.flowFee2")}</div>
@@ -382,35 +382,33 @@ export function Hero() {
   const { t } = useTranslation();
 
   return (
-    <section className="relative overflow-hidden bg-white">
+    <section className="relative overflow-hidden bg-white bg-mesh-hero">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{ background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(10,61,42,0.04), transparent 70%)" }}
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/80"
       />
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-28 pt-20 lg:pb-32">
-        <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
+      <div className="relative mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pb-28 sm:pt-20 lg:pb-32">
+        <div className="grid items-center gap-12 sm:gap-16 lg:grid-cols-2 lg:gap-20">
           <Stagger>
             <Reveal>
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-500 shadow-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand-green" aria-hidden="true" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/90 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 shadow-stripe-sm backdrop-blur-md">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand-green shadow-[0_0_8px_rgba(10,61,42,0.45)]" aria-hidden="true" />
                 {t("hero.badge")}
               </div>
             </Reveal>
 
             <Reveal>
-              <div className="mt-8">
+              <div className="mt-6 sm:mt-8">
                 <RotatingNarrative />
               </div>
             </Reveal>
 
             <Reveal>
-              <div className="mt-10 flex flex-wrap items-center gap-4">
+              <div className="mt-8 flex flex-wrap items-center gap-4 sm:mt-10">
                 <a
-                  href="#solutions"
-                  className="inline-flex items-center justify-center rounded-xl bg-brand-green px-8 text-sm font-semibold text-white shadow-sm transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light"
-                  style={{ height: 52 }}
+                  href="#product"
+                  className="inline-flex h-[52px] items-center justify-center rounded-lg bg-brand-green px-8 text-[15px] font-semibold text-white shadow-stripe-sm ring-1 ring-white/25 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-green-light hover:shadow-stripe"
                 >
                   {t("hero.cta")}
                 </a>
@@ -418,7 +416,7 @@ export function Hero() {
             </Reveal>
 
             <Reveal>
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400">
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-[12px] text-slate-500 sm:mt-8 sm:text-xs">
                 <span className="flex items-center gap-1.5">
                   <CheckMark className="text-brand-green" />
                   {t("hero.checkIntegration")}
