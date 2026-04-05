@@ -1,0 +1,17 @@
+EcoTrace — copia física antes de cambios de diseño (v1)
+Fecha: 2026-04-04T19:04:41Z
+
+Estructura:
+  app/           → backend/app (código FastAPI)
+  backend/       → proyecto backend completo
+  web/           → app Next.js completa (incl. node_modules, .next)
+  widget/        → widget
+  public/        → copia de web/public
+  src/           → copia de web/src
+  components/  → copia de web/src/components
+  pages/         → copia de web/src/app (App Router)
+  public-root-colon/ → solo si existía carpeta literal 'public:' en la raíz
+
+Archivos de configuración copiados en la raíz de este backup: README, requirements, Docker, render, env example, gitignore, y configs del front (package.json, next, tailwind, tsconfig, etc.).
+
+No se copió .env (secretos). Restaurar desde .env.example si hace falta.

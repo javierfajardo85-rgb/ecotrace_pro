@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ecotrace
+      POSTGRES_USER: ecotrace
+      POSTGRES_PASSWORD: ecotrace
+    ports:
+      - "5432:5432"
+    volumes:
+      - ecotrace_pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://ecotrace:ecotrace@db:5432/ecotrace
+      JWT_SECRET: change-me
+      JWT_ALG: HS256
+      CARBON_INTERFACE_API_KEY: ""
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  ecotrace_pgdata:
+

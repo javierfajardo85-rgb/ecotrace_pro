@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    @apply text-slate-900;
+  }
+
+  h1 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  body {
+    line-height: 1.6;
+  }
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  height: 100%;
+  scroll-padding-top: 5rem;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(5, 150, 105, 0.18);
+}
+
+/* Legacy helper (kept for now). We'll remove after full Tailwind migration. */
+.et-container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
